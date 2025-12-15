@@ -37,6 +37,66 @@
             
             console.log('Console initialized successfully');
             
+            // Request history storage
+            window.requestHistory = [];
+            
+            window.updateHistory = function() {
+                const historyContent = document.getElementById('historyContent');
+                if (!historyContent) return;
+                
+                // Clear only the data rows, keep existing headers
+                const rows = historyContent.querySelectorAll('tr');
+                rows.forEach((row, i) => {
+                    if (i > 0) { // Keep first row (title from JSON)
+                        row.remove();
+                    }
+                });
+                
+                if (requestHistory.length === 0) {
+                    const emptyRow = document.createElement('tr');
+                    const emptyCell = document.createElement('td');
+                    emptyCell.colSpan = 4;
+                    emptyCell.textContent = 'Send a request to see history...';
+                    emptyRow.appendChild(emptyCell);
+                    historyContent.appendChild(emptyRow);
+                    return;
+                }
+                
+                // Add header row
+                const headerRow = document.createElement('tr');
+                headerRow.style.background = '#333';
+                ['Time', 'Method', 'Endpoint', 'Status'].forEach(text => {
+                    const th = document.createElement('th');
+                    th.textContent = text;
+                    headerRow.appendChild(th);
+                });
+                historyContent.appendChild(headerRow);
+                
+                // Add history entries (newest first)
+                requestHistory.slice().reverse().forEach(entry => {
+                    const row = document.createElement('tr');
+                    
+                    const timeCell = document.createElement('td');
+                    timeCell.textContent = entry.time;
+                    row.appendChild(timeCell);
+                    
+                    const methodCell = document.createElement('td');
+                    methodCell.textContent = entry.method;
+                    row.appendChild(methodCell);
+                    
+                    const urlCell = document.createElement('td');
+                    urlCell.textContent = entry.url.replace('http://chat.chessers.club/api/', '');
+                    row.appendChild(urlCell);
+                    
+                    const statusCell = document.createElement('td');
+                    statusCell.textContent = entry.status;
+                    statusCell.style.color = entry.success ? '#0f0' : '#f00';
+                    row.appendChild(statusCell);
+                    
+                    historyContent.appendChild(row);
+                });
+            };
+            
             // API button handlers
             window.sendRequest = function() {
                 console.log('🚀 sendRequest called');
@@ -54,6 +114,7 @@
                 console.log('📍 Endpoint element value:', url);
                 console.log('📍 Full URL being fetched:', url);
                 console.log('📍 Method:', method);
+                console.log('📍 Request data:', rd.value);
                 
                 if (!url || !url.startsWith('http')) {
                     rc.textContent = '[ERROR] Invalid URL: ' + url;
@@ -66,15 +127,33 @@
                     method: method,
                     headers: {'Content-Type': 'application/json'}
                 };
-                if (method === 'POST' && rd.value.trim()) {
-                    opts.body = rd.value;
+                if (method === 'POST') {
+                    if (rd.value.trim()) {
+                        opts.body = rd.value;
+                    } else {
+                        rc.textContent = '[ERROR] POST request requires data in the Request Data field';
+                        return;
+                    }
                 }
                 console.log('Fetching URL:', url);
                 console.log('Fetch options:', JSON.stringify(opts, null, 2));
+                
+                const startTime = new Date();
                 fetch(url, opts)
                     .then(r => r.text())
                     .then(text => {
                         console.log('✅ Response:', text.substring(0, 200));
+                        
+                        // Add to history
+                        requestHistory.push({
+                            time: startTime.toLocaleTimeString(),
+                            method: method,
+                            url: url,
+                            status: '✅ SUCCESS',
+                            success: true
+                        });
+                        updateHistory();
+                        
                         try {
                             const data = JSON.parse(text);
                             rc.textContent = '[SUCCESS]\n' + JSON.stringify(data, null, 2);
@@ -84,6 +163,17 @@
                     })
                     .catch(e => {
                         console.error('❌ Fetch error:', e);
+                        
+                        // Add error to history
+                        requestHistory.push({
+                            time: startTime.toLocaleTimeString(),
+                            method: method,
+                            url: url,
+                            status: '❌ ' + e.message,
+                            success: false
+                        });
+                        updateHistory();
+                        
                         rc.textContent = '[ERROR] ' + e.message;
                     });
             };
@@ -109,6 +199,26 @@
                 };
                 rd.value = examples[ep.value] || JSON.stringify({message: 'Test', sender: 'guest'}, null, 2);
             };
+            
+            // Auto-switch to POST and load example when endpoint changes
+            document.addEventListener('change', function(e) {
+                if (e.target.id === 'endpoint') {
+                    const ep = e.target.value;
+                    const method = document.getElementById('method');
+                    console.log('📍 Endpoint changed to:', ep);
+                    
+                    // Auto-switch to POST for endpoints that need it
+                    if (ep.includes('message.php') || ep.includes('user.php')) {
+                        if (method) method.value = 'POST';
+                        console.log('✅ Auto-switched to POST');
+                        // Auto-load example
+                        setTimeout(loadExample, 100);
+                    } else {
+                        if (method) method.value = 'GET';
+                        console.log('✅ Auto-switched to GET');
+                    }
+                }
+            });
             
             // Global click handler for all buttons
             document.addEventListener('click', function(e) {
