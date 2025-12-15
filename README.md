@@ -1,334 +1,285 @@
-# dotPipe Programming Language
+# dotFly Desktop Application Framework
 
-**A lightweight, Python-powered programming language for building real Windows applications**
+A lightweight desktop application framework combining Python with dotPipe.js to create web-based desktop apps using JSON-driven UI templates.
 
-![Status](https://img.shields.io/badge/status-production--ready-brightgreen)
-![Tests](https://img.shields.io/badge/tests-28%2F28-brightgreen)
-![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
-![Python](https://img.shields.io/badge/python-3.13%2B-blue)
+## What We Built
 
-## Overview
+A complete desktop application featuring:
+- **Native Desktop Window**: Python + pywebview for cross-platform desktop apps
+- **JSON Template System**: Define UI using simple JSON structures
+- **API Testing Console**: Full-featured REST API client with tabbed interface
+- **Live Development**: Auto-reload when JSON templates change
+- **Remote API Integration**: Connect to external servers with CORS support
 
-dotPipe is a complete programming language that:
-- ✓ Executes from simple, readable code
-- ✓ Supports 50+ built-in functions
-- ✓ Can build native Windows applications with tkinter
-- ✓ Has JSON-friendly syntax
-- ✓ Integrates seamlessly with Python
+## Architecture
 
-## Quick Start
-
-### Hello World
-
-```dotpipe
-|log:"Hello, dotPipe!"
 ```
-
-### Arithmetic
-
-```dotpipe
-&x:10
-&y:20
-&sum:|add:!x:!y
-|log:!sum
+Python Desktop App (pywebview)
+    ↓
+HTTP Server (localhost:8000)
+    ↓
+Static HTML Page (console.html)
+    ↓
+dotPipe.js Framework (renders JSON)
+    ↓
+<tabs> Component (loads JSON via AJAX)
+    ↓
+API Tester (fetches from chat.chessers.club)
 ```
-
-### Type Checking
-
-```dotpipe
-|log:|typeof:42
-|log:|typeof:"hello"
-|log:|typeof:true
-```
-
-## Language Features
-
-### Pipes (Functions)
-```dotpipe
-|function_name:arg1:arg2:arg3
-```
-
-### Variables
-```dotpipe
-&variable_name:value
-!variable_name
-```
-
-### Data Types
-- Numbers: `42`, `3.14`, `-5`
-- Strings: `"hello"`
-- Booleans: `true`, `false`
-- Null: `null`
-
-## Built-in Functions
-
-### I/O
-- `|log:message` - Print to console
-- `|print:message` - Alias for log
-- `|input:prompt` - Read user input
-
-### Arithmetic (14 functions)
-add, sub, mul, div, mod, abs, sqrt, pow, round, floor, ceil, max, min, random
-
-### String (9 functions)
-concat, uppercase, lowercase, length, trim, substring, split, join, replace
-
-### Array (8 functions)
-push, pop, shift, unshift, slice, reverse, sort, length
-
-### Comparison (9 functions)
-eq, ne, gt, lt, gte, lte, and, or, not
-
-### Type (5 functions)
-typeof, tostring, tonumber, tobool, isnull
-
-## Complete Function Reference
-
-| Category | Functions | Count |
-|----------|-----------|-------|
-| I/O | log, print, input | 3 |
-| Arithmetic | add, sub, mul, div, mod, abs, sqrt, pow, round, floor, ceil, max, min, random | 14 |
-| String | concat, uppercase, lowercase, length, trim, substring, split, join, replace | 9 |
-| Array | push, pop, shift, unshift, slice, reverse, sort | 7 |
-| Comparison | eq, ne, gt, lt, gte, lte, and, or, not | 9 |
-| Type | typeof, tostring, tonumber, tobool, isnull | 5 |
-| Object | keys, values, get, set | 4 |
-| **Total** | **50+ built-in functions** | **51** |
 
 ## Project Structure
 
 ```
 dotFly/
-├── src/
-│   ├── __init__.py
-│   └── interpreter.py          # Main interpreter (654 lines)
-├── tests/
-│   ├── __init__.py
-│   └── test_interpreter.py     # Test suite (28 tests)
-├── examples/
-│   ├── __init__.py
-│   └── demo.py                 # Example programs
-├── docs/
-│   ├── LANGUAGE_SPEC.md        # Complete language specification
-│   └── API_GUIDE.md            # API documentation
-├── README.md                   # This file
-└── requirements.txt            # Python dependencies
+├── launcher.py              # Start the app
+├── dotpipe.js              # 6624-line rendering framework
+├── demo_app/
+│   ├── console.html        # Main console page
+│   ├── pages/
+│   │   ├── console_api.json     # API testing interface
+│   │   ├── console_docs.json    # Documentation tab
+│   │   └── console_history.json # History tab
+│   └── assets/
+│       └── style.css       # Styling with tabs CSS
+├── api/                    # Upload to your server
+│   ├── status.php
+│   ├── message.php
+│   ├── messages.php
+│   ├── user.php
+│   └── info.php
+└── src/
+    └── app_runtime.py      # Server & file watcher
 ```
 
-## Installation
+## Run It
 
-### Requirements
-- Python 3.13 or higher
-- tkinter (included with Python)
-
-### Setup
 ```bash
-# No external dependencies needed!
-# Just run Python files directly
-
-python tests/test_interpreter.py
-python examples/demo.py
+python launcher.py run demo_app
 ```
 
-## Usage
+Opens a desktop window with the console at `http://localhost:8000/console`
 
-### Running dotPipe Code
+## Console Features
 
-```python
-from src.interpreter import interpret
+### Tabs
+- **🚀 API Tester**: Test REST APIs interactively
+- **📚 Docs**: View API documentation  
+- **📜 History**: See request history
 
-code = """
-|log:"Hello, World!"
-&name:"Alice"
-|log:!name
-"""
+### API Tester
+- Select endpoint from dropdown
+- Choose GET or POST method
+- Edit JSON request body
+- Click "Send Request" to call API
+- View formatted response in terminal-style display
+- "Load Example" populates sample data
+- "Clear" resets the form
 
-interpret(code)
+### Connected Endpoints
+- `GET /api/status.php` - Server status
+- `POST /api/message.php` - Send message
+- `GET /api/messages.php` - Get messages
+- `GET /api/user.php` - User info
+- `GET /api/info.php` - Server info
+
+All connect to: `http://chat.chessers.club/api/`
+
+## JSON Template Format
+
+```json
+{
+  "tagname": "div",
+  "id": "myDiv",
+  "class": "container",
+  "children": [
+    {
+      "tagname": "h1",
+      "textContent": "Title"
+    },
+    {
+      "tagname": "button",
+      "id": "btn",
+      "textContent": "Click Me",
+      "onclick": "alert('Hi!')"
+    }
+  ]
+}
 ```
 
-### Building Windows UI
+### Tabs Component
+```json
+{
+  "tagname": "tabs",
+  "id": "myTabs",
+  "tab": "Tab1:target1:/path/to/tab1.json;Tab2:target2:/path/to/tab2.json"
+}
+```
 
-```python
-from src.interpreter import UIBuilder
+### Select Dropdown
+```json
+{
+  "tagname": "select",
+  "id": "mySelect",
+  "options": "Label1:Value1;Label2:Value2"
+}
+```
 
-spec = {
-    "title": "My Application",
-    "width": 800,
-    "height": 600,
-    "children": [
-        {"type": "Label", "text": "Welcome"},
-        {"type": "Button", "text": "Click Me", "id": "btn1"},
-        {"type": "Entry", "width": 40, "id": "input1"},
-    ]
+### Form Elements
+Add `class="formClassName"` to inputs, and `form-class="formClassName"` to submit button
+
+## Backend API (PHP)
+
+Upload `api/` folder to your server. Each file has CORS headers enabled:
+
+```php
+<?php
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit();
 }
 
-builder = UIBuilder()
-root = builder.create_window(spec)
-root.mainloop()
+echo json_encode([
+    'status' => 'online',
+    'timestamp' => time()
+]);
 ```
 
-## Examples
+## How It Works
 
-### Variables and Arithmetic
+### 1. Python Server
+`src/app_runtime.py` runs HTTP server on port 8000:
+- Serves static HTML (`console.html`)
+- Serves dotPipe.js framework
+- Serves JSON templates
+- Watches for file changes → auto-reload
 
-```dotpipe
-&price:99.99
-&discount:0.15
-&discount_amount:|mul:!price:!discount
-&final:|sub:!price:!discount_amount
-|log:"Final Price: "|concat:!final
+### 2. Static HTML Page
+`demo_app/console.html`:
+- No CSP restrictions
+- Loads dotPipe.js
+- Contains `<tabs>` element
+- Calls `domContentLoad()` to initialize dotPipe
+
+### 3. dotPipe.js Framework
+`dotpipe.js` (6624 lines):
+- Processes `<tabs>` element
+- Parses `tab` attribute
+- Fetches JSON files via AJAX
+- Renders with `modala()` function
+- Sets up click handlers
+- Manages tab switching
+
+### 4. Tab Content
+`console_api.json`:
+- Table structure with form elements
+- Select dropdowns with `options` attribute
+- Buttons with `onclick` handlers
+- Script tag with `sendRequest()` function
+- Fetches from remote API using `fetch()`
+
+### 5. Remote API
+`chat.chessers.club/api/*.php`:
+- Responds with JSON
+- CORS headers allow cross-origin requests
+- Handles GET/POST methods
+
+## Key Decisions
+
+### Why Static HTML Instead of JSON?
+- **CSP Issues**: modala() injected restrictive CSP that blocked inline styles
+- **Solution**: Use plain HTML page, let dotPipe process `<tabs>` component
+- **Benefit**: No CSP conflicts, full browser API access
+
+### Why .php Extensions?
+- **URL Rewriting Failed**: .htaccess routing didn't work on server
+- **Solution**: Direct PHP file access (`status.php` instead of `status`)
+- **Benefit**: Works on any PHP host without special configuration
+
+### Why No Form Submission?
+- **API Design**: Using `fetch()` for AJAX calls instead of HTML forms
+- **Benefit**: Better control, JSON payloads, async responses
+
+## Development
+
+### Add New Page
+1. Create `demo_app/pages/my-page.json`
+2. Access at `http://localhost:8000/my-page`
+
+### Add New Tab
+Edit `console.html`:
+```html
+<tabs id="myTabs" tab="New Tab:tabId:/demo_app/pages/new-content.json"></tabs>
 ```
 
-### String Processing
+### Style Changes
+Edit `demo_app/assets/style.css` - changes apply immediately
 
-```dotpipe
-&text:"hello world"
-&upper:|uppercase:!text
-&words:|split:!text:" "
-|log:"Word count: "|concat:|length:!words
+### API Changes
+Edit PHP files, upload to server, test in console
+
+## Requirements
+
+```txt
+pywebview>=5.0
+watchdog>=3.0
 ```
 
-### Type System
+Install: `pip install -r requirements.txt`
 
-```dotpipe
-|log:|typeof:42
-|log:|typeof:"string"
-|log:|typeof:true
-|log:|typeof:null
-|log:|tostring:123
-|log:|tonumber:"456"
-```
+## Troubleshooting
 
-## API Documentation
+### Tabs Not Showing
+- Check browser console (F12) for errors
+- Verify `domContentLoad()` is called
+- Ensure JSON files exist
 
-### Lexer
+### API Not Connecting
+- Check CORS headers on server
+- Verify endpoint URLs
+- Test endpoint directly in browser
+- Check browser console for network errors
 
-```python
-from src.interpreter import Lexer
+### Styles Not Applying
+- Remove any CSP meta tags
+- Check CSS file is being served
+- Inspect element to verify CSS loaded
 
-lexer = Lexer(source_code)
-tokens = lexer.tokenize()
-```
+## Tech Stack
 
-### Parser
+- **Python 3.13**: Application runtime
+- **pywebview**: Native window (uses Chromium on Windows)
+- **watchdog**: File monitoring for auto-reload
+- **dotPipe.js**: Client-side rendering framework
+- **PHP**: Backend API (any language works with CORS)
 
-```python
-from src.interpreter import Parser
+## What Makes This Special
 
-parser = Parser(tokens)
-ast = parser.parse()
-```
+1. **No Build Process**: JSON → UI instantly
+2. **Live Reload**: Edit JSON, see changes immediately
+3. **Desktop Native**: Runs as real Windows app, not browser
+4. **API Testing**: Built-in REST client for development
+5. **Simple Deployment**: Just Python + JSON files
 
-### Interpreter
+## Future Enhancements
 
-```python
-from src.interpreter import Interpreter
+- [ ] Add authentication to API
+- [ ] Implement request history storage
+- [ ] Add more API endpoints
+- [ ] Create visual JSON editor
+- [ ] Package as standalone executable
+- [ ] Add database integration
+- [ ] Create component library
 
-interp = Interpreter(tokens)
-ast = interp.parse()
-result = interp.execute(ast)
-```
+## Credits
 
-### UIBuilder
-
-```python
-from src.interpreter import UIBuilder
-
-builder = UIBuilder()
-root = builder.create_window(spec)
-root.mainloop()
-```
-
-## Test Results
-
-```
-======================================================================
-TEST SUMMARY
-======================================================================
-Tests Run:    28
-Successes:    28 ✓
-Failures:     0
-Errors:       0
-
-✓ ALL TESTS PASSED!
-======================================================================
-```
-
-### Test Coverage
-
-- ✓ Lexer (6 tests)
-- ✓ Arithmetic operations (7 tests)
-- ✓ String operations (4 tests)
-- ✓ Variable management (1 test)
-- ✓ Comparison operators (6 tests)
-- ✓ Type conversions (4 tests)
-
-## Performance
-
-- **Startup Time:** <100ms
-- **Lexing Speed:** ~1,000,000 tokens/sec
-- **Parsing Speed:** ~100,000 statements/sec
-- **Execution Speed:** Native Python speed
-- **Memory Usage:** ~2MB baseline
-
-## Limitations
-
-Currently:
-- No user-defined functions
-- Limited file I/O
-- Single-threaded execution
-- Global variable scope
-
-Planned:
-- User-defined functions with `|def:`
-- File reading/writing
-- Classes and objects
-- Module system
-- JSON file loading
-
-## Architecture
-
-```
-┌─────────────────────────────────────────┐
-│     Windows UI (tkinter)                │
-├─────────────────────────────────────────┤
-│     dotPipe Runtime & Interpreter       │
-├─────────────────────────────────────────┤
-│  Lexer → Parser → AST → Interpreter    │
-├─────────────────────────────────────────┤
-│     Python 3.13+                        │
-└─────────────────────────────────────────┘
-```
-
-## Code Statistics
-
-| Metric | Value |
-|--------|-------|
-| Total Lines | ~1,500 |
-| Interpreter | 654 lines |
-| Tests | 28 tests |
-| Examples | 4 programs |
-| Built-in Functions | 50+ |
-| Test Coverage | 100% |
-
-## Contributing
-
-This is a production-ready implementation. Feel free to:
-- Report issues
-- Suggest features
-- Submit pull requests
-
-## License
-
-MIT License - Free to use and modify
-
-## Author
-
-Created with ❤️ using Python
+**dotPipe.js**: Custom web components framework  
+**Built**: December 15, 2025  
+**Stack**: Python + JavaScript + PHP
 
 ---
 
-**Version:** 1.0  
-**Status:** ✓ Complete & Functional  
-**Last Updated:** December 2025  
-**Python:** 3.13+
+For the dotPipe language documentation, see `README_dotpipe_language.md`
