@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Server Console</title>
+    <link rel="stylesheet" href="/demo_app/assets/style.css">
+</head>
+<body>
+<script src="/dotpipe.js"></script>
+<script>
+const pageData = {"tagname": "table", "id": "docsContent", "children00": {"tagname": "tr", "children01": {"tagname": "td", "h2": "\ud83d\udcda API Documentation"}}, "children01": {"tagname": "tr", "children01": {"tagname": "td", "h3": "Available Endpoints"}}, "children02": {"tagname": "tr", "children01": {"tagname": "td", "textContent": "GET /api/tasks_db/all - Retrieve all tasks"}}, "children03": {"tagname": "tr", "children01": {"tagname": "td", "textContent": "GET /api/tasks_db/count - Get task count"}}, "children04": {"tagname": "tr", "children01": {"tagname": "td", "textContent": "POST /api/tasks_db/insert - Create new task"}}, "children05": {"tagname": "tr", "children01": {"tagname": "td", "textContent": "POST /api/tasks_db/update - Update existing task"}}, "children06": {"tagname": "tr", "children01": {"tagname": "td", "textContent": "POST /api/tasks_db/delete - Delete task"}}};
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        modala(pageData, document.body);
+    });
+} else {
+    modala(pageData, document.body);
+}
+</script>
+</body>
+</html>

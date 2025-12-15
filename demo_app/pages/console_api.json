@@ -67,9 +67,9 @@
 					"tagname": "td",
 					"colspan": "2",
 					"children": [
-						{"tagname": "button", "id": "sendBtn", "textContent": "🚀 Send Request", "style": "margin:5px;", "form-class": "apiForm", "callback": "sendRequest"},
-						{"tagname": "button", "id": "clearBtn", "textContent": "🔄 Clear", "style": "margin:5px;", "onclick": "clearAll()"},
-						{"tagname": "button", "id": "loadBtn", "textContent": "📋 Load Example", "style": "margin:5px;", "onclick": "loadExample()"}
+						{"tagname": "button", "type": "button", "id": "sendBtn", "textContent": "🚀 Send Request", "style": "margin:5px;"},
+						{"tagname": "button", "type": "button", "id": "clearBtn", "textContent": "🔄 Clear", "style": "margin:5px;"},
+						{"tagname": "button", "type": "button", "id": "loadBtn", "textContent": "📋 Load Example", "style": "margin:5px;"}
 					]
 				}
 			]
@@ -111,8 +111,8 @@
 					"colspan": "2",
 					"children": [
 						{
-							"tagname": "script",
-							"textContent": "window.clearAll=function(){const rd=document.getElementById('requestData');const rc=document.getElementById('responseContent');if(rd)rd.value='';if(rc)rc.textContent='[CLEARED] Ready for new request...'};window.loadExample=function(){const ep=document.getElementById('endpoint');const rd=document.getElementById('requestData');if(!ep||!rd)return;const examples={'http://chat.chessers.club/api/message':{message:'Hello from API tester',user:'test_user'},'http://chat.chessers.club/api/fs':{operation:'list',path:'./'}};rd.value=JSON.stringify(examples[ep.value]||{message:'Test message'},null,2)};window.sendRequest=function(){const ep=document.getElementById('endpoint');const m=document.getElementById('method');const rd=document.getElementById('requestData');const rc=document.getElementById('responseContent');if(!ep||!m||!rd||!rc)return;console.log('Sending request to:',ep.value);rc.textContent='[SENDING] '+m.value+' to '+ep.value+'...\\n';let jsonData={};if(rd.value.trim()){try{jsonData=JSON.parse(rd.value)}catch(e){rc.textContent='[ERROR] Invalid JSON: '+e.message;console.error('JSON parse error:',e);return}}const opts={method:m.value,headers:{'Content-Type':'application/json'}};if(m.value==='POST'&&Object.keys(jsonData).length>0)opts.body=JSON.stringify(jsonData);console.log('Fetch options:',opts);fetch(ep.value,opts).then(r=>{console.log('Response status:',r.status);return r.text().then(text=>{try{return JSON.parse(text)}catch(e){console.error('Response not JSON:',text);return{error:'Invalid JSON response',response:text}}})}).then(data=>{console.log('Response data:',data);rc.textContent='[SUCCESS]\\n'+JSON.stringify(data,null,2)}).catch(e=>{console.error('Fetch error:',e);rc.textContent='[ERROR] '+e.message+'\\n\\nCheck console (F12) for details'})};document.body.addEventListener('click',function(e){if(e.target.id==='sendBtn')sendRequest();else if(e.target.id==='clearBtn')clearAll();else if(e.target.id==='loadBtn')loadExample()});"
+							"tagname": "div",
+							"textContent": ""
 						}
 					]
 				}

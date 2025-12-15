@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Server Console</title>
+    <link rel="stylesheet" href="/demo_app/assets/style.css">
+</head>
+<body>
+<script src="/dotpipe.js"></script>
+<script>
+const pageData = {"tagname": "table", "id": "historyContent", "children00": {"tagname": "tr", "children01": {"tagname": "td", "h2": "\ud83d\udcdc Request History"}}, "children01": {"tagname": "tr", "children01": {"tagname": "td", "textContent": "No requests sent yet. History will appear here."}}};
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        modala(pageData, document.body);
+    });
+} else {
+    modala(pageData, document.body);
+}
+</script>
+</body>
+</html>

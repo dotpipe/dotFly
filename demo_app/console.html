@@ -37,6 +37,87 @@
             
             console.log('Console initialized successfully');
             
+            // API button handlers
+            window.sendRequest = function() {
+                console.log('🚀 sendRequest called');
+                const ep = document.getElementById('endpoint');
+                const m = document.getElementById('method');
+                const rd = document.getElementById('requestData');
+                const rc = document.getElementById('responseContent');
+                if (!ep || !m || !rd || !rc) {
+                    console.error('❌ Missing elements');
+                    return;
+                }
+                rc.textContent = '[SENDING] ' + m.value + ' ' + ep.value + '...';
+                let opts = {
+                    method: m.value,
+                    headers: {'Content-Type': 'application/json'}
+                };
+                if (m.value === 'POST' && rd.value.trim()) {
+                    opts.body = rd.value;
+                }
+                console.log('Fetching:', ep.value, opts);
+                fetch(ep.value, opts)
+                    .then(r => r.text())
+                    .then(text => {
+                        console.log('✅ Response:', text.substring(0, 200));
+                        try {
+                            const data = JSON.parse(text);
+                            rc.textContent = '[SUCCESS]\n' + JSON.stringify(data, null, 2);
+                        } catch(e) {
+                            rc.textContent = '[RESPONSE]\n' + text;
+                        }
+                    })
+                    .catch(e => {
+                        console.error('❌ Fetch error:', e);
+                        rc.textContent = '[ERROR] ' + e.message;
+                    });
+            };
+            
+            window.clearAll = function() {
+                console.log('🔄 clearAll called');
+                const rd = document.getElementById('requestData');
+                const rc = document.getElementById('responseContent');
+                if (rd) rd.value = '';
+                if (rc) rc.textContent = '[CLEARED] Ready for new request...';
+            };
+            
+            window.loadExample = function() {
+                console.log('📋 loadExample called');
+                const ep = document.getElementById('endpoint');
+                const rd = document.getElementById('requestData');
+                if (!ep || !rd) return;
+                const examples = {
+                    'http://chat.chessers.club/api/message.php': JSON.stringify({
+                        message: 'Hello from dotFly at ' + new Date().toLocaleTimeString(),
+                        sender: 'dotFly_user'
+                    }, null, 2)
+                };
+                rd.value = examples[ep.value] || JSON.stringify({message: 'Test', sender: 'guest'}, null, 2);
+            };
+            
+            // Global click handler for all buttons
+            document.addEventListener('click', function(e) {
+                console.log('👆 Click detected:', e.target.id, e.target.tagName, e.target);
+                if (e.target.id === 'sendBtn') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Calling sendRequest...');
+                    sendRequest();
+                    return false;
+                } else if (e.target.id === 'clearBtn') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    clearAll();
+                    return false;
+                } else if (e.target.id === 'loadBtn') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    loadExample();
+                    return false;
+                }
+            }, true);
+            
             // Test the API endpoint
             setTimeout(() => {
                 console.log('Testing API endpoint...');
