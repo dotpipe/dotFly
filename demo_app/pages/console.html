@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Server Console</title>
+    <link rel="stylesheet" href="/demo_app/assets/style.css">
+</head>
+<body>
+<script src="/dotpipe.js"></script>
+<script>
+const pageData = {"tagname": "body", "children": [{"tagname": "div", "id": "consoleWrap", "children": [{"tagname": "h1", "textContent": "\ud83d\udee1\ufe0f Server Console"}, {"tagname": "tabs", "id": "consoleTabs", "tab": "\ud83d\ude80 API Tester:apiTab:/demo_app/pages/console_api.json;\ud83d\udcda Docs:docsTab:/demo_app/pages/console_docs.json;\ud83d\udcdc History:historyTab:/demo_app/pages/console_history.json"}]}]};
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        modala(pageData, document.body);
+    });
+} else {
+    modala(pageData, document.body);
+}
+</script>
+</body>
+</html>
