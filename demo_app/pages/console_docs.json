@@ -1,0 +1,32 @@
+{
+	"tagname": "table",
+	"id": "docsContent",
+	"children00": {
+		"tagname": "tr",
+		"children01": {"tagname": "td", "h2": "📚 API Documentation"}
+	},
+	"children01": {
+		"tagname": "tr",
+		"children01": {"tagname": "td", "h3": "Available Endpoints"}
+	},
+	"children02": {
+		"tagname": "tr",
+		"children01": {"tagname": "td", "textContent": "GET /api/tasks_db/all - Retrieve all tasks"}
+	},
+	"children03": {
+		"tagname": "tr",
+		"children01": {"tagname": "td", "textContent": "GET /api/tasks_db/count - Get task count"}
+	},
+	"children04": {
+		"tagname": "tr",
+		"children01": {"tagname": "td", "textContent": "POST /api/tasks_db/insert - Create new task"}
+	},
+	"children05": {
+		"tagname": "tr",
+		"children01": {"tagname": "td", "textContent": "POST /api/tasks_db/update - Update existing task"}
+	},
+	"children06": {
+		"tagname": "tr",
+		"children01": {"tagname": "td", "textContent": "POST /api/tasks_db/delete - Delete task"}
+	}
+}

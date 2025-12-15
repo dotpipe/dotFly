@@ -1,0 +1,12 @@
+{
+	"tagname": "table",
+	"id": "historyContent",
+	"children00": {
+		"tagname": "tr",
+		"children01": {"tagname": "td", "h2": "📜 Request History"}
+	},
+	"children01": {
+		"tagname": "tr",
+		"children01": {"tagname": "td", "textContent": "No requests sent yet. History will appear here."}
+	}
+}

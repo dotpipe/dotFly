@@ -1,0 +1,20 @@
+{
+    "tagname": "body",
+    "children": [
+        {
+            "tagname": "div",
+            "id": "consoleWrap",
+            "children": [
+                {
+                    "tagname": "h1",
+                    "textContent": "🛡️ Server Console"
+                },
+                {
+                    "tagname": "tabs",
+                    "id": "consoleTabs",
+                    "tab": "🚀 API Tester:apiTab:/demo_app/pages/console_api.json;📚 Docs:docsTab:/demo_app/pages/console_docs.json;📜 History:historyTab:/demo_app/pages/console_history.json"
+                }
+            ]
+        }
+    ]
+}

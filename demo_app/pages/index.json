@@ -1,0 +1,22 @@
+{
+  "tagname": "body",
+  "children00": {
+    "tagname": "div",
+    "id": "main",
+    "children00": {
+      "tagname": "h1",
+      "textContent": "Task Manager"
+    },
+    "children01": {
+      "tagname": "p",
+      "textContent": "Welcome! Manage your tasks efficiently."
+    },
+    "children02": {
+      "tagname": "button",
+      "id": "openConsole",
+      "textContent": "Open Console",
+      "class": "redirect",
+      "ajax": "/console"
+    }
+  }
+}

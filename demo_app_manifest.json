@@ -1,0 +1,31 @@
+{
+  "name": "Task Manager",
+  "version": "1.0.0",
+  "description": "A simple task management application",
+  "main": "index",
+  "pages": {
+    "index": "index.json",
+    "tasks": "tasks.json",
+    "add_task": "add_task.json"
+  },
+  "databases": [
+    {
+      "id": "tasks_db",
+      "file": "tasks.csv",
+      "columns": ["id", "title", "status", "priority", "due_date"]
+    }
+  ],
+  "assets": [],
+  "theme": {
+    "color_primary": "#3498db",
+    "color_success": "#27ae60",
+    "color_danger": "#e74c3c",
+    "font_family": "Segoe UI, Arial, sans-serif"
+  },
+  "settings": {
+    "window_width": 1000,
+    "window_height": 700,
+    "resizable": true,
+    "dev_tools": false
+  }
+}

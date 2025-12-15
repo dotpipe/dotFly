@@ -1,0 +1,87 @@
+/* styles.css */
+
+#dark-mode-body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+  }
+  
+  #dark-mode-header {
+    padding: 20px;
+    background-color: #333333;
+    text-align: center;
+  }
+  
+  #dark-mode-title {
+    font-size: 24px;
+  }
+  
+  #dark-mode-paragraph {
+    font-size: 16px;
+  }
+  
+  #dark-mode-link {
+    color: #ffcc00;
+    text-decoration: none;
+  }
+  
+  #dark-mode-link:hover {
+    text-decoration: underline;
+  }
+  
+  #dark-mode-button {
+    background-color: #ffcc00;
+    color: #1a1a1a;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  #dark-mode-button:hover {
+    background-color: #ffd633;
+  }
+
+/* dark-theme.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1 {
+    color: #ffffff;
+    font-size: 24px;
+  }
+  
+  p {
+    color: #cccccc;
+    font-size: 16px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #ffcc00;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  td {
+    padding: 10px;
+    border: 1px solid #333;
+    width: 25%; /* Bootstrap grid columns are divided into 12 parts, so 100% / 4 = 25% */
+  }
+  
+  tr:nth-child(even) {
+    background-color: #333;
+  }
+  
+  tr:hover {
+    background-color: #444;
+  }

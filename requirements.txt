@@ -1,0 +1,12 @@
+# dotFly Framework Requirements
+# Python 3.13+ required
+
+# Core WebView for desktop apps
+pywebview>=5.0
+
+# File watching for auto-reload
+watchdog>=3.0.0
+
+# Optional for development:
+# pytest>=7.0 (for advanced testing)
+# pylint>=2.0 (for code analysis)

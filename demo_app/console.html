@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Server Console</title>
+    <link rel="stylesheet" href="/demo_app/assets/style.css">
+</head>
+<body>
+    <div id="consoleWrap">
+        <h1>🛡️ Server Console</h1>
+        <tabs id="consoleTabs" tab="🚀 API Tester:apiTab:/demo_app/pages/console_api.json;📚 Docs:docsTab:/demo_app/pages/console_docs.json;📜 History:historyTab:/demo_app/pages/console_history.json"></tabs>
+    </div>
+
+    <script src="/dotpipe.js"></script>
+    <script>
+        // Initialize dotPipe when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        function init() {
+            console.log('Initializing dotPipe...');
+            
+            // Process tabs and other dotPipe components
+            if (typeof domContentLoad === 'function') {
+                domContentLoad();
+                console.log('domContentLoad() called');
+            }
+            
+            // Register pipe elements
+            if (typeof addPipe === 'function') {
+                addPipe(document.body);
+                console.log('addPipe() called');
+            }
+            
+            console.log('Console initialized successfully');
+            
+            // Test the API endpoint
+            setTimeout(() => {
+                console.log('Testing API endpoint...');
+                fetch('http://chat.chessers.club/api/status.php')
+                    .then(r => {
+                        console.log('Response status:', r.status);
+                        return r.json();
+                    })
+                    .then(data => {
+                        console.log('✅ API CONNECTED:', data);
+                    })
+                    .catch(e => console.error('❌ API Error:', e));
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
