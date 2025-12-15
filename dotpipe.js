@@ -5651,7 +5651,9 @@ function modala(value, tempTag, root, id) {
             var options = null;
             // console.log(v)
             optsArray.forEach((e, f) => {
-                var g = e.split(":");
+                // Split only on first colon to support URLs (http://...)
+                var colonIndex = e.indexOf(":");
+                var g = colonIndex > 0 ? [e.substring(0, colonIndex), e.substring(colonIndex + 1)] : [e, e];
                 options = document.createElement("option");
                 options.setAttribute("value", g[1]);
                 options.textContent = (g[0]);

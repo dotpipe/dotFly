@@ -24,7 +24,7 @@
 							"tagname": "select",
 							"id": "endpoint",
 							"class": "apiForm",
-							"options": "Chat Status:http://chat.chessers.club/api/status.php;Send Message:http://chat.chessers.club/api/message.php;Get Messages:http://chat.chessers.club/api/messages.php;User Info:http://chat.chessers.club/api/user.php;Server Info:http://chat.chessers.club/api/info.php"
+							"options": "💚 Chat Status:http://chat.chessers.club/api/status.php;📤 Send Message:http://chat.chessers.club/api/message.php;📥 Get Messages:http://chat.chessers.club/api/messages.php;👤 User Info:http://chat.chessers.club/api/user.php;ℹ️ Server Info:http://chat.chessers.club/api/info.php"
 						}
 					]
 				}

@@ -46,18 +46,32 @@
                 const rc = document.getElementById('responseContent');
                 if (!ep || !m || !rd || !rc) {
                     console.error('❌ Missing elements');
+                    console.error('ep:', ep, 'm:', m, 'rd:', rd, 'rc:', rc);
                     return;
                 }
-                rc.textContent = '[SENDING] ' + m.value + ' ' + ep.value + '...';
+                const url = ep.value;
+                const method = m.value;
+                console.log('📍 Endpoint element value:', url);
+                console.log('📍 Full URL being fetched:', url);
+                console.log('📍 Method:', method);
+                
+                if (!url || !url.startsWith('http')) {
+                    rc.textContent = '[ERROR] Invalid URL: ' + url;
+                    console.error('Invalid URL detected:', url);
+                    return;
+                }
+                
+                rc.textContent = '[SENDING] ' + method + ' ' + url + '...';
                 let opts = {
-                    method: m.value,
+                    method: method,
                     headers: {'Content-Type': 'application/json'}
                 };
-                if (m.value === 'POST' && rd.value.trim()) {
+                if (method === 'POST' && rd.value.trim()) {
                     opts.body = rd.value;
                 }
-                console.log('Fetching:', ep.value, opts);
-                fetch(ep.value, opts)
+                console.log('Fetching URL:', url);
+                console.log('Fetch options:', JSON.stringify(opts, null, 2));
+                fetch(url, opts)
                     .then(r => r.text())
                     .then(text => {
                         console.log('✅ Response:', text.substring(0, 200));
