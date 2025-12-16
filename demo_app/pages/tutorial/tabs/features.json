@@ -1,0 +1,28 @@
+{
+    "div": {
+        "style": "padding: 20px;",
+        "children": [
+            {
+                "h3": {
+                    "style": "color: #667eea;",
+                    "text": "📊 dotPipe Features"
+                }
+            },
+            {
+                "ul": [
+                    {"li": "⚡ Inline macro pipelines"},
+                    {"li": "🔗 Declarative AJAX loading"},
+                    {"li": "🎨 15+ custom components"},
+                    {"li": "📱 Mobile-responsive design"},
+                    {"li": "🎭 JSON-based templating"}
+                ]
+            },
+            {
+                "div": {
+                    "style": "background: #d4edda; padding: 15px; border-radius: 5px; margin-top: 15px;",
+                    "html": "<strong>💡 Pro Tip:</strong> Combine features for powerful applications!"
+                }
+            }
+        ]
+    }
+}

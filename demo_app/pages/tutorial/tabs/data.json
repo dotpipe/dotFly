@@ -1,0 +1,62 @@
+{
+    "div": {
+        "style": "padding: 20px;",
+        "children": [
+            {
+                "h3": "📈 Data Display"
+            },
+            {
+                "p": "Tabs are great for displaying structured data:"
+            },
+            {
+                "table": {
+                    "style": "width: 100%; margin: 15px 0;",
+                    "children": [
+                        {
+                            "tr": {
+                                "children": [
+                                    {"th": "Metric"},
+                                    {"th": "Value"},
+                                    {"th": "Status"}
+                                ]
+                            }
+                        },
+                        {
+                            "tr": {
+                                "children": [
+                                    {"td": "Active Users"},
+                                    {"td": "1,234"},
+                                    {"td": "✅ Good"}
+                                ]
+                            }
+                        },
+                        {
+                            "tr": {
+                                "children": [
+                                    {"td": "API Calls"},
+                                    {"td": "45,678"},
+                                    {"td": "✅ Normal"}
+                                ]
+                            }
+                        },
+                        {
+                            "tr": {
+                                "children": [
+                                    {"td": "Response Time"},
+                                    {"td": "124ms"},
+                                    {"td": "✅ Fast"}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "div": {
+                    "style": "background: #e7f3ff; padding: 15px; border-radius: 5px; margin-top: 15px;",
+                    "html": "<strong>💡 Tip:</strong> You can load real data from APIs using pipe elements within tabs!"
+                }
+            }
+        ]
+    }
+}

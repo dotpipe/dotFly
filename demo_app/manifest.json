@@ -5,7 +5,16 @@
   "main": "index",
   "pages": {
     "index": "index.json",
-    "console": "console.json"
+    "console": "console.json",
+    "tutorial_index": "pages/tutorial/tutorial_index.json",
+    "overview": "pages/tutorial/overview.json",
+    "inline_macros": "pages/tutorial/inline_macros.json",
+    "ajax_pipes": "pages/tutorial/ajax_pipes.json",
+    "tabs_demo": "pages/tutorial/tabs_demo.json",
+    "csv_demo": "pages/tutorial/csv_demo.json",
+    "carousel_demo": "pages/tutorial/carousel_demo.json",
+    "modala_demo": "pages/tutorial/modala_demo.json",
+    "advanced": "pages/tutorial/advanced.json"
   },
   "databases": [
     {

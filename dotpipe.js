@@ -384,6 +384,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     catch (e) {
+        console.error('Failed to parse body JSON:', e);
     }
 
     domContentLoad();
@@ -405,7 +406,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         PAGE_NONCE = nonce
         var meta = document.createElement("meta");
-        meta.content = `script-src 'self' nonce-${PAGE_NONCE}; img-src 'self'; style-src 'self' nonce-${PAGE_NONCE}; child-src 'none'; object-src 'none'`;
+        meta.content = `default-src 'self'; script-src 'self' 'nonce-${PAGE_NONCE}'; style-src 'self' 'unsafe-inline' 'unsafe-hashes'; img-src 'self' data: https: http:; connect-src https: http: 'self'; child-src 'none'; object-src 'none'`;
         meta.httpEquiv = "Content-Security-Policy";
         document.head.appendChild(meta);
     });
@@ -2197,7 +2198,9 @@ function setupCheckoutElement(checkoutElement, validateMode) {
  * Display order summary on checkout page
  */
 function displayOrderSummary() {
-    const cart = JSON.parse(localStorage.getItem('dotPipeCart'));
+    const cartData = localStorage.getItem('dotPipeCart');
+    if (!cartData) return;
+    const cart = JSON.parse(cartData);
     const orderSummary = document.getElementById('order-summary');
     if (!orderSummary) return;
 
@@ -2422,7 +2425,12 @@ function processOrder(validateMode) {
     }
 
     // Get cart data
-    const cart = JSON.parse(localStorage.getItem('dotPipeCart'));
+    const cartData = localStorage.getItem('dotPipeCart');
+    if (!cartData) {
+        alert('Cart is empty');
+        return;
+    }
+    const cart = JSON.parse(cartData);
 
     // Create order object
     const order = {
@@ -2956,7 +2964,8 @@ function initCart() {
  * @param {string} image - The product image URL
  */
 function addToCart(productId, name, price, quantity = 1, image = '') {
-    const cart = JSON.parse(localStorage.getItem('dotPipeCart'));
+    const cartData = localStorage.getItem('dotPipeCart');
+    const cart = cartData ? JSON.parse(cartData) : {items: [], subtotal: 0, tax: 0, shipping: 0, total: 0};
 
     // Check if item already exists in cart
     const existingItemIndex = cart.items.findIndex(item => item.productId === productId);
@@ -2993,7 +3002,9 @@ function addToCart(productId, name, price, quantity = 1, image = '') {
  * @param {string} productId - The product ID to remove
  */
 function removeFromCart(productId) {
-    const cart = JSON.parse(localStorage.getItem('dotPipeCart'));
+    const cartData = localStorage.getItem('dotPipeCart');
+    if (!cartData) return;
+    const cart = JSON.parse(cartData);
 
     // Filter out the item to remove
     cart.items = cart.items.filter(item => item.productId !== productId);
@@ -3014,7 +3025,9 @@ function removeFromCart(productId) {
  * @param {number} quantity - The new quantity
  */
 function updateCartQuantity(productId, quantity) {
-    const cart = JSON.parse(localStorage.getItem('dotPipeCart'));
+    const cartData = localStorage.getItem('dotPipeCart');
+    if (!cartData) return;
+    const cart = JSON.parse(cartData);
 
     const itemIndex = cart.items.findIndex(item => item.productId === productId);
 
@@ -3060,7 +3073,9 @@ function updateCartTotals(cart) {
  * Update cart display in the UI
  */
 function updateCartDisplay() {
-    const cart = JSON.parse(localStorage.getItem('dotPipeCart'));
+    const cartData = localStorage.getItem('dotPipeCart');
+    if (!cartData) return;
+    const cart = JSON.parse(cartData);
     const cartItems = document.getElementById('cart-items');
     const cartSubtotal = document.getElementById('cart-subtotal');
     const cartTax = document.getElementById('cart-tax');
@@ -5504,7 +5519,7 @@ function modal(filename, tagId) {
  */
 function modalList(filenames) {
     const files = filenames.split(";");
-    if (files.length >= 1) {
+    if (files.length > 0) {
         files.forEach(file => {
             const f = file.split(":");
             if (f[1] != undefined && f[1].split(".").length > 1) {
@@ -5517,10 +5532,6 @@ function modalList(filenames) {
                 modal(f[0], f[1]);
             }
         });
-    }
-    else {
-        // console.log(files)
-        modal(files[0].split(":")[0], files[0].split(":")[1]);
     }
 }
 
@@ -5603,7 +5614,7 @@ function modala(value, tempTag, root, id) {
     if (value["header"] !== undefined && value["header"] instanceof Object) {
         modalaHead(value["header"], "head", root, null);
         var meta = document.createElement("meta");
-        meta.content = "script-src-elem 'self'; img-src 'self'; style-src 'self'; child-src 'none'; object-src 'none'";
+        meta.content = "default-src 'self'; script-src-elem 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; connect-src 'self' https: http:; child-src 'none'; object-src 'none'";
         meta.httpEquiv = "Content-Security-Policy";
         document.head.appendChild(meta);
     }
@@ -5845,35 +5856,39 @@ function shiftFilesLeft(elem, auto = false, delay = 1000) {
         elem = document.getElementById(elem);
 
     console.error(elem)
-    var iter = elem.hasAttribute("iter") ? parseInt(elem.getAttribute("iter")) : 1;
-    var i = elem.hasAttribute("index") ? parseInt(elem.getAttribute("index")) : 0;
-    var b = elem.hasAttribute("boxes") ? parseInt(elem.getAttribute("boxes")) : 1;
+    var iter = elem.hasAttribute("iter") ? parseInt(elem.getAttribute("iter"), 10) : 1;
+    var i = elem.hasAttribute("index") ? parseInt(elem.getAttribute("index"), 10) : 0;
+    var b = elem.hasAttribute("boxes") ? parseInt(elem.getAttribute("boxes"), 10) : 1;
 
     var h = 0;
+    var cloneSrcs = elem.getAttribute("sources").split(";");
+    var newIndex = (i - iter + cloneSrcs.length) % cloneSrcs.length;
 
     while (h < b) {
-        elem.removeChild(elem.firstChild);
-        var cloneSrcs = elem.getAttribute("sources").split(";");
-        var clones = cloneSrcs[(h + i) % cloneSrcs.length];
+        if (elem.firstChild) elem.removeChild(elem.firstChild);
+        var clones = cloneSrcs[(h + newIndex) % cloneSrcs.length];
         var newClone = null;
-        if (elem.getAttribute("type").toLowerCase() == ('audio' | 'video'))
+        var elemType = elem.getAttribute("type").toLowerCase();
+        if (elemType == 'audio' || elemType == 'video')
             newClone = document.createElement(elem.getAttribute("source"));
-        else if (elem.getAttribute("type").toLowerCase() == ('modal'))
+        else if (elemType == 'modal')
             modalList(clones);
-        else if (elem.getAttribute("type").toLowerCase() == ('php' | 'html')) {
+        else if (elemType == 'php' || elemType == 'html') {
             var f = htmlToJson(getTextFile(clones));
             modalList(f)
         }
         else
             newClone = document.createElement(elem.getAttribute("type"));
-        newClone.src = clones;
-        newClone.height = elem.getAttribute("height");
-        newClone.width = elem.getAttribute("width");
-        elem.appendChild(newClone);
+        if (newClone) {
+            newClone.src = clones;
+            newClone.height = elem.getAttribute("height");
+            newClone.width = elem.getAttribute("width");
+            elem.appendChild(newClone);
+        }
         h++;
     }
 
-    if (elem.hasAttribute("vertical") && elem.getAttribute("vertical") == "true")
+    if (elem.hasAttribute("vertical") && elem.getAttribute("vertical") === "true")
         elem.style.display = "block";
     else
         elem.style.display = "inline-block";
@@ -5884,7 +5899,7 @@ function shiftFilesLeft(elem, auto = false, delay = 1000) {
     else if (elem.classList.contains("time-inactive")) {
         auto = false;
     }
-    elem.setAttribute("index", (i + iter) % elem.children.length);
+    elem.setAttribute("index", newIndex);
     if (auto == "on")
         setTimeout(() => { shiftFilesLeft(elem, auto, delay); }, (delay));
 
@@ -5894,35 +5909,39 @@ function shiftFilesRight(elem, auto = false, delay = 1000) {
         elem = document.getElementById(elem);
 
     console.error(elem)
-    var iter = elem.hasAttribute("iter") ? parseInt(elem.getAttribute("iter")) : 1;
-    var i = elem.hasAttribute("index") ? parseInt(elem.getAttribute("index")) : 0;
-    var b = elem.hasAttribute("boxes") ? parseInt(elem.getAttribute("boxes")) : 1;
+    var iter = elem.hasAttribute("iter") ? parseInt(elem.getAttribute("iter"), 10) : 1;
+    var i = elem.hasAttribute("index") ? parseInt(elem.getAttribute("index"), 10) : 0;
+    var b = elem.hasAttribute("boxes") ? parseInt(elem.getAttribute("boxes"), 10) : 1;
 
     var h = 0;
+    var cloneSrcs = elem.getAttribute("sources").split(";");
+    var newIndex = (i + iter) % cloneSrcs.length;
 
     while (h < b) {
-        elem.removeChild(elem.lastChild);
-        var cloneSrcs = elem.getAttribute("sources").split(";");
-        var clones = cloneSrcs[(h + i) % cloneSrcs.length];
+        if (elem.lastChild) elem.removeChild(elem.lastChild);
+        var clones = cloneSrcs[(h + newIndex) % cloneSrcs.length];
         var newClone = null;
-        if (elem.getAttribute("type").toLowerCase() == ('audio' | 'video'))
+        var elemType = elem.getAttribute("type").toLowerCase();
+        if (elemType == 'audio' || elemType == 'video')
             newClone = document.createElement(elem.getAttribute("source"));
-        else if (elem.getAttribute("type").toLowerCase() == ('modal'))
+        else if (elemType == 'modal')
             modalList(clones);
-        else if (elem.getAttribute("type").toLowerCase() == ('php' | 'html')) {
+        else if (elemType == 'php' || elemType == 'html') {
             var f = htmlToJson(getTextFile(clones));
             modalList(f)
         }
         else
             newClone = document.createElement(elem.getAttribute("type"));
-        newClone.src = clones;
-        newClone.height = elem.getAttribute("height");
-        newClone.width = elem.getAttribute("width");
-        elem.prepend(newClone);
+        if (newClone) {
+            newClone.src = clones;
+            newClone.height = elem.getAttribute("height");
+            newClone.width = elem.getAttribute("width");
+            elem.prepend(newClone);
+        }
         h++;
     }
 
-    if (elem.hasAttribute("vertical") && elem.getAttribute("vertical") == "true")
+    if (elem.hasAttribute("vertical") && elem.getAttribute("vertical") === "true")
         elem.style.display = "block";
     else
         elem.style.display = "inline-block";
@@ -5933,7 +5952,7 @@ function shiftFilesRight(elem, auto = false, delay = 1000) {
     else if (elem.classList.contains("time-inactive")) {
         auto = false;
     }
-    elem.setAttribute("index", (i + iter) % elem.children.length);
+    elem.setAttribute("index", newIndex);
     if (auto == "on")
         setTimeout(() => { shiftFilesLeft(elem, auto, delay); }, (delay));
 
@@ -5946,15 +5965,16 @@ function fileShift(elem) {
     var h = 0;
     var g = 0;
     var arr = elem.getAttribute("sources").split(";");
-    var ppfc = document.getElementById(elem.getAttribute("insert").toString());
+    var ppfc = document.getElementById(elem.getAttribute("insert"));
+    if (!ppfc) return;
     if (!ppfc.hasAttribute("file-index"))
         ppfc.setAttribute("file-index", "0");
-    index = parseInt(ppfc.getAttribute("file-index").toString());
+    var index = parseInt(ppfc.getAttribute("file-index"), 10);
     var interv = elem.getAttribute("interval");
     if (elem.classList.contains("decrIndex"))
-        index = Math.abs(parseInt(ppfc.getAttribute("file-index").toString())) - interv;
+        index = Math.abs(parseInt(ppfc.getAttribute("file-index"), 10)) - interv;
     else
-        index = Math.abs(parseInt(ppfc.getAttribute("file-index").toString())) + interv;
+        index = Math.abs(parseInt(ppfc.getAttribute("file-index"), 10)) + interv;
     if (index < 0)
         index = arr.length - 1;
     index = index % arr.length;
@@ -5963,14 +5983,17 @@ function fileShift(elem) {
 }
 
 function fileOrder(elem) {
-    if (typeof (elem) == "string")
+    if (typeof (elem) === "string")
         elem = document.getElementById(elem);
+    
+    if (!elem) return;
 
-    arr = elem.getAttribute("sources").split(";");
-    ppfc = document.getElementById(elem.getAttribute("insert").toString());
+    var arr = elem.getAttribute("sources").split(";");
+    var ppfc = document.getElementById(elem.getAttribute("insert"));
+    if (!ppfc) return;
     if (!ppfc.hasAttribute("file-index"))
         ppfc.setAttribute("file-index", "0");
-    index = parseInt(ppfc.getAttribute("file-index").toString());
+    var index = parseInt(ppfc.getAttribute("file-index"), 10);
     var interv = elem.getAttribute("interval");
     if (elem.classList.contains("decrIndex"))
         index = Math.abs(parseInt(ppfc.getAttribute("file-index").toString())) - interv;
@@ -6051,36 +6074,56 @@ const pipeListenersSet = new WeakSet();
 function hasPipeListener(elem) { return pipeListenersSet.has(elem); }
 function markPipeListener(elem) { pipeListenersSet.add(elem); }
 
+const rootListenersSet = new WeakSet();
+
 function addPipe(rootElem = document) {
-    // Global listeners for clicks or custom 'inline' events
-    ['click', 'inline'].forEach(eventType => {
-        rootElem.addEventListener(eventType, async function (event) {
-            let target = event.target;
+    // Prevent adding multiple listeners to the same root element
+    if (rootListenersSet.has(rootElem)) {
+        return;
+    }
+    rootListenersSet.add(rootElem);
 
-            // Only process elements that need it
-            if ((target.classList.contains('mouse') || target.id !== null) && !hasPipeListener(target)) {
+    // Global listener for clicks
+    rootElem.addEventListener('click', async function (event) {
+        let target = event.target;
 
-                // Mark the element as processed for the listener
-                markPipeListener(target);
+        // Check for carousel control classes
+        const hasCarouselClass = target.classList.contains('carousel-step-left') ||
+                                  target.classList.contains('carousel-step-right') ||
+                                  target.classList.contains('carousel-slide-left') ||
+                                  target.classList.contains('carousel-slide-right');
 
-                // 1️⃣ Run the standard pipe processing
-                await pipes(target);
+        // Only process elements with id AND ('mouse' class OR dotpipe attributes OR carousel classes)
+        const hasDotpipeAttr = target.hasAttribute('ajax') || 
+                                target.hasAttribute('modal') || 
+                                target.hasAttribute('inline') ||
+                                target.hasAttribute('event');
+        
+        if ((target.id || hasCarouselClass) && (target.classList.contains('mouse') || hasDotpipeAttr || hasCarouselClass) && !hasPipeListener(target)) {
+            // Stop event propagation to prevent duplicate firing
+            event.stopPropagation();
+            event.preventDefault();
 
-                // 2️⃣ If element has inline macro, run it
-                if (target.getAttribute('inline')) {
-                    const key = target.id || Symbol(); // use ID or a unique key
-                    // Ensure matrix entry exists
-                    dotPipe.matrix[key] = dotPipe.matrix[key] || {
-                        inlineMacro: target.getAttribute('inline'),
-                        dpVars: {},
-                        element: target,
-                        matrix: []
-                    };
-                    await dotPipe.runInline(key, target);
-                }
+            // Mark the element as processed for the listener
+            markPipeListener(target);
+
+            // 1️⃣ Run the standard pipe processing
+            await pipes(target);
+
+            // 2️⃣ If element has inline macro, run it
+            if (target.getAttribute('inline')) {
+                const key = target.id || Symbol(); // use ID or a unique key
+                // Ensure matrix entry exists
+                dotPipe.matrix[key] = dotPipe.matrix[key] || {
+                    inlineMacro: target.getAttribute('inline'),
+                    dpVars: {},
+                    element: target,
+                    matrix: []
+                };
+                await dotPipe.runInline(key, target);
             }
-        }, true);
-    });
+        }
+    }, true);
 
     // Process <csv-foreach> elements inside the root
     const csvForEachElements = rootElem.getElementsByTagName("csv-foreach");
@@ -6115,35 +6158,33 @@ function addPipe(rootElem = document) {
 
 // }
 
+const flashListenersSet = new WeakSet();
 function flashClickListener(elem) {
-    if (elem.id) {
-        elem.removeEventListener('click', () => {
+    // Only add listener if element has flashClickListener attribute and hasn't been processed
+    if (elem.id && elem.hasAttribute('flashClickListener') && !flashListenersSet.has(elem)) {
+        flashListenersSet.add(elem);
+        const handler = () => {
             pipes(elem);
-            // console.log(elem.id);
-        });
-        elem.addEventListener('click', () => {
-            pipes(elem);
-            // console.log(elem.id);
-        });
+        };
+        elem.addEventListener('click', handler, { once: false });
     }
     domContentLoad(true);
 }
 
-function attachEventListeners(elem) {
-    if (elem.classList.contains('mouse') || elem.id !== null) {
-        let events = (elem.getAttribute("event") || "click").split(';');
-        events.forEach(event => elem.addEventListener(event, () => {
-            pipes(elem);
-            // console.log(elem.id);
-        }));
-        if (!hasPipeListener(elem)) {
-            elem.addEventListener('click', () => {
-                pipes(elem);
-                // console.log(elem.id);
-            });
-        }
-    }
-}
+// DISABLED: This function adds duplicate listeners - addPipe() handles all click events now
+// function attachEventListeners(elem) {
+//     if (elem.classList.contains('mouse') || elem.id !== null) {
+//         let events = (elem.getAttribute("event") || "click").split(';');
+//         events.forEach(event => elem.addEventListener(event, () => {
+//             pipes(elem);
+//         }));
+//         if (!hasPipeListener(elem)) {
+//             elem.addEventListener('click', () => {
+//                 pipes(elem);
+//             });
+//         }
+//     }
+// }
 
 function hasPipeListener(elem) {
     return elem && typeof elem.onclick === 'function';
@@ -6194,7 +6235,8 @@ function pipes(elem, stop = false) {
         var pages = elem.getAttribute("node").split(";");
         pages.forEach((e) => {
             // console.log(e);
-            document.getElementById(e).innerHTML = "";
+            const element = document.getElementById(e);
+            if (element) element.innerHTML = "";
         });
     }
 
@@ -6217,12 +6259,13 @@ function pipes(elem, stop = false) {
         var index = optsArray.length;
         if (index == 0) {
             // Handle case where no elements are present
-        } else if (index >= 1 && optsArray[0] !== '' | undefined) {
+        } else if (index >= 1 && optsArray[0] !== '' && optsArray[0] !== undefined) {
             console.log(optsArray[0])
             // Handle case where only one element is present
-            if (document.getElementById(optsArray[0]).hasAttribute("inline")) {
+            const turnElement = document.getElementById(optsArray[0]);
+            if (turnElement && turnElement.hasAttribute("inline")) {
                 dotPipe.register();
-                dotPipe.runInline(document.getElementById(optsArray[0]).id);
+                dotPipe.runInline(turnElement.id);
             }
             const opt = optsArray.shift();                 // take first element
             optsArray.push(opt);                           // push it to the end
@@ -6234,34 +6277,43 @@ function pipes(elem, stop = false) {
         var optsArray = elem.getAttribute("x-toggle").split(";");
         optsArray.forEach((e, f) => {
             var g = e.split(":");
-            if (g[0] != '' && g[0] != undefined)
-                document.getElementById(g[0]).classList.toggle(g[1]);
+            if (g[0] != '' && g[0] != undefined) {
+                const toggleElement = document.getElementById(g[0]);
+                if (toggleElement) toggleElement.classList.toggle(g[1]);
+            }
         });
     }
     if (elem.hasAttribute("set") && elem.getAttribute("set")) {
-        js = elem.getAttribute("set");
+        var js = elem.getAttribute("set");
         js.split(";").forEach((e, f) => {
             var [id, name, value] = e.split(":");
-            if (id != '' && id != undefined)
-                document.getElementById(id).setAttribute(name, value);
+            if (id != '' && id != undefined) {
+                const setElement = document.getElementById(id);
+                if (setElement) setElement.setAttribute(name, value);
+            }
         });
     }
     if (elem.hasAttribute("get") && elem.getAttribute("get")) {
-        js = elem.getAttribute("get");
+        var js = elem.getAttribute("get");
         js.split(";").forEach((e, f) => {
             var [id, name, target] = e.split(":");
             if (id != undefined && name != undefined && target != undefined) {
-                var n = document.getElementById(id).getAttribute(name);
-                document.getElementById(target).setAttribute(name, n);
+                const sourceElement = document.getElementById(id);
+                const targetElement = document.getElementById(target);
+                if (sourceElement && targetElement) {
+                    var n = sourceElement.getAttribute(name);
+                    targetElement.setAttribute(name, n);
+                }
             }
         });
     }
     if (elem.hasAttribute("delete") && elem.getAttribute("delete")) {
-        js = elem.getAttribute("delete");
+        var js = elem.getAttribute("delete");
         js.split(";").forEach((e, f) => {
             var [id, name] = e.split(":");
-            if (g[0] != '' && g[0] != undefined && g[1] != undefined) {
-                document.getElementById(id).removeAttribute(name);
+            if (id != '' && id != undefined && name != undefined) {
+                const deleteElement = document.getElementById(id);
+                if (deleteElement) deleteElement.removeAttribute(name);
             }
         });
     }
@@ -6275,15 +6327,21 @@ function pipes(elem, stop = false) {
     if (elem.classList.contains("carousel-step-right")) {
         if (elem.hasAttribute("insert")) {
             var x = document.getElementById(elem.getAttribute("insert"));
-            auto = false;
-            shiftFilesRight(x, auto, parseInt(x.getAttribute("delay")));
+            if (x) {
+                auto = false;
+                console.log("Carousel step right", x.id);
+                shiftFilesRight(x, auto, parseInt(x.getAttribute("delay"), 10) || 1000);
+            }
         }
     }
     if (elem.classList.contains("carousel-step-left")) {
         if (elem.hasAttribute("insert")) {
             var x = document.getElementById(elem.getAttribute("insert"));
-            auto = false;
-            shiftFilesLeft(x, auto, parseInt(x.getAttribute("delay")));
+            if (x) {
+                auto = false;
+                console.log("Carousel step left", x.id);
+                shiftFilesLeft(x, auto, parseInt(x.getAttribute("delay"), 10) || 1000);
+            }
         }
     }
     if (elem.classList.contains("carousel-slide-left")) {
@@ -6337,7 +6395,27 @@ function pipes(elem, stop = false) {
     if (elem.hasAttribute("ajax")) {
         var parts = elem.getAttribute("ajax").split(";");
         parts.forEach((part) => {
-            var [file, target, limit] = part.split(":");
+            // Handle protocol colons (http:// or https://) correctly
+            var file, target, limit;
+            if (part.match(/^https?:\/\//)) {
+                // URL with protocol - find the last colon that's not part of protocol
+                var protocolEnd = part.indexOf('://') + 3;
+                var afterProtocol = part.substring(protocolEnd);
+                var lastColon = afterProtocol.lastIndexOf(':');
+                
+                if (lastColon !== -1) {
+                    file = part.substring(0, protocolEnd + lastColon);
+                    var remaining = afterProtocol.substring(lastColon + 1).split(':');
+                    target = remaining[0];
+                    limit = remaining[1];
+                } else {
+                    file = part;
+                }
+            } else {
+                // No protocol, use simple split
+                [file, target, limit] = part.split(":");
+            }
+            
             var clone = elem.cloneNode(true);
             clone.setAttribute("ajax", file);
             clone.setAttribute("insert", target);
@@ -6449,13 +6527,14 @@ function prettifyJsonWithColors(jsonObj) {
 // Usage
 function displayColoredJson(elementId, jsonObj) {
     const prettyHtml = prettifyJsonWithColors(jsonObj);
-    document.getElementById(elementId).innerHTML = `<pre>${prettyHtml}</pre>`;
+    const element = document.getElementById(elementId);
+    if (element) element.innerHTML = `<pre>${prettyHtml}</pre>`;
 }
 
 function navigate(elem, opts = null, query = "", classname = "") {
     //formAJAX at the end of this line
     // console.log(elem);
-    elem_qstring = query + ((document.getElementsByClassName(classname).length > 0) ? formAJAX(elem, classname) : "");
+    var elem_qstring = query + ((document.getElementsByClassName(classname).length > 0) ? formAJAX(elem, classname) : "");
     //    elem_qstring = elem_qstring;
     elem_qstring = encodeURI(elem_qstring);
     // console.log(elem_qstring);
@@ -6501,7 +6580,7 @@ function navigate(elem, opts = null, query = "", classname = "") {
                         }
                     }
                     domContentLoad();
-                    flashClickListener(elem);
+                    // flashClickListener(elem);
                     return allText;
                 }
                 catch (e) {
@@ -6520,7 +6599,7 @@ function navigate(elem, opts = null, query = "", classname = "") {
                         document.getElementById(elem.getAttribute("insert")).innerHTML = (rawFile.responseText);
                     }
                     domContentLoad();
-                    flashClickListener(elem);
+                    // flashClickListener(elem);
                     return allText;
                 }
                 catch (e) {
@@ -6540,7 +6619,7 @@ function navigate(elem, opts = null, query = "", classname = "") {
                         document.getElementById(elem.getAttribute("insert")).textContent = (rawFile.responseText);
                     }
                     domContentLoad();
-                    flashClickListener(elem);
+                    // flashClickListener(elem);
                     return allText;
                 }
                 catch (e) {
@@ -6562,7 +6641,7 @@ function navigate(elem, opts = null, query = "", classname = "") {
                     // editNode.innerHTML = allText;
                     renderTree(allText, editNode);
                     domContentLoad();
-                    flashClickListener(elem);
+                    // flashClickListener(elem);
                     return;
                 }
                 catch (e) {
@@ -6599,7 +6678,7 @@ function navigate(elem, opts = null, query = "", classname = "") {
                 var newContent = document.createElement('div');
                 modala(allText, newContent);
                 domContentLoad()
-                flashClickListener(elem);
+                // flashClickListener(elem);
                 if (elem.classList.contains("modala-multi-first")) {
                     insertElement.insertBefore(newContent, insertElement.firstChild);
                 } else {

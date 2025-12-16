@@ -1,0 +1,95 @@
+{
+    "style": {
+        "text": "\n            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; padding: 20px; min-height: 100vh; }\n            .tutorial-main { max-width: 1200px; margin: 0 auto; background: white; padding: 50px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }\n            .nav-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 30px 0; }\n            .nav-btn { padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s; font-weight: bold; }\n            .nav-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4); }\n            h1 { color: #667eea; text-align: center; font-size: 3em; margin-bottom: 10px; }\n            .subtitle { text-align: center; color: #666; font-size: 1.2em; margin-bottom: 40px; }\n        "
+    },
+    "div": {
+        "class": "tutorial-main",
+        "children": [
+            {
+                "h1": {
+                    "style": "color: #667eea; text-align: center; font-size: 3em; margin-bottom: 10px;",
+                    "text": "🚀 dotPipe.js"
+                }
+            },
+            {
+                "div": {
+                    "class": "subtitle",
+                    "style": "text-align: center; color: #666; font-size: 1.2em; margin-bottom: 40px;",
+                    "text": "Complete Interactive Tutorial & Documentation"
+                }
+            },
+            {
+                "div": {
+                    "class": "nav-buttons",
+                    "style": "display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 30px 0;",
+                    "children": [
+                        {
+                            "a": {
+                                "href": "?page=overview",
+                                "class": "nav-btn",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "text": "🎯 Overview"
+                            }
+                        },
+                        {
+                            "a": {
+                                "href": "?page=inline_macros",
+                                "class": "nav-btn",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "text": "⚡ Inline Macros"
+                            }
+                        },
+                        {
+                            "a": {
+                                "href": "?page=ajax_pipes",
+                                "class": "nav-btn",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "text": "🔗 AJAX & Pipes"
+                            }
+                        },
+                        {
+                            "a": {
+                                "href": "?page=tabs_demo",
+                                "class": "nav-btn",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "text": "📑 Tabs Component"
+                            }
+                        },
+                        {
+                            "a": {
+                                "href": "?page=csv_demo",
+                                "class": "nav-btn",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "text": "📊 CSV Component"
+                            }
+                        },
+                        {
+                            "a": {
+                                "href": "?page=carousel_demo",
+                                "class": "nav-btn",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "text": "🎠 Carousel"
+                            }
+                        },
+                        {
+                            "a": {
+                                "href": "?page=modala_demo",
+                                "class": "nav-btn",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "text": "🎨 Modala Templates"
+                            }
+                        },
+                        {
+                            "a": {
+                                "href": "?page=advanced",
+                                "class": "nav-btn",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "text": "🛠️ Advanced"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

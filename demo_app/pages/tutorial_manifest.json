@@ -1,0 +1,31 @@
+{
+  "name": "dotPipe Tutorial",
+  "version": "1.0.0",
+  "description": "Complete Interactive Tutorial & Documentation for dotPipe.js",
+  "main": "tutorial_index",
+  "pages": {
+    "tutorial_index": "tutorial/tutorial_index.json",
+    "overview": "tutorial/overview.json",
+    "inline_macros": "tutorial/inline_macros.json",
+    "ajax_pipes": "tutorial/ajax_pipes.json",
+    "tabs_demo": "tutorial/tabs_demo.json",
+    "csv_demo": "tutorial/csv_demo.json",
+    "carousel_demo": "tutorial/carousel_demo.json",
+    "modala_demo": "tutorial/modala_demo.json",
+    "advanced": "tutorial/advanced.json"
+  },
+  "theme": {
+    "color_primary": "#667eea",
+    "color_secondary": "#764ba2",
+    "color_success": "#27ae60",
+    "color_warning": "#f39c12",
+    "color_danger": "#e74c3c",
+    "font_family": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
+  },
+  "settings": {
+    "window_width": 1200,
+    "window_height": 800,
+    "resizable": true,
+    "dev_tools": true
+  }
+}

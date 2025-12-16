@@ -102,8 +102,8 @@ class AppHTTPHandler(BaseHTTPRequestHandler):
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'unsafe-hashes'; style-src 'self' 'unsafe-inline' 'unsafe-hashes'; img-src 'self' data: https: http:;">
     <title>Server Console</title>
-    <link rel="stylesheet" href="/demo_app/assets/style.css">
 </head>
 <body id="pageBody">
     <h1 id="status">Loading JavaScript...</h1>
@@ -590,7 +590,6 @@ class FileChangeHandler(FileSystemEventHandler):
 <head>
     <meta charset="UTF-8">
     <title>Server Console</title>
-    <link rel="stylesheet" href="/demo_app/assets/style.css">
 </head>
 <body>
 <script src="/dotpipe.js"></script>

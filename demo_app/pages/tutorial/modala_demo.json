@@ -1,0 +1,415 @@
+{
+    "style": {
+        "tagname": "style",
+        "textcontent": "body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0;  padding: 2px !important; } .section { max-width: 1200px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);  padding: 2px !important; .demo-box { background: #f8f9fa; border-left: 4px solid #667eea; margin: 25px 0; border-radius: 8px;  padding: 2px !important; .demo-title { font-size: 1.3em; font-weight: bold; color: #667eea; margin-bottom: 15px; } .code-block { background: #2d2d2d; color: #f8f8f2; border-radius: 8px; font-family: 'Courier New', monospace; overflow-x: auto; margin: 15px 0; white-space: pre-wrap; font-size: 0.95em; min-height: 60px; line-height: 1.4;  padding: 2px !important; h2 { color: #667eea; font-size: 2.5em; margin-bottom: 20px; } h3 { color: #764ba2; font-size: 1.8em; margin-top: 30px; margin-bottom: 15px; }"
+    },
+    "div": {
+        "class": "section",
+        "children": [
+            {
+                "h2": "🎨 Modala Templates"
+            },
+            {
+                "p": {"text": "Modala is dotPipe's powerful JSON templating system. Define your UI structure in JSON and render it dynamically into DOM elements."}
+            },
+
+            {
+                "h3": "🎭 What is Modala?"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "JSON-to-HTML Rendering"
+                            }
+                        },
+                        {
+                            "p": {"text": "Modala converts JSON objects into HTML elements:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "// JSON Input\n{\n  \"div\": {\n    \"class\": \"container\",\n    \"children\": [\n      {\"h1\": \"Hello World\"},\n      {\"p\": \"This is a paragraph\"}\n    ]\n  }\n}\n\n// HTML Output\n\n  Hello World\n  This is a paragraph\n"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "📝 Basic Syntax"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Element Structure"
+                            }
+                        },
+                        {
+                            "p": {"text": "Each JSON object represents an HTML element:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "{\n  \"elementName\": {\n    \"attribute1\": \"value1\",\n    \"attribute2\": \"value2\",\n    \"text\": \"Element content\",\n    \"html\": \"HTML content\",\n    \"children\": [\n      // Nested elements\n    ]\n  }\n}"
+                            }
+                        },
+                        {
+                            "table": {
+                                "children": [
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"th": {"text": "Property"}},
+                                                {"th": {"text": "Purpose"}}
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"td": {
+                                                    "class": "code-block", "textContent": "text"
+                                                }},
+                                                {"td": {"text": "Plain text content (safe, escaped)"}}
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"td": {
+                                                    "class": "code-block", "textContent": "html"
+                                                }},
+                                                {"td": {"text": "HTML content (renders as HTML)"}}
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"td": {
+                                                    "class": "code-block", "textContent": "children"
+                                                }},
+                                                {"td": {"text": "Array of nested elements"}}
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🚀 Demo: Simple Template"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Demo 1: Load JSON Template"
+                            }
+                        },
+                        {
+                            "p": {"text": "Use the modal attribute to load JSON:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;pipe id=\"modalLoader\"\n      modal=\"/templates/card.json:targetDiv\">\n\n\nLoad Template\n"
+                            }
+                        },
+                        {
+                            "p": {"text": "This tutorial page itself is built with modala! Every tab loads JSON templates."}
+                        },
+                        {
+                            "div": { "html": "🎯 Real Example: You're reading this from modala_demo.json right now!"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🏭️ Building Complex UIs"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Demo 2: Card Layout"
+                            }
+                        },
+                        {
+                            "p": {"text": "Create rich card layouts with modala:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "{\n  \"div\": {\n    \"class\": \"card\",\n    \"style\": \"border: 2px solid #667eea; border-radius: 10px;\",\n    \"children\": [\n      {\n        \"h3\": {\n          \"style\": \"color: #667eea;\",\n          \"text\": \"Product Name\"\n        }\n      },\n      {\n        \"p\": \"Product description goes here...\"\n      },\n      {\n        \"button\": {\n          \"text\": \"Buy Now\",\n          \"onclick\": \"alert('Added to cart!')\"\n        }\n      }\n    ]\n  }\n}"
+                            }
+                        },
+                        {
+                            "p": {"text": "Rendered output:"}
+                        },
+                        {
+                            "div": {
+                                "class": "card",
+                                "children": [
+                                    {
+                                        "h3": { "text": "Amazing Product"
+                                        }
+                                    },
+                                    {
+                                        "p": {"text": "This beautiful product was rendered from JSON using modala templates!"}
+                                    },
+                                    {
+                                        "button": {
+                                            "tagname": "button",
+                                            "id": "buyNowBtn",
+                                            "textContent": "🛒 Buy Now"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "📋 Forms with Modala"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Demo 3: Dynamic Forms"
+                            }
+                        },
+                        {
+                            "p": {"text": "Build entire forms in JSON:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "{\n  \"div\": {\n    \"class\": \"form-container\",\n    \"children\": [\n      {\"label\": \"Name:\"},\n      {\"input\": {\"id\": \"name\", \"type\": \"text\"}},\n      {\"label\": \"Email:\"},\n      {\"input\": {\"id\": \"email\", \"type\": \"email\"}},\n      {\"button\": {\"text\": \"Submit\", \"onclick\": \"submitForm()\"}}\n    ]\n  }\n}"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🎨 Special Keys"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Modala Magic Keys"
+                            }
+                        },
+                        {
+                            "p": {"text": "Special JSON keys provide extra functionality:"}
+                        },
+                        {
+                            "table": {
+                                "children": [
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"th": {"text": "Key"}},
+                                                {"th": {"text": "Effect"}},
+                                                {"th": {"text": "Example"}}
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"td": {
+                                                    "class": "code-block", "textContent": "br"
+                                                }},
+                                                {"td": {"text": "Insert line breaks"}},
+                                                {"td": {
+                                                    "class": "code-block", "textContent": "{\"br\": \"3\"}"
+                                                }}
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"td": {
+                                                    "class": "code-block", "textContent": "js"
+                                                }},
+                                                {"td": {"text": "Load external JS"}},
+                                                {"td": {
+                                                    "class": "code-block", "textContent": "{\"js\": \"script.js\"}"
+                                                }}
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"td": {
+                                                    "class": "code-block", "textContent": "css"
+                                                }},
+                                                {"td": {"text": "Load external CSS"}},
+                                                {"td": {
+                                                    "class": "code-block", "textContent": "{\"css\": \"style.css\"}"
+                                                }}
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"td": {
+                                                    "class": "code-block", "textContent": "modala"
+                                                }},
+                                                {"td": {"text": "Load nested template"}},
+                                                {"td": {
+                                                    "class": "code-block", "textContent": "{\"modala\": \"other.json\"}"
+                                                }}
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🔗 Loading Modala Templates"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Three Ways to Load"
+                            }
+                        },
+                        {
+                            "p": {"text": "1. Using pipe element with modal attribute:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;pipe id=\"loader1\" modal=\"template.json:targetId\">\nLoad"
+                            }
+                        },
+                        {
+                            "p": {"text": "2. Using inline macros:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": " r.json())\n  .then(data =&gt; {\n    const target = document.getElementById('targetId');\n    modala(data, target);\n  });"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "💡 Best Practices"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "ul": {
+                                "children": [
+                                    {"li": {"text": "✅ Keep templates modular - one component per file"}},
+                                    {"li": {"text": "✅ Use meaningful element IDs for inline macros"}},
+                                    {"li": {"text": "✅ Validate JSON syntax before deployment"}},
+                                    {"li": {"text": "✅ Use text for user-generated content (safe)"}},
+                                    {"li": {"text": "✅ Use html only for trusted content"}},
+                                    {"li": {"text": "✅ Organize templates in a dedicated folder"}},
+                                    {"li": {"text": "✅ Reuse templates with different data"}}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🎯 Real-World Example"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Product Catalog"
+                            }
+                        },
+                        {
+                            "p": {"text": "Build a complete product card:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "{\n  \"div\": {\n    \"class\": \"product-card\",\n    \"style\": \"border: 2px solid #ddd; border-radius: 10px; max-width: 300px;\",\n    \"children\": [\n      {\n        \"div\": {\n          \"style\": \"width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; margin-bottom: 15px;\",\n          \"html\": \"📦\"\n        }\n      },\n      {\"h3\": {\"text\": \"Product Title\", \"style\": \"margin: 10px 0;\"}},\n      {\"p\": {\"text\": \"High-quality product description\", \"style\": \"color: #666;\"}},\n      {\n        \"div\": {\n          \"style\": \"display: flex; justify-content: space-between; align-items: center; margin-top: 15px;\",\n          \"children\": [\n            {\"span\": {\"html\": \"$99.99\"}},\n            {\"button\": {\"text\": \"Add to Cart\", \"onclick\": \"alert('Added!');\"}}\n          ]\n        }\n      }\n    ]\n  }\n}"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "📚 Learn More"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "p": {
+                                "html": "🎓 Pro Tip: Modala is incredibly powerful when combined with:"
+                            }
+                        },
+                        {
+                            "ul": {
+                                "children": [
+                                    {"li": {"text": "⚡ Inline macros for interactivity"}},
+                                    {"li": {"text": "🔗 AJAX pipes for dynamic data"}},
+                                    {"li": {"text": "📑 Tabs for multi-page layouts"}},
+                                    {"li": {"text": "🎠 Carousels for galleries"}}
+                                ]
+                            }
+                        },
+                        {
+                            "p": {"text": "This entire tutorial is a modala-powered application! Check the JSON files to see how it's built."}
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

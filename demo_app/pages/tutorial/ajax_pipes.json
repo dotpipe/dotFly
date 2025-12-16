@@ -1,0 +1,431 @@
+{
+    "style": {
+        "tagname": "style",
+        "textcontent": "body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0;  padding: 2px !important; } .section { max-width: 1200px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);  padding: 2px !important; .demo-box { background: #f8f9fa; border-left: 4px solid #667eea; margin: 25px 0; border-radius: 8px;  padding: 2px !important; .demo-title { font-size: 1.3em; font-weight: bold; color: #667eea; margin-bottom: 15px; } .code-block { background: #2d2d2d; color: #f8f8f2; border-radius: 8px; font-family: 'Courier New', monospace; overflow-x: auto; margin: 15px 0; white-space: pre-wrap; font-size: 0.95em; min-height: 60px; line-height: 1.4;  padding: 2px !important; .output-box { background: white; border: 2px solid #667eea; border-radius: 8px; margin: 15px 0; min-height: 50px;  padding: 2px !important; button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 1em; font-weight: bold; transition: all 0.3s; margin: 10px 5px;  padding: 2px !important; } button:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); } input, textarea, select { border: 2px solid #667eea; border-radius: 8px; font-size: 1em; margin: 10px 5px; } h2 { color: #667eea; font-size: 2.5em; margin-bottom: 20px; } h3 { color: #764ba2; font-size: 1.8em; margin-top: 30px; margin-bottom: 15px; }"
+    },
+    "div": {
+        "tagname": "div",
+        "class": "section",
+        "children": [
+            {
+                "h2": "🔗 AJAX & Pipe Elements"
+            },
+            {
+                "p": {"textcontent": "The <pipe> element is the workhorse of dotPipe for loading remote content. It makes AJAX requests declaratively without writing JavaScript."}
+            },
+
+            {
+                "h3": "📡 Basic AJAX Loading"
+            },
+            {
+                "div": {
+                    "tagname": "div",
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "class": "demo-title",
+                                "text": "Demo 1: Load JSON Data"
+                            }
+                        },
+                        {
+                            "p": {"textcontent": "Use the ajax attribute to fetch data and the insert attribute to specify where it goes."}
+                        },
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "class": "code-block", "textContent": "&lt;pipe id=\"loader1\" \n      ajax=\"http://chat.chessers.club/api/status.php\" \n      insert=\"ajaxOut1\">\n\n\nLoad Status\n"
+                            }
+                        },
+                        {
+                            "button": {
+                                "tagname": "button",
+                                "id": "loadBtn1",
+                                "ajax": "http://chat.chessers.club/api/status.php:pipeOut1",
+                                "textContent": "🔄 Load API Status"
+                            }
+                        },
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "id": "pipeOut1",
+                                "class": "output-box",
+                                "text": "Click to load API status..."
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "📮 POST Requests with Data"
+            },
+            {
+                "div": {
+                    "tagname": "div",
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "class": "demo-title",
+                                "text": "Demo 2: Send POST Request"
+                            }
+                        },
+                        {
+                            "p": {"textcontent": "Send data to an API using POST method with the query attribute."}
+                        },
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "class": "code-block", "textContent": "&lt;pipe id=\"poster1\"\n      ajax=\"/api/endpoint\"\n      mode=\"POST\"\n      query=\"message:Hello&sender:dotPipe\"\n      insert=\"postOut1\">\n"
+                            }
+                        },
+                        {
+                            "input": {
+                                "id": "postMessage",
+                                "type": "text",
+                                "placeholder": "Enter message...",
+                                "value": "Hello from dotPipe tutorial!"
+                            }
+                        },
+                        {
+                            "br": ""
+                        },
+                        {
+                            "button": {
+                                "tagname": "button",
+                                "id": "postBtn",
+                                "ajax": "http://chat.chessers.club/api/message.php:postOut1",
+                                "mode": "POST",
+                                "query": "message:#postMessage",
+                                "textContent": "📤 Send Message"
+                            }
+                        },
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "id": "postOut1",
+                                "class": "output-box",
+                                "text": "Response will appear here..."
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🔄 Dynamic Content Loading"
+            },
+            {
+                "div": {
+                    "tagname": "div",
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "class": "demo-title",
+                                "text": "Demo 3: Load Different Endpoints"
+                            }
+                        },
+                        {
+                            "p": {"textcontent": "Dynamically change which endpoint to load from."}
+                        },
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "class": "code-block", "textContent": "&lt;select id=\"endpointSelect\">\n  Status\n  Info\n\n\n"
+                            }
+                        },
+                        {
+                            "select": {
+                                "id": "endpointSelect",
+                                "children": [
+                                    {
+                                        "option": {
+                                            "value": "http://chat.chessers.club/api/status.php",
+                                            "text": "📊 Status API"
+                                        }
+                                    },
+                                    {
+                                        "option": {
+                                            "value": "http://chat.chessers.club/api/info.php",
+                                            "text": "ℹ️ Info API"
+                                        }
+                                    },
+                                    {
+                                        "option": {
+                                            "value": "http://chat.chessers.club/api/messages.php",
+                                            "text": "💬 Messages API"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "br": {"textcontent": ""}
+                        },
+                        {
+                            "button": {
+                                "tagname": "button",
+                                "id": "dynamicBtn",
+                                "ajax": "#endpointSelect:dynOut1",
+                                "textContent": "🚀 Load Selected API"
+                            }
+                        },
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "id": "dynOut1",
+                                "class": "output-box",
+                                "text": "Select an endpoint and click load..."
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🎨 Response Formatting"
+            },
+            {
+                "div": {
+                    "tagname": "div",
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "class": "demo-title",
+                                "text": "Demo 4: Format Response Types"
+                            }
+                        },
+                        {
+                            "p": {"textcontent": "Use classes to control how the response is displayed:"}
+                        },
+                        {
+                            "table": {
+                                "tagname": "table",
+                                "trs": [
+                                    {
+                                        "tagname": "tr",
+                                        "children": [
+                                            {"tagname": "th", "textcontent": "Class"},
+                                            {"tagname": "th", "textcontent": "Effect"}
+                                        ]
+                                    },
+                                    {
+                                        "tagname": "tr",
+                                        "children": [
+                                            {"tagname": "td", "class": "code-block", "textContent": "json"},
+                                            {"tagname": "td", "textcontent": "Format as JSON with syntax highlighting"}
+                                        ]
+                                    },
+                                    {
+                                        "tagname": "tr",
+                                        "children": [
+                                            {"tagname": "td", "class": "code-block", "textContent": "plain-text"},
+                                            {"tagname": "td", "textcontent": "Display as plain text"}
+                                        ]
+                                    },
+                                    {
+                                        "tagname": "tr",
+                                        "children": [
+                                            {"tagname": "td", "class": "code-block", "textContent": "plain-html"},
+                                            {"tagname": "td", "textcontent": "Render as HTML"}
+                                        ]
+                                    },
+                                    {
+                                        "tagname": "tr",
+                                        "children": [
+                                            {"tagname": "td", "class": "code-block", "textContent": "tree-view"},
+                                            {"tagname": "td", "textcontent": "Show as expandable tree structure"}
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "br": {"textcontent": ""}
+                        },
+                        {
+                            "button": {
+                                "tagname": "button",
+                                "id": "formatBtn",
+                                "ajax": "http://chat.chessers.club/api/status.php:formatOut1",
+                                "class": "json",
+                                "textContent": "📋 Load as Formatted JSON"
+                            }
+                        },
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "id": "formatOut1",
+                                "class": "output-box",
+                                "text": "Formatted response will appear here..."
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "⚙️ Callbacks & Events"
+            },
+            {
+                "div": {
+                    "tagname": "div",
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "class": "demo-title",
+                                "text": "Demo 5: Execute Callback After Load"
+                            }
+                        },
+                        {
+                            "p": {"textcontent": "Run a JavaScript function after AJAX completes using the callback attribute."}
+                        },
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "class": "code-block", "textContent": "&lt;pipe id=\"callbackLoader\"\n      ajax=\"/api/data.json\"\n      insert=\"callbackOut1\"\n      callback=\"onDataLoaded\">\n\n\n\nfunction onDataLoaded() {\n    alert('Data loaded successfully!');\n}\n"
+                            }
+                        },
+                        {
+                            "button": {
+                                "tagname": "button",
+                                "id": "callbackBtn",
+                                "ajax": "http://chat.chessers.club/api/status.php:callbackOut1",
+                                "callback": "onTutorialDataLoaded",
+                                "textContent": "🎯 Load with Callback"
+                            }
+                        },
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "id": "callbackOut1",
+                                "class": "output-box",
+                                "text": "Data will load here..."
+                            }
+                        },
+                        {
+                            "div": {
+                                "tagname": "div",
+                                "id": "callbackMsg",
+                                "text": "Waiting for callback..."
+                            }
+                        },
+                        {
+                            "script": {
+                                "text": "window.onTutorialDataLoaded = function() { document.getElementById('callbackMsg').innerHTML = '✅ Callback executed! Data loaded at ' + new Date().toLocaleTimeString() + ''; };"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "💡 Key Attributes Reference"
+            },
+            {
+                "div": {
+                    "tagname": "div",
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "table": {
+                                "tagname": "table",
+                                "trs": [
+                                    {
+                                        "tagname": "tr",
+                                        "children": [
+                                            {"tagname": "th", "textcontent": "Attribute"},
+                                            {"tagname": "th", "textcontent": "Purpose"},
+                                            {"tagname": "th", "textcontent": "Example"}
+                                        ]
+                                    },
+                                    {
+                                        "tagname": "tr",
+                                        "children": [
+                                            {"tagname": "td", "class": "code-block", "textContent": "ajax"},
+                                            {"tagname": "td", "textcontent": "URL to fetch"},
+                                            {"tagname": "td", "class": "code-block", "textContent": "ajax=\"/api/data.json\""}
+                                        ]
+                                    },
+                                    {
+                                        "tagname": "tr",
+                                        "children": [
+                                            {"tagname": "td", "class": "code-block", "textContent": "insert"},
+                                            {"tagname": "td", "textcontent": "Target element ID"},
+                                            {"tagname": "td", "class": "code-block", "textContent": "insert=\"outputDiv\""}
+                                        ]
+                                    },
+                                    {
+                                        "tagname": "tr",
+                                        "children": [
+                                            {"tagname": "td", "class": "code-block", "textContent": "mode"},
+                                            {"tagname": "td", "textcontent": "HTTP method"},
+                                            {"tagname": "td", "class": "code-block", "textContent": "mode=\"POST\""}
+                                        ]
+                                    },
+                                    {
+                                        "tagname": "tr",
+                                        "children": [
+                                            {"tagname": "td", "class": "code-block", "textContent": "query"},
+                                            {"tagname": "td", "textcontent": "Data to send"},
+                                            {"tagname": "td", "class": "code-block", "textContent": "query=\"key:val&key2:val2\""}
+                                        ]
+                                    },
+                                    {
+                                        "tagname": "tr",
+                                        "children": [
+                                            {"tagname": "td", "class": "code-block", "textContent": "callback"},
+                                            {"tagname": "td", "textcontent": "Function to call after"},
+                                            {"tagname": "td", "class": "code-block", "textContent": "callback=\"myFunction\""}
+                                        ]
+                                    },
+                                    {
+                                        "tagname": "tr",
+                                        "children": [
+                                            {"tagname": "td", "class": "code-block", "textContent": "headers"},
+                                            {"tagname": "td", "textcontent": "Custom HTTP headers"},
+                                            {"tagname": "td", "class": "code-block", "textContent": "headers=\"Auth:token&Type:json\""}
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🎯 Best Practices"
+            },
+            {
+                "div": {
+                    "tagname": "div",
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "ul": {
+                                "children": [
+                                    {"li": {"textcontent": "✅ Always specify an insert target for the response"}},
+                                    {"li": {"textcontent": "✅ Use appropriate classes (json, plain-text) to format responses"}},
+                                    {"li": {"textcontent": "✅ Set mode=\"POST\" when sending data to APIs"}},
+                                    {"li": {"textcontent": "✅ Use callback to handle post-load actions"}},
+                                    {"li": {"textcontent": "✅ Use flashClickListener on buttons to trigger AJAX requests"}},
+                                    {"li": {"textcontent": "✅ Handle errors gracefully with callbacks"}}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

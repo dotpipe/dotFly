@@ -1,0 +1,502 @@
+{
+    "style": {
+        "tagname": "style",
+        "textcontent": "body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0;  padding: 2px !important; } .section { max-width: 1200px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);  padding: 2px !important; } .demo-box { background: #f8f9fa; border-left: 4px solid #667eea; margin: 25px 0; border-radius: 8px;  padding: 2px !important; } .demo-title { font-size: 1.3em; font-weight: bold; color: #667eea; margin-bottom: 15px; } .code-block { background: #2d2d2d; color: #f8f8f2; border-radius: 8px; font-family: 'Courier New', monospace; overflow-x: auto; margin: 15px 0; white-space: pre-wrap; font-size: 0.95em; min-height: 60px; line-height: 1.4;  padding: 2px !important; } h2 { color: #667eea; font-size: 2.5em; margin-bottom: 20px; } h3 { color: #764ba2; font-size: 1.8em; margin-top: 30px; margin-bottom: 15px; }"
+    },
+    "tagname": "div",
+    "class": "section",
+    "children": [
+        {
+            "tagname": "h2",
+            "textContent": "🎠 Carousel Component"
+        },
+        {
+            "tagname": "p",
+            "textContent": "The <carousel> element creates beautiful image sliders and content carousels with automatic rotation and manual controls."
+        },
+        {
+            "tagname": "h3",
+            "textContent": "🖼️ Basic Image Carousel"
+        },
+        {
+            "tagname": "div",
+            "class": "demo-box",
+            "children": [
+                {
+                    "tagname": "div",
+                    "class": "demo-title",
+                    "textContent": "Demo 1: Simple Image Slider"
+                },
+                {
+                    "tagname": "p",
+                    "textContent": "Create a basic carousel with the sources attribute:"
+                },
+                {
+                    "tagname": "div",
+                    "class": "code-block",
+                    "textContent": "&lt;carousel id=\"imageSlider\"\n          sources=\"img1.jpg;img2.jpg;img3.jpg\"\n          delay=\"3000\"\n          boxes=\"1\">\n"
+                },
+                {
+                    "tagname": "p",
+                    "textContent": "Example with real images from Unsplash (free stock photos):"
+                },
+                {
+                    "tagname": "div",
+                    "children": [
+                        {
+                            "tagname": "carousel",
+                            "id": "carouselDemo1",
+                            "type": "img",
+                            "sources": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=300&fit=crop;https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&h=300&fit=crop;https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=300&fit=crop;https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&h=300&fit=crop",
+                            "boxes": "1",
+                            "iter": "1",
+                            "width": "800",
+                            "height": "300",
+                            "style": "width: 100%; max-width: 800px; margin: 0 auto; display: block;"
+                        },
+                        {
+                            "tagname": "div",
+                            "style": "text-align: center; margin-top: 15px;",
+                            "children": [
+                                {
+                                    "tagname": "button",
+                                    "class": "carousel-step-left",
+                                    "insert": "carouselDemo1",
+                                    "textContent": "◀ Previous",
+                                    "style": "margin: 0 10px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;"
+                                },
+                                {
+                                    "tagname": "button",
+                                    "class": "carousel-step-right",
+                                    "insert": "carouselDemo1",
+                                    "textContent": "Next ▶",
+                                    "style": "margin: 0 10px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "tagname": "h3",
+            "textContent": "⏱️ Auto-Rotating Carousel"
+        },
+        {
+            "tagname": "div",
+            "class": "demo-box",
+            "children": [
+                {
+                    "tagname": "div",
+                    "class": "demo-title",
+                    "textContent": "Demo 2: Automatic Rotation"
+                },
+                {
+                    "tagname": "p",
+                    "textContent": "Use the delay attribute to set rotation interval in milliseconds:"
+                },
+                {
+                    "tagname": "div",
+                    "class": "code-block",
+                    "textContent": "&lt;carousel id=\"autoCarousel\"\n          sources=\"slide1.json;slide2.json;slide3.json\"\n          delay=\"5000\"\n          boxes=\"1\">\n\n\n"
+                },
+                {
+                    "tagname": "div",
+                    "textContent": "💡 Auto-Play: Set delay for automatic sliding. Users can still manually navigate."
+                }
+            ]
+        },
+        {
+            "tagname": "h3",
+            "textContent": "📦 Multiple Items"
+        },
+        {
+            "tagname": "div",
+            "class": "demo-box",
+            "children": [
+                {
+                    "tagname": "div",
+                    "class": "demo-title",
+                    "textContent": "Demo 3: Multi-Item Carousel"
+                },
+                {
+                    "tagname": "p",
+                    "textContent": "Display multiple items at once with the boxes attribute:"
+                },
+                {
+                    "tagname": "div",
+                    "class": "code-block",
+                    "textContent": "&lt;carousel id=\"multiCarousel\"\n          sources=\"item1.html;item2.html;item3.html;item4.html\"\n          boxes=\"3\"\n          delay=\"4000\">\n"
+                },
+                {
+                    "tagname": "p",
+                    "textContent": "Show 3 items at a time, rotating through content:"
+                },
+                {
+                    "tagname": "div",
+                    "children": [
+                        {
+                            "tagname": "div",
+                            "children": [
+                                {
+                                    "tagname": "div",
+                                    "textContent": "📦 1"
+                                },
+                                {
+                                    "tagname": "div",
+                                    "textContent": "📦 2"
+                                },
+                                {
+                                    "tagname": "div",
+                                    "textContent": "📦 3"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "tagname": "h3",
+            "textContent": "🎮 Navigation Controls"
+        },
+        {
+            "tagname": "div",
+            "class": "demo-box",
+            "children": [
+                {
+                    "tagname": "div",
+                    "class": "demo-title",
+                    "textContent": "Control Classes"
+                },
+                {
+                    "tagname": "p",
+                    "textContent": "Add navigation buttons with special classes:"
+                },
+                {
+                    "tagname": "table",
+                    "children": [
+                        {
+                            "tagname": "tr",
+                            "children": [
+                                {
+                                    "tagname": "th",
+                                    "textContent": "Class"
+                                },
+                                {
+                                    "tagname": "th",
+                                    "textContent": "Action"
+                                },
+                                {
+                                    "tagname": "th",
+                                    "textContent": "Description"
+                                }
+                            ]
+                        },
+                        {
+                            "tagname": "tr",
+                            "children": [
+                                {
+                                    "tagname": "td",
+                                    "class": "code-block",
+                                    "textContent": "carousel-step-right"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Next"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Move one slide right"
+                                }
+                            ]
+                        },
+                        {
+                            "tagname": "tr",
+                            "children": [
+                                {
+                                    "tagname": "td",
+                                    "class": "code-block",
+                                    "textContent": "carousel-step-left"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Previous"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Move one slide left"
+                                }
+                            ]
+                        },
+                        {
+                            "tagname": "tr",
+                            "children": [
+                                {
+                                    "tagname": "td",
+                                    "class": "code-block",
+                                    "textContent": "carousel-slide-right"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Auto-right"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Start auto-sliding right"
+                                }
+                            ]
+                        },
+                        {
+                            "tagname": "tr",
+                            "children": [
+                                {
+                                    "tagname": "td",
+                                    "class": "code-block",
+                                    "textContent": "carousel-slide-left"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Auto-left"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Start auto-sliding left"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tagname": "div",
+                    "class": "code-block",
+                    "textContent": "&lt;button class=\"carousel-step-left\">◀ Prev\n\nNext ▶"
+                }
+            ]
+        },
+        {
+            "tagname": "h3",
+            "textContent": "🎨 Content Carousel"
+        },
+        {
+            "tagname": "div",
+            "class": "demo-box",
+            "children": [
+                {
+                    "tagname": "div",
+                    "class": "demo-title",
+                    "textContent": "Demo 4: Load Dynamic Content"
+                },
+                {
+                    "tagname": "p",
+                    "textContent": "Carousels can load JSON files for rich content:"
+                },
+                {
+                    "tagname": "div",
+                    "class": "code-block",
+                    "textContent": "&lt;carousel id=\"contentCarousel\"\n          sources=\"/content/slide1.json;/content/slide2.json\"\n          delay=\"6000\"\n          boxes=\"1\">\n"
+                },
+                {
+                    "tagname": "p",
+                    "textContent": "Each JSON file can contain formatted content:"
+                },
+                {
+                    "tagname": "div",
+                    "class": "code-block",
+                    "textContent": "{\n  \"div\": {\n    \"class\": \"carousel-slide\",\n    \"children\": [\n      {\"h2\": \"Slide Title\"},\n      {\"p\": \"Slide description...\"},\n      {\"button\": {\"text\": \"Learn More\"}}\n    ]\n  }\n}"
+                }
+            ]
+        },
+        {
+            "tagname": "h3",
+            "textContent": "📱 Responsive Design"
+        },
+        {
+            "tagname": "div",
+            "class": "demo-box",
+            "children": [
+                {
+                    "tagname": "div",
+                    "class": "demo-title",
+                    "textContent": "Mobile-Friendly Carousels"
+                },
+                {
+                    "tagname": "p",
+                    "textContent": "Make carousels responsive with CSS:"
+                },
+                {
+                    "tagname": "div",
+                    "class": "code-block",
+                    "textContent": ".carousel-container {\n    width: 100%;\n    overflow: hidden;\n}\n\n/* Mobile: 1 item */\n@media (max-width: 768px) {\n    carousel[boxes=\"3\"] {\n        /* Adjust for mobile */\n    }\n}\n\n/* Desktop: 3 items */\n@media (min-width: 769px) {\n    .carousel-slide {\n        flex: 0 0 33.333%;\n    }\n}"
+                }
+            ]
+        },
+        {
+            "tagname": "h3",
+            "textContent": "🎯 Carousel Attributes"
+        },
+        {
+            "tagname": "div",
+            "class": "demo-box",
+            "children": [
+                {
+                    "tagname": "table",
+                    "children": [
+                        {
+                            "tagname": "tr",
+                            "children": [
+                                {
+                                    "tagname": "th",
+                                    "textContent": "Attribute"
+                                },
+                                {
+                                    "tagname": "th",
+                                    "textContent": "Type"
+                                },
+                                {
+                                    "tagname": "th",
+                                    "textContent": "Description"
+                                }
+                            ]
+                        },
+                        {
+                            "tagname": "tr",
+                            "children": [
+                                {
+                                    "tagname": "td",
+                                    "class": "code-block",
+                                    "textContent": "sources"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "String"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Semicolon-separated list of files"
+                                }
+                            ]
+                        },
+                        {
+                            "tagname": "tr",
+                            "children": [
+                                {
+                                    "tagname": "td",
+                                    "class": "code-block",
+                                    "textContent": "delay"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Number"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Auto-rotate interval in milliseconds"
+                                }
+                            ]
+                        },
+                        {
+                            "tagname": "tr",
+                            "children": [
+                                {
+                                    "tagname": "td",
+                                    "class": "code-block",
+                                    "textContent": "boxes"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Number"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Number of items to display at once"
+                                }
+                            ]
+                        },
+                        {
+                            "tagname": "tr",
+                            "children": [
+                                {
+                                    "tagname": "td",
+                                    "class": "code-block",
+                                    "textContent": "interval"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Number"
+                                },
+                                {
+                                    "tagname": "td",
+                                    "textContent": "Number of steps for iteration"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "tagname": "h3",
+            "textContent": "💡 Best Practices"
+        },
+        {
+            "tagname": "div",
+            "class": "demo-box",
+            "children": [
+                {
+                    "tagname": "ul",
+                    "children": [
+                        {
+                            "tagname": "li",
+                            "textContent": "✅ Use consistent aspect ratios for images"
+                        },
+                        {
+                            "tagname": "li",
+                            "textContent": "✅ Set appropriate delay (3-7 seconds recommended)"
+                        },
+                        {
+                            "tagname": "li",
+                            "textContent": "✅ Provide manual navigation controls"
+                        },
+                        {
+                            "tagname": "li",
+                            "textContent": "✅ Optimize images for web (compress, resize)"
+                        },
+                        {
+                            "tagname": "li",
+                            "textContent": "✅ Test on mobile devices for touch gestures"
+                        },
+                        {
+                            "tagname": "li",
+                            "textContent": "✅ Add indicators to show current slide"
+                        },
+                        {
+                            "tagname": "li",
+                            "textContent": "✅ Pause auto-rotation on hover for better UX"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "tagname": "h3",
+            "textContent": "📋 Complete Example"
+        },
+        {
+            "tagname": "div",
+            "class": "demo-box",
+            "children": [
+                {
+                    "tagname": "div",
+                    "class": "demo-title",
+                    "textContent": "Full Carousel Implementation"
+                },
+                {
+                    "tagname": "div",
+                    "class": "code-block",
+                    "textContent": "\n\n\n    Image Gallery\n    &lt;script src=\"/dotpipe.js\">\n    \n        .carousel-wrapper {\n            max-width: 800px;\n            margin: 0 auto;\n            position: relative;\n        }\n        .carousel-controls {\n            text-align: center;\n            margin-top: 20px;\n        }\n        carousel img {\n            width: 100%;\n            border-radius: 10px;\n        }\n    \n\n\n    \n        🎨 Gallery\n        \n        \n        \n        \n        \n            ◀ Previous\n            Next ▶\n        \n    \n    \n    \n        document.addEventListener('DOMContentLoaded', () => {\n            domContentLoad();\n            addPipe(document.body);\n        });\n    \n\n"
+                }
+            ]
+        }
+    ]
+}

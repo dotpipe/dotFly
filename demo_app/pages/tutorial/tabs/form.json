@@ -1,0 +1,64 @@
+{
+    "div": {
+        "style": "padding: 20px;",
+        "children": [
+            {
+                "h3": "📝 Sample Form"
+            },
+            {
+                "p": "Forms in tabs work just like regular forms:"
+            },
+            {
+                "div": {
+                    "style": "background: white; padding: 20px; border-radius: 5px;",
+                    "children": [
+                        {
+                            "label": {
+                                "html": "<strong>Name:</strong>"
+                            }
+                        },
+                        {
+                            "br": ""
+                        },
+                        {
+                            "input": {
+                                "id": "tabFormName",
+                                "type": "text",
+                                "placeholder": "Your name",
+                                "style": "width: 90%; padding: 8px; margin: 5px 0;"
+                            }
+                        },
+                        {
+                            "br": ""
+                        },
+                        {
+                            "label": {
+                                "html": "<strong>Message:</strong>"
+                            }
+                        },
+                        {
+                            "br": ""
+                        },
+                        {
+                            "textarea": {
+                                "id": "tabFormMsg",
+                                "placeholder": "Your message",
+                                "style": "width: 90%; padding: 8px; margin: 5px 0; min-height: 80px;"
+                            }
+                        },
+                        {
+                            "br": ""
+                        },
+                        {
+                            "button": {
+                                "onclick": "alert('Form submitted: ' + document.getElementById('tabFormName').value);",
+                                "text": "✉️ Submit",
+                                "style": "margin-top: 10px;"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

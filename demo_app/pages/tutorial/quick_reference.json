@@ -1,0 +1,210 @@
+{
+    "div": {
+        "style": "font-family: 'Courier New', monospace; background: #2d2d2d; color: #f8f8f2; padding: 30px; border-radius: 10px; max-width: 900px; margin: 20px auto;",
+        "children": [
+            {
+                "h1": {
+                    "style": "color: #667eea; text-align: center; font-size: 2.5em; margin-bottom: 30px;",
+                    "text": "🚀 dotPipe.js Quick Reference"
+                }
+            },
+            {
+                "div": {
+                    "style": "display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;",
+                    "children": [
+                        {
+                            "div": {
+                                "style": "background: #383838; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea;",
+                                "children": [
+                                    {
+                                        "h2": {
+                                            "style": "color: #667eea; margin-top: 0;",
+                                            "text": "⚡ Pipeline Operators"
+                                        }
+                                    },
+                                    {
+                                        "pre": {
+                                            "style": "color: #a6e22e; margin: 10px 0;",
+                                            "text": "|                   Chain operations\n&var:value          Store variable\n!var                Get variable\n$id.prop:value      Set DOM property\n#var:id.prop        Read DOM property\n%func:[args]        Call function\n|+id:shell          Open scope shell\n|-shell             Close scope shell"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "div": {
+                                "style": "background: #383838; padding: 20px; border-radius: 8px; border-left: 4px solid #764ba2;",
+                                "children": [
+                                    {
+                                        "h2": {
+                                            "style": "color: #764ba2; margin-top: 0;",
+                                            "text": "🏷️ Custom Tags"
+                                        }
+                                    },
+                                    {
+                                        "pre": {
+                                            "style": "color: #f8f8f2; margin: 10px 0;",
+                                            "text": "<pipe>              AJAX loader\n<tabs>              Tabbed UI\n<csv>               CSV tables\n<carousel>          Sliders\n<cart>              Shopping cart\n<login>             Auth forms\n<checkout>          Checkout\n<search>            Filter\n<columns>           Multi-column\n<timed>             Auto-refresh"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "div": {
+                                "style": "background: #383838; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea;",
+                                "children": [
+                                    {
+                                        "h2": {
+                                            "style": "color: #667eea; margin-top: 0;",
+                                            "text": "📋 Key Attributes"
+                                        }
+                                    },
+                                    {
+                                        "pre": {
+                                            "style": "color: #f8f8f2; margin: 10px 0;",
+                                            "text": "id=\"unique\"         Required!\ninline=\"|...\"        Pipeline macro\najax=\"url\"           Fetch resource\ninsert=\"targetId\"    Where to render\nmode=\"POST\"          HTTP method\nquery=\"key:val&\"     POST data\ncallback=\"func\"      After completion\nmodal=\"file:target\"  Load JSON template\ntab=\"Label:id:src\"   Tab definition"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "div": {
+                                "style": "background: #383838; padding: 20px; border-radius: 8px; border-left: 4px solid #764ba2;",
+                                "children": [
+                                    {
+                                        "h2": {
+                                            "style": "color: #764ba2; margin-top: 0;",
+                                            "text": "🎨 Modala JSON"
+                                        }
+                                    },
+                                    {
+                                        "pre": {
+                                            "style": "color: #a6e22e; margin: 10px 0;",
+                                            "text": "{\n  \"div\": {\n    \"class\": \"value\",\n    \"text\": \"safe text\",\n    \"html\": \"<b>HTML</b>\",\n    \"children\": [\n      {\"h1\": \"Title\"}\n    ]\n  }\n}"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "div": {
+                    "style": "margin-top: 30px; background: #383838; padding: 20px; border-radius: 8px;",
+                    "children": [
+                        {
+                            "h2": {
+                                "style": "color: #667eea; margin-top: 0;",
+                                "text": "💡 Quick Examples"
+                            }
+                        },
+                        {
+                            "div": {
+                                "style": "margin: 15px 0;",
+                                "children": [
+                                    {
+                                        "h3": {
+                                            "style": "color: #f92672; margin: 10px 0 5px 0;",
+                                            "text": "Inline Macro:"
+                                        }
+                                    },
+                                    {
+                                        "pre": {
+                                            "style": "background: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto;",
+                                            "text": "<button id=\"btn1\" inline=\"\n  |&msg:Hello World\n  |$output.innerHTML:!msg\n\">Click Me</button>"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "div": {
+                                "style": "margin: 15px 0;",
+                                "children": [
+                                    {
+                                        "h3": {
+                                            "style": "color: #f92672; margin: 10px 0 5px 0;",
+                                            "text": "AJAX Load:"
+                                        }
+                                    },
+                                    {
+                                        "pre": {
+                                            "style": "background: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto;",
+                                            "text": "<button ajax=\"/api/data.json\" \n        insert=\"target\">\n  Load\n</button>"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "div": {
+                                "style": "margin: 15px 0;",
+                                "children": [
+                                    {
+                                        "h3": {
+                                            "style": "color: #f92672; margin: 10px 0 5px 0;",
+                                            "text": "Tabs:"
+                                        }
+                                    },
+                                    {
+                                        "pre": {
+                                            "style": "background: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto;",
+                                            "text": "<tabs id=\"nav\" tab=\"\n  Home:homeTab:/pages/home.json;\n  About:aboutTab:/pages/about.json\n\"></tabs>"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "div": {
+                                "style": "margin: 15px 0;",
+                                "children": [
+                                    {
+                                        "h3": {
+                                            "style": "color: #f92672; margin: 10px 0 5px 0;",
+                                            "text": "CSV Table:"
+                                        }
+                                    },
+                                    {
+                                        "pre": {
+                                            "style": "background: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto;",
+                                            "text": "<csv id=\"table\" \n     ajax=\"/data/users.csv\" \n     insert=\"container\" \n     sort=\"Name:csv-asc\" \n     page-size=\"10\">\n</csv>"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "div": {
+                    "style": "margin-top: 30px; text-align: center; color: #888;",
+                    "children": [
+                        {
+                            "p": {
+                                "style": "margin: 5px 0;",
+                                "text": "📚 Full documentation: See dotpipe.js header comments"
+                            }
+                        },
+                        {
+                            "p": {
+                                "style": "margin: 5px 0;",
+                                "text": "🎓 Interactive tutorial: /demo_app/dotpipe_tutorial.html"
+                            }
+                        },
+                        {
+                            "p": {
+                                "style": "margin: 20px 0 5px 0; color: #667eea; font-weight: bold;",
+                                "text": "Built with ❤️ using dotPipe.js"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "div": {
+        "style": "padding: 20px;",
+        "children": [
+            {
+                "h3": {
+                    "style": "color: #667eea;",
+                    "text": "🏠 Welcome Home!"
+                }
+            },
+            {
+                "p": "This is the home tab. Content loaded dynamically from home.json."
+            },
+            {
+                "div": {
+                    "style": "background: #e7f3ff; padding: 15px; border-radius: 5px; margin: 15px 0;",
+                    "html": "<strong>✨ Dynamic Content Loading:</strong> Each tab loads its content from a separate JSON file, making your application modular and maintainable."
+                }
+            }
+        ]
+    }
+}

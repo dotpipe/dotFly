@@ -1,0 +1,295 @@
+{
+    "style": {
+        "tagname": "style",
+        "textcontent": "body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0;  padding: 2px !important; } .section { max-width: 1200px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);  padding: 2px !important; .demo-box { background: #f8f9fa; border-left: 4px solid #667eea; margin: 25px 0; border-radius: 8px;  padding: 2px !important; .demo-title { font-size: 1.3em; font-weight: bold; color: #667eea; margin-bottom: 15px; } .code-block { background: #2d2d2d; color: #f8f8f2; border-radius: 8px; font-family: 'Courier New', monospace; overflow-x: auto; margin: 15px 0; white-space: pre-wrap; font-size: 0.95em; min-height: 60px; line-height: 1.4;  padding: 2px !important; h2 { color: #667eea; font-size: 2.5em; margin-bottom: 20px; } h3 { color: #764ba2; font-size: 1.8em; margin-top: 30px; margin-bottom: 15px; }"
+    },
+    "div": {
+        "class": "section",
+        "children": [
+            {
+                "h2": "📏 Tabs Component"
+            },
+            {
+                "p": {"textcontent": "The <tabs> element creates tabbed navigation interfaces that can load content from JSON files dynamically."}
+            },
+
+            {
+                "h3": "📖 Basic Tab Structure"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Anatomy of a Tabs Element"
+                            }
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;tabs id=\"myTabs\" \n      tab=\"Tab1:tab1Id:source1.json;Tab2:tab2Id:source2.json\">\n\n\nFormat: \"TabLabel:TabElementId:SourceFile\""
+                            }
+                        },
+                        {
+                            "p": {"textcontent": "Each tab definition has three parts separated by colons:"}
+                        },
+                        {
+                            "ol": {
+                                "children": [
+                                    {"li": {"textcontent": "Tab Label - The text shown on the tab button"}},
+                                    {"li": {"textcontent": "Tab ID - Unique identifier for the tab content area"}},
+                                    {"li": {"textcontent": "Source File - Path to JSON file to load"}}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🎨 Live Demo: Simple Tabs"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Demo 1: Three Tab Interface"
+                            }
+                        },
+                        {
+                            "p": {"textcontent": "Click the tabs below to see dynamic content loading:"}
+                        },
+                        {
+                            "div": {
+                                "id": "tabsDemoContainer",
+                                "children": [
+                                    {
+                                        "tabs": {
+                                            "id": "demo1Tabs",
+                                            "tab": "🏠 Home:homeTabContent:/dotfly/demo_app/pages/tutorial/tabs/home.json;📊 Features:featuresTabContent:/dotfly/demo_app/pages/tutorial/tabs/features.json;📞 Contact:contactTabContent:/dotfly/demo_app/pages/tutorial/tabs/contact.json"
+                                        }
+                                    },
+                                    {
+                                        "div": {
+                                            "id": "demo1TabsContent"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;tabs id=\"demo1Tabs\" tab=\"\n  🏠 Home:homeTab:/dotfly/demo_app/pages/tutorial/tabs/home.json;\n  📊 Features:featuresTab:/dotfly/demo_app/pages/tutorial/tabs/features.json;\n  📞 Contact:contactTab:/dotfly/demo_app/pages/tutorial/tabs/contact.json\n\">"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🔥 Advanced: Nested Content"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Demo 2: Tabs with Rich Content"
+                            }
+                        },
+                        {
+                            "p": {"textcontent": "Tabs can load complex JSON structures with forms, buttons, and interactive elements:"}
+                        },
+                        {
+                            "div": { "children": [
+                                    {
+                                        "tabs": {
+                                            "id": "demo2Tabs",
+                                            "tab": "📝 Form:formTabContent:/dotfly/demo_app/pages/tutorial/tabs/form.json;🎯 Actions:actionsTabContent:/dotfly/demo_app/pages/tutorial/tabs/actions.json;📈 Data:dataTabContent:/dotfly/demo_app/pages/tutorial/tabs/data.json"
+                                        }
+                                    },
+                                    {
+                                        "div": {
+                                            "id": "demo2TabsContent"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "⚙️ Tab Customization"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Styling Tabs with CSS"
+                            }
+                        },
+                        {
+                            "p": {"textcontent": "Tabs automatically get classes you can style:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "/* Tab buttons */\n.tab-button {\n    background: #667eea;\n    color: white;\n    border: none;\n\n    cursor: pointer;\n padding: 2px !important; }\n\n/* Active tab */\n.tab-button.active {\n    background: #764ba2;\n    font-weight: bold;\n}\n\n/* Tab content area */\n.tab-content {\n\n    background: white;\n    border: 2px solid #667eea;\n}"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🎯 Dynamic Tab Creation"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Demo 3: Programmatically Add Tabs"
+                            }
+                        },
+                        {
+                            "p": {"textcontent": "You can modify the tab attribute dynamically:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "// Get the tabs element\nconst tabs = document.getElementById('myTabs');\n\n// Update the tab attribute\ntabs.setAttribute('tab', \n    'New Tab:newTabId:/path/to/new.json;' + \n    tabs.getAttribute('tab')\n);\n\n// Re-initialize\nif (typeof domContentLoad === 'function') {\n    domContentLoad();\n}"
+                            }
+                        },
+                        {
+                            "button": {
+                                "tagname": "button",
+                                "id": "addTabBtn",
+                                "textContent": "➕ Add Dynamic Tab"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "💡 Tab Best Practices"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "ul": {
+                                "children": [
+                                    {"li": {"textcontent": "✅ Use unique IDs for each tab content area"}},
+                                    {"li": {"textcontent": "✅ Keep tab labels short and descriptive"}},
+                                    {"li": {"textcontent": "✅ Use emojis in labels for visual appeal"}},
+                                    {"li": {"textcontent": "✅ Organize related content in the same tab group"}},
+                                    {"li": {"textcontent": "✅ Provide loading indicators for slow-loading content"}},
+                                    {"li": {"textcontent": "✅ Test tab navigation on mobile devices"}},
+                                    {"li": {"textcontent": "✅ Use consistent JSON structure across tab sources"}}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "📋 Tab Attribute Reference"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "table": {
+                                "children": [
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"th": {"textcontent": "Part"}},
+                                                {"th": {"textcontent": "Required"}},
+                                                {"th": {"textcontent": "Description"}}
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"td": {"textcontent": "Tab Label"}},
+                                                {"td": {"textcontent": "✅ Yes"}},
+                                                {"td": {"textcontent": "Text displayed on the tab button"}}
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"td": {"textcontent": "Tab ID"}},
+                                                {"td": {"textcontent": "✅ Yes"}},
+                                                {"td": {"textcontent": "Unique identifier for the tab's content area"}}
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"td": {"textcontent": "Source File"}},
+                                                {"td": {"textcontent": "✅ Yes"}},
+                                                {"td": {"textcontent": "Path to JSON file containing tab content"}}
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "tr": {
+                                            "children": [
+                                                {"td": {"textcontent": "Separator"}},
+                                                {"td": {"textcontent": "✅ Yes"}},
+                                                {"td": {"textcontent": "Use semicolon (;) between tabs, colon (:) between parts"}}
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🎓 Complete Example"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Full Implementation"
+                            }
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "\n\n\n    My Tabbed App\n    &lt;script src=\"/dotpipe.js\">\n\n\n    Dashboard\n    \n    \n    \n    \n    \n    \n    \n    \n        // Initialize dotPipe\n        if (document.readyState === 'loading') {\n            document.addEventListener('DOMContentLoaded', () => {\n                domContentLoad();\n                addPipe(document.body);\n            });\n        } else {\n            domContentLoad();\n            addPipe(document.body);\n        }\n    \n\n"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

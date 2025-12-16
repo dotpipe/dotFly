@@ -1,0 +1,481 @@
+{
+    "style": {
+        "tagname": "style",
+        "textcontent": "body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0;  padding: 2px !important; } .section { max-width: 1200px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);  padding: 2px !important; .demo-box { background: #f8f9fa; border-left: 4px solid #667eea; margin: 25px 0; border-radius: 8px;  padding: 2px !important; .demo-title { font-size: 1.3em; font-weight: bold; color: #667eea; margin-bottom: 15px; } .code-block { background: #2d2d2d; color: #f8f8f2; border-radius: 8px; font-family: 'Courier New', monospace; overflow-x: auto; margin: 15px 0; white-space: pre-wrap; font-size: 0.95em; min-height: 60px; line-height: 1.4;  padding: 2px !important; h2 { color: #667eea; font-size: 2.5em; margin-bottom: 20px; } h3 { color: #764ba2; font-size: 1.8em; margin-top: 30px; margin-bottom: 15px; }"
+    },
+    "div": {
+        "class": "section",
+        "children": [
+            {
+                "h2": "🛠️ Advanced Techniques"
+            },
+            {
+                "p": {"text": "Master advanced dotPipe patterns and techniques for building sophisticated web applications."}
+            },
+
+            {
+                "h3": "🔄 Shell Variables (Scoped Pipelines)"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Variable Scoping with Shells"
+                            }
+                        },
+                        {
+                            "p": {"text": "Shells create isolated variable scopes within pipelines:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;button inline=\"\n  |+outputDiv:myShell\n  |&localVar:This is scoped\n  |$outputDiv.innerHTML:!localVar\n  |-myShell\n\">Use Shell\n\nOperators:\n  |+targetId:shellName  → Open shell\n  |-shellName           → Close and merge shell"
+                            }
+                        },
+                        {
+                            "p": {"text": "Variables inside shells are isolated until the shell closes."}
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "⚙️ The |call Operator"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Demo 1: Call Custom Functions"
+                            }
+                        },
+                        {
+                            "p": {"text": "The |call operator invokes any global function:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "// Define a function\nwindow.processData = function(data, format) {\n    console.log('Processing:', data, 'as', format);\n    return data.toUpperCase();\n};\n\n// Call it from inline\n&lt;button inline=\"\n  |&data:hello world\n  |call:processData:!data:json\n\">Process"
+                            }
+                        },
+                        {
+                            "p": {"text": "Try it:"}
+                        },
+                        {
+                            "button": {
+                                "tagname": "button",
+                                "id": "callDemo1",
+                                "inline": "|&data:Hello from dotPipe!|call:showAlert:!data",
+                                "textContent": "🔔 Call Function"
+                            }
+                        },
+                        {
+                            "div": { "html": "💡 Power: This lets you extend dotPipe with ANY custom JavaScript logic!"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🔗 Chaining AJAX Requests"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Demo 2: Sequential API Calls"
+                            }
+                        },
+                        {
+                            "p": {"text": "Use callbacks to chain AJAX requests:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;button id=\"step1\"\n        ajax=\"/api/users\"\n        insert=\"result1\"\n        callback=\"loadStep2\">\n  Load Users\n\n\n\n\nfunction loadStep2() {\n    // First request done, load related data\n    document.getElementById('step2Btn').click();\n}\n"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🎯 Event-Driven Architecture"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Demo 3: Mouse Events"
+                            }
+                        },
+                        {
+                            "p": {"text": "Use the event attribute for custom events:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;div id=\"hoverArea\"\n     class=\"mouse\"\n     event=\"mouseover;mouseout\"\n     tool-tip=\"Hover message!;hoverArea;info-tooltip;2000;9999\">\n    Hover me!\n"
+                            }
+                        },
+                        {
+                            "p": {"text": "Supported events:"}
+                        },
+                        {
+                            "ul": {
+                                "children": [
+                                    {"li": {"text": "click - Mouse click"}},
+                                    {"li": {"text": "mouseover - Mouse enters"}},
+                                    {"li": {"text": "mouseout - Mouse leaves"}},
+                                    {"li": {"text": "change - Input changes"}},
+                                    {"li": {"text": "submit - Form submission"}}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "📊 Working with Forms"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Demo 4: Form Class Grouping"
+                            }
+                        },
+                        {
+                            "p": {"text": "Use form-class to group form inputs:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;input class=\"userForm\" name=\"username\">\n\n\n\n\n\nSubmit"
+                            }
+                        },
+                        {
+                            "p": {"text": "dotPipe automatically collects all inputs with class userForm and sends them."}
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🎨 Dynamic Styling"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Demo 5: Toggle Classes"
+                            }
+                        },
+                        {
+                            "p": {"text": "Use x-toggle to toggle CSS classes:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;button id=\"toggler\"\n        x-toggle=\"box1:active;box2:highlighted\">\n    Toggle States\n\n\nBox 1\nBox 2\n\n\n.active { background: green; }\n.highlighted { color: yellow; }\n"
+                            }
+                        },
+                        {
+                            "button": {
+                                "tagname": "button",
+                                "id": "toggleDemo",
+                                "inline": "|$toggleBox1.style.background:#667eea|$toggleBox1:✅ Toggled!|$toggleBox2.style.background:#764ba2|$toggleBox2:✅ Changed!",
+                                "textContent": "🎨 Toggle Styles"
+                            }
+                        },
+                        {
+                            "div": { "children": [
+                                    {
+                                        "div": {
+                                            "id": "toggleBox1",
+                                            "text": "Box 1"
+                                        }
+                                    },
+                                    {
+                                        "div": {
+                                            "id": "toggleBox2",
+                                            "text": "Box 2"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🔐 Authentication Flows"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Login Component"
+                            }
+                        },
+                        {
+                            "p": {"text": "Use the <login> element for auth:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;login id=\"authSystem\"\n       login-page=\"/api/login.php\"\n       registration-page=\"/api/register.php\"\n       css-page=\"/styles/auth.css\">\n"
+                            }
+                        },
+                        {
+                            "p": {"text": "Provides complete login/registration UI with AJAX submission."}
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "⏱️ Timed Updates"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Auto-Refresh Content"
+                            }
+                        },
+                        {
+                            "p": {"text": "Use  for periodic updates:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;timed id=\"liveData\"\n       ajax=\"/api/live-stats\"\n       insert=\"statsDiv\"\n       delay=\"5000\">\n\n\n\n\n\n▶ Start\n⏸ Pause"
+                            }
+                        },
+                        {
+                            "p": {"text": "Content refreshes automatically every 5 seconds."}
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🛍️ E-Commerce Components"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Shopping Cart & Checkout"
+                            }
+                        },
+                        {
+                            "p": {"text": "Built-in e-commerce components:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "\n&lt;cart id=\"myCart\">\n  \n  \n\n\n\n\n"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🔍 Search & Filter"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Content Filtering"
+                            }
+                        },
+                        {
+                            "p": {"text": "Use  to filter content:"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;search id=\"contentFilter\" \n        target=\"dataTable\">\n\n\n\n\n\n    \n"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "📱 Multi-Column Layouts"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Responsive Columns"
+                            }
+                        },
+                        {
+                            "p": {"text": "Create responsive layouts with :"}
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "&lt;columns id=\"layout\"\n         count=\"3\"\n         percents=\"30,40,30\"\n         pages=\"col1.json;col2.json;col3.json\"\n         height=\"600px\">\n"
+                            }
+                        },
+                        {
+                            "p": {"text": "Perfect for dashboard layouts and multi-panel UIs."}
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🎯 Best Practices Summary"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "h4": "Performance"
+                        },
+                        {
+                            "ul": {
+                                "children": [
+                                    {"li": {"text": "✅ Use lazy loading for large datasets"}},
+                                    {"li": {"text": "✅ Minimize AJAX calls with caching"}},
+                                    {"li": {"text": "✅ Batch DOM updates in inline macros"}}
+                                ]
+                            }
+                        },
+                        {
+                            "h4": "Security"
+                        },
+                        {
+                            "ul": {
+                                "children": [
+                                    {"li": {"text": "🔒 Validate user input on the server"}},
+                                    {"li": {"text": "🔒 Use text property for user content in modala"}},
+                                    {"li": {"text": "🔒 Sanitize data before DOM insertion"}}
+                                ]
+                            }
+                        },
+                        {
+                            "h4": "Maintainability"
+                        },
+                        {
+                            "ul": {
+                                "children": [
+                                    {"li": {"text": "📁 Organize JSON templates by feature"}},
+                                    {"li": {"text": "📁 Use consistent naming conventions"}},
+                                    {"li": {"text": "📁 Comment complex inline macros"}}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🎓 Complete Application Example"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "div": {
+                                "class": "demo-title",
+                                "text": "Full-Stack dotPipe App"
+                            }
+                        },
+                        {
+                            "div": {
+                                "class": "code-block", "textContent": "\n\n\n    Dashboard\n    &lt;script src=\"/dotpipe.js\">\n    \n\n\n    \n    \n    \n    \n    \n        \n        \n        \n        \n        \n        \n        \n        \n        \n        \n        \n    \n    \n    \n    🔄 Refresh Data\n    \n    \n    \n    \n        document.addEventListener('DOMContentLoaded', () => {\n            domContentLoad();\n            addPipe(document.body);\n            \n            // Initialize\n            pipes('userTable');\n        });\n    \n\n"
+                            }
+                        }
+                    ]
+                }
+            },
+
+            {
+                "h3": "🚀 Next Steps"
+            },
+            {
+                "div": {
+                    "class": "demo-box",
+                    "children": [
+                        {
+                            "p": {
+                                "html": "🎉 Congratulations! You've completed the dotPipe.js tutorial!"
+                            }
+                        },
+                        {
+                            "p": {"text": "You now know:"}
+                        },
+                        {
+                            "ul": {
+                                "children": [
+                                    {"li": {"text": "⚡ Inline macro pipelines and variables"}},
+                                    {"li": {"text": "🔗 AJAX loading with pipe elements"}},
+                                    {"li": {"text": "📑 Tabbed navigation"}},
+                                    {"li": {"text": "📊 CSV data display"}},
+                                    {"li": {"text": "🎠 Image carousels"}},
+                                    {"li": {"text": "🎨 Modala JSON templating"}},
+                                    {"li": {"text": "🛠️ Advanced patterns and techniques"}}
+                                ]
+                            }
+                        },
+                        {
+                            "p": {
+                                "html": "📚 Resources:"
+                            }
+                        },
+                        {
+                            "ul": {
+                                "children": [
+                                    {"li": {"text": "🌐 GitHub: github.com/dotpipe"}},
+                                    {"li": {"text": "📖 Full documentation in dotpipe.js header"}},
+                                    {"li": {"text": "💬 Community forums and support"}},
+                                    {"li": {"text": "🎯 Example projects and templates"}}
+                                ]
+                            }
+                        },
+                        {
+                            "p": { "html": "Happy coding with dotPipe! 🚀"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
