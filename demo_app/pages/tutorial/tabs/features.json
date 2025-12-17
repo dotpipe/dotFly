@@ -1,25 +1,28 @@
 {
     "div": {
-        "style": "padding: 20px;",
+        "style": "padding: 20px; color: #ffffff;",
         "children": [
             {
                 "h3": {
-                    "style": "color: #667eea;",
+                    "style": "color: #00d9ff;",
                     "text": "📊 dotPipe Features"
                 }
             },
             {
-                "ul": [
-                    {"li": "⚡ Inline macro pipelines"},
-                    {"li": "🔗 Declarative AJAX loading"},
-                    {"li": "🎨 15+ custom components"},
-                    {"li": "📱 Mobile-responsive design"},
-                    {"li": "🎭 JSON-based templating"}
-                ]
+                "ul": {
+                    "style": "color: #ffffff;",
+                    "children": [
+                        {"li": {"style": "color: #ffffff;", "text": "⚡ Inline macro pipelines"}},
+                        {"li": {"style": "color: #ffffff;", "text": "🔗 Declarative AJAX loading"}},
+                        {"li": {"style": "color: #ffffff;", "text": "🎨 15+ custom components"}},
+                        {"li": {"style": "color: #ffffff;", "text": "📱 Mobile-responsive design"}},
+                        {"li": {"style": "color: #ffffff;", "text": "🎭 JSON-based templating"}}
+                    ]
+                }
             },
             {
                 "div": {
-                    "style": "background: #d4edda; padding: 15px; border-radius: 5px; margin-top: 15px;",
+                    "style": "background: #000000; padding: 15px; border-radius: 3px; margin-top: 15px; border: 2px solid #00ff88; color: #ffffff;",
                     "html": "<strong>💡 Pro Tip:</strong> Combine features for powerful applications!"
                 }
             }

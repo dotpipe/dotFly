@@ -1,351 +1,84 @@
 {
-    "style": {
-        "tagname": "style",
-        "textcontent": "body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0;  padding: 2px !important; } .section { max-width: 1200px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);  padding: 2px !important; .demo-box { background: #f8f9fa; border-left: 4px solid #667eea; margin: 25px 0; border-radius: 8px;  padding: 2px !important; .demo-title { font-size: 1.3em; font-weight: bold; color: #667eea; margin-bottom: 15px; } .code-block { background: #2d2d2d; color: #f8f8f2; border-radius: 8px; font-family: 'Courier New', monospace; overflow-x: auto; margin: 15px 0; white-space: pre-wrap; font-size: 0.95em; min-height: 60px; line-height: 1.4;  padding: 2px !important; .output-box { background: white; border: 2px solid #667eea; border-radius: 8px; margin: 15px 0; min-height: 50px;  padding: 2px !important; button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 1em; font-weight: bold; transition: all 0.3s; margin: 10px 5px;  padding: 2px !important; } button:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); } input { border: 2px solid #667eea; border-radius: 8px; font-size: 1em; margin: 10px 5px; } h2 { color: #667eea; font-size: 2.5em; margin-bottom: 20px; } h3 { color: #764ba2; font-size: 1.8em; margin-top: 30px; margin-bottom: 15px; }"
-    },
-    "div": {
-        "class": "section",
-        "children": [
-            {
-                "h2": "⚡ Inline Macros: The Power of dotPipe"
-            },
-            {
-                "p": {"textcontent": "Inline macros allow you to execute complex logic directly in HTML attributes. They use a pipeline syntax where operations are chained with the | operator."}
-            },
-            
-            {
-                "h3": "📦 Variable Storage & Retrieval"
-            },
-            {
-                "div": {
-                    "class": "demo-box",
-                    "children": [
-                        {
-                            "div": {
-                                "class": "demo-title",
-                                "text": "Demo 1: Store and Display Variables"
-                            }
-                        },
-                        {
-                            "p": {"textcontent": "Store a value in a variable and display it in another element."}
-                        },
-                        {
-                            "div": {
-                                "class": "code-block", "textContent": "&lt;button id=\"varDemo1\" inline=\"\n    |&username:JohnDoe123\n    |&status:Active\n    |$varOutput1.innerHTML:User: !username - Status: !status\n\">Store & Display"
-                            }
-                        },
-                        {
-                            "button": {
-                                "tagname": "button",
-                                "id": "varDemo1",
-                                "inline": "|&username:JohnDoe123|&status:Active|$varOutput1:User: !username - Status: !status",
-                                "textContent": "🎯 Store & Display"
-                            }
-                        },
-                        {
-                            "div": {
-                                "id": "varOutput1",
-                                "class": "output-box",
-                                "text": "Click to see stored variables..."
-                            }
-                        }
-                    ]
-                }
-            },
-
-            {
-                "h3": "🔄 DOM Manipulation"
-            },
-            {
-                "div": {
-                    "class": "demo-box",
-                    "children": [
-                        {
-                            "div": {
-                                "class": "demo-title",
-                                "text": "Demo 2: Update Multiple Elements"
-                            }
-                        },
-                        {
-                            "p": {"textcontent": "Use DOM operators to update multiple elements at once."}
-                        },
-                        {
-                            "div": {
-                                "class": "code-block", "textContent": "&lt;button id=\"domDemo1\" inline=\"\n    |&message:dotPipe is awesome!\n    |$domOut1.innerHTML:!message\n    |$domOut2.innerHTML:Length: !message.length characters\n    |$domOut3.style.color:green\n\">Update Elements"
-                            }
-                        },
-                        {
-                            "button": {
-                                "tagname": "button",
-                                "id": "domDemo1",
-                                "inline": "|&message:dotPipe is awesome!|$domOut1:!message|$domOut2:Message updated successfully!|$domOut3.style.background:#d4edda|$domOut3:✅ All elements updated",
-                                "textContent": "🎯 Update Elements"
-                            }
-                        },
-                        {
-                            "div": {
-                                "id": "domOut1",
-                                "class": "output-box",
-                                "text": "Output 1"
-                            }
-                        },
-                        {
-                            "div": {
-                                "id": "domOut2",
-                                "class": "output-box",
-                                "text": "Output 2"
-                            }
-                        },
-                        {
-                            "div": {
-                                "id": "domOut3",
-                                "class": "output-box",
-                                "text": "Output 3"
-                            }
-                        }
-                    ]
-                }
-            },
-
-            {
-                "h3": "📥 Reading Input Values"
-            },
-            {
-                "div": {
-                    "class": "demo-box",
-                    "children": [
-                        {
-                            "div": {
-                                "class": "demo-title",
-                                "text": "Demo 3: Read and Process Input"
-                            }
-                        },
-                        {
-                            "p": {"textcontent": "Read values from input fields and process them."}
-                        },
-                        {
-                            "div": {
-                                "class": "code-block", "textContent": "&lt;input id=\"nameInput\" placeholder=\"Enter your name\">\nGreet Me"
-                            }
-                        },
-                        {
-                            "input": {
-                                "id": "nameInput",
-                                "type": "text",
-                                "placeholder": "Enter your name here..."
-                            }
-                        },
-                        {
-                            "br": ""
-                        },
-                        {
-                            "button": {
-                                "tagname": "button",
-                                "id": "inputDemo1",
-                                "inline": "|#userName:nameInput.value|$inputOut1:👋 Welcome, !userName!|$inputOut1.style.color:#667eea",
-                                "textContent": "👋 Greet Me"
-                            }
-                        },
-                        {
-                            "div": {
-                                "id": "inputOut1",
-                                "class": "output-box",
-                                "text": "Enter your name and click the button..."
-                            }
-                        }
-                    ]
-                }
-            },
-
-            {
-                "h3": "🎯 Function Calls"
-            },
-            {
-                "div": {
-                    "class": "demo-box",
-                    "children": [
-                        {
-                            "div": {
-                                "class": "demo-title",
-                                "text": "Demo 4: Call JavaScript Functions"
-                            }
-                        },
-                        {
-                            "p": {"textcontent": "Execute custom JavaScript functions with arguments."}
-                        },
-                        {
-                            "div": {
-                                "class": "code-block", "textContent": "&lt;button id=\"funcDemo1\" inline=\"\n    |&alertMsg:Hello from dotPipe!\n    |%showAlert:[!alertMsg]\n\">Show Alert"
-                            }
-                        },
-                        {
-                            "button": {
-                                "tagname": "button",
-                                "id": "funcDemo1",
-                                "inline": "|&alertMsg:Hello from dotPipe inline macros!|%showAlert:[!alertMsg]",
-                                "textContent": "🔔 Show Alert"
-                            }
-                        },
-                        {
-                            "br": ""
-                        },
-                        {
-                            "div": {
-                                "class": "code-block", "textContent": "&lt;button id=\"funcDemo2\" inline=\"\n    |&targetElem:funcOut2\n    |%highlightElement:[!targetElem]\n\">Highlight Output"
-                            }
-                        },
-                        {
-                            "button": {
-                                "tagname": "button",
-                                "id": "funcDemo2",
-                                "inline": "|&targetElem:funcOut2|&msg:This element was highlighted using inline macros!|$funcOut2:!msg|%highlightElement:[!targetElem]",
-                                "textContent": "✨ Highlight Output"
-                            }
-                        },
-                        {
-                            "div": {
-                                "id": "funcOut2",
-                                "class": "output-box",
-                                "text": "This element will be highlighted..."
-                            }
-                        }
-                    ]
-                }
-            },
-
-            {
-                "h3": "🔗 Chaining Operations"
-            },
-            {
-                "div": {
-                    "class": "demo-box",
-                    "children": [
-                        {
-                            "div": {
-                                "class": "demo-title",
-                                "text": "Demo 5: Complex Pipeline"
-                            }
-                        },
-                        {
-                            "p": {"textcontent": "Combine multiple operations in a single pipeline."}
-                        },
-                        {
-                            "div": {
-                                "class": "code-block", "textContent": "&lt;input id=\"num1\" type=\"number\" placeholder=\"First number\">\n\nCalculate"
-                            }
-                        },
-                        {
-                            "input": {
-                                "id": "num1",
-                                "type": "number",
-                                "placeholder": "First number",
-                                "value": "10"
-                            }
-                        },
-                        {
-                            "input": {
-                                "id": "num2",
-                                "type": "number",
-                                "placeholder": "Second number",
-                                "value": "20"
-                            }
-                        },
-                        {
-                            "br": ""
-                        },
-                        {
-                            "button": {
-                                "tagname": "button",
-                                "id": "chainDemo1",
-                                "inline": "|#n1:num1.value|#n2:num2.value|&result:Calculation complete!|$chainOut1:📊 Numbers: !n1 and !n2|$chainOut2:✅ !result|$chainOut2.style.background:#d4edda",
-                                "textContent": "🧮 Process"
-                            }
-                        },
-                        {
-                            "div": {
-                                "id": "chainOut1",
-                                "class": "output-box",
-                                "text": "Output 1"
-                            }
-                        },
-                        {
-                            "div": {
-                                "id": "chainOut2",
-                                "class": "output-box",
-                                "text": "Output 2"
-                            }
-                        }
-                    ]
-                }
-            },
-
-            {
-                "h3": "💡 Best Practices"
-            },
-            {
-                "div": {
-                    "class": "demo-box",
-                    "children": [
-                        {
-                            "ul": {
-                                "children": [
-                                    {"li": {"textcontent": "✅ Always use unique IDs for elements"}},
-                                    {"li": {"textcontent": "✅ Chain operations with the | pipe operator"}},
-                                    {"li": {"textcontent": "✅ Store intermediate values in variables with &varName:value"}},
-                                    {"li": {"textcontent": "✅ Reference variables with !varName"}},
-                                    {"li": {"textcontent": "✅ Use $id.property:value to update DOM"}},
-                                    {"li": {"textcontent": "✅ Use #varName:id.property to read from DOM"}},
-                                    {"li": {"textcontent": "✅ Call functions with %funcName:[arg1, arg2]"}}
-                                ]
-                            }
-                        }
-                    ]
-                }
-            },
-
-            {
-                "h3": "🎓 Try It Yourself"
-            },
-            {
-                "div": {
-                    "class": "demo-box",
-                    "children": [
-                        {
-                            "div": {
-                                "class": "demo-title",
-                                "text": "Interactive Playground"
-                            }
-                        },
-                        {
-                            "p": {"textcontent": "Create your own inline macro (limited to simple operations for safety):"}
-                        },
-                        {
-                            "textarea": {
-                                "id": "customInline",
-                                "placeholder": "Try: |&myVar:Hello World|$playOutput:!myVar",
-                                "text": "|&myVar:Hello World|$playOutput:!myVar"
-                            }
-                        },
-                        {
-                            "br": ""
-                        },
-                        {
-                            "button": {
-                                "tagname": "button",
-                                "id": "runCustom",
-                                "textContent": "▶️ Run Custom Inline"
-                            }
-                        },
-                        {
-                            "div": {
-                                "id": "playOutput",
-                                "class": "output-box",
-                                "text": "Your output will appear here..."
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
-    }
+  "style": {
+    "tagname": "style",
+    "textcontent": "body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #000000 0%, #0a0a0a 100%); color: #fff; } .section { max-width: 1200px; margin: 0 auto; background: #0a0f1e; border-radius: 5px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); padding: 30px; border: 1px solid #1f4068; color: #fff; } .section h2 { color: #00d9ff; } .section h3 { color: #ff3366; } .section p { color: #fff; } .demo-title { color: #ff3366; font-weight: bold; font-size: 1.2em; margin-bottom: 10px; } .demo-box { background: #050510; border-left: 4px solid #ff3366; margin: 25px 0; border-radius: 3px; padding: 20px; box-shadow: 0 4px 15px rgba(255,51,102,0.3); } .example-nest { margin: 18px 0; padding: 18px; background: #181a22; border-radius: 4px; border: 1px solid #00d9ff; } .code-block { background: #000; color: #fff; border-radius: 3px; font-family: 'Courier New', monospace; overflow-x: auto; margin: 15px 0; white-space: pre-wrap; font-size: 0.95em; min-height: 60px; line-height: 1.4; padding: 15px; border: 1px solid #00d9ff; } .output-box { background: #050510; border: 2px solid #00d9ff; border-radius: 3px; margin: 15px 0; min-height: 50px; padding: 15px; color: #fff; } button { background: linear-gradient(135deg, #ff3366 0%, #cc0033 100%); color: #fff; border: none; padding: 10px 20px; border-radius: 3px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255,51,102,0.4); } button:hover { background: linear-gradient(135deg, #ff5588 0%, #ff3366 100%); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,51,102,0.6); }"
+  },
+  "div": {
+    "class": "section",
+    "children": [
+      { "h2": "⚡ Inline Macros: The Power of dotPipe" },
+      { "p": { "textcontent": "Inline macros let you execute logic directly in HTML attributes using a pipeline syntax. Each operation is chained with the | operator." } },
+      { "h3": "Demo: Store and Display Variables" },
+      { "div": { "class": "demo-box", "children": [
+        { "div": { "class": "demo-title", "text": "Store and Display" } },
+        { "div": { "class": "example-nest", "children": [
+          { "div": { "class": "code-block", "textContent": "<button id=\"varDemo1\" inline=\"|&username:JohnDoe|$varOutput1:!username\">Store & Display" } },
+          { "button": { "tagname": "button", "id": "varDemo1", "inline": "|&username:JohnDoe|$varOutput1:!username", "textContent": "Store & Display" } },
+          { "div": { "id": "varOutput1", "class": "output-box", "text": "Click to see stored variable..." } }
+        ] } }
+      ] } },
+      { "h3": "Demo: DOM Manipulation" },
+      { "div": { "class": "demo-box", "children": [
+        { "div": { "class": "demo-title", "text": "Update Multiple Elements" } },
+        { "div": { "class": "example-nest", "children": [
+          { "div": { "class": "code-block", "textContent": "<button id=\"domDemo1\" inline=\"|&msg:Hello!|$out1:!msg|$out2:!msg\">Update Elements" } },
+          { "button": { "tagname": "button", "id": "domDemo1", "inline": "|&msg:Hello!|$out1:!msg|$out2:!msg", "textContent": "Update Elements" } },
+          { "div": { "id": "out1", "class": "output-box", "text": "Output 1" } },
+          { "div": { "id": "out2", "class": "output-box", "text": "Output 2" } }
+        ] } }
+      ] } },
+      { "h3": "Demo: Read and Process Input" },
+      { "div": { "class": "demo-box", "children": [
+        { "div": { "class": "demo-title", "text": "Read and Process Input (Flat tagname format)" } },
+        { "div": { "class": "example-nest", "children": [
+          { "div": { "class": "code-block", "textContent": "{\n  \"tagname\": \"input\", \"id\": \"nameInput\", \"type\": \"text\", \"placeholder\": \"Enter your name here...\" }\n{\n  \"tagname\": \"button\", \"id\": \"greetBtn\", \"inline\": \"|#user:nameInput.value|$greetOut:Hello, !user\", \"textContent\": \"Greet Me\" }\n{\n  \"tagname\": \"div\", \"id\": \"greetOut\", \"class\": \"output-box\", \"text\": \"Enter your name and click the button...\" }" } },
+          { "tagname": "input", "id": "nameInput", "type": "text", "placeholder": "Enter your name here..." },
+{ "tagname": "button", "id": "greetBtn", "inline": "|#user:nameInput.value|$greetOut:Hello, !user", "textContent": "Greet Me" },
+{ "tagname": "div", "id": "greetOut", "class": "output-box", "text": "Enter your name and click the button..." }
+        ] } },
+        { "div": { "class": "demo-title", "text": "Read and Process Input (Nested tagname-key format for modala)" } },
+        { "div": { "class": "example-nest", "children": [
+          { "div": { "class": "code-block", "textContent": "{\n  input: { id: 'nameInput', type: 'text', placeholder: 'Enter your name here...' },\n  button: { tagname: 'button', id: 'greetBtn', inline: '|#user:nameInput.value|$greetOut:Hello, !user', textContent: 'Greet Me' },\n  div: { tagname: 'div', id: 'greetOut', class: 'output-box', text: 'Enter your name and click the button...' }\n}" } },
+          { "tagname": "input", "id": "nameInput2", "type": "text", "placeholder": "Enter your name..." },
+{ "tagname": "input", "id": "scoreInput", "type": "number", "placeholder": "Enter your score..." },
+{ "tagname": "button", "id": "greetScoreBtn", "inline": "|#user:nameInput2.value|#score:scoreInput.value|$greetScoreOut:Hello, !user! Your score is !score/100.", "textContent": "Greet Me (with Score)" },
+{ "tagname": "div", "id": "greetScoreOut", "class": "output-box", "text": "Enter your name and score, then click the button..." }
+        ] } }
+      ] } },
+      { "h3": "Demo: Function Calls" },
+      { "div": { "class": "demo-box", "children": [
+        { "div": { "class": "demo-title", "text": "Call JavaScript Functions" } },
+        { "div": { "class": "example-nest", "children": [
+          { "div": { "class": "code-block", "textContent": "<button id=\"funcDemo\" inline=\"|&msg:Hello!|call:alert:!msg\">Show Alert" } },
+          { "button": { "tagname": "button", "id": "funcDemo", "inline": "|&msg:Hello!|call:alert:!msg", "textContent": "Show Alert" } }
+        ] } }
+      ] } },
+      { "h3": "Demo: Literal Exclamation Mark (\\!)" },
+      { "div": { "class": "demo-box", "children": [
+        { "div": { "class": "demo-title", "text": "Show Literal Exclamation Mark" } },
+        { "div": { "class": "example-nest", "children": [
+          { "div": { "class": "code-block", "textContent": "<button id=\"exclDemo\" inline=\"|&msg:Hello\\! World\\!|$exclOut:!msg\">Show !'s" } },
+          { "button": { "tagname": "button", "id": "exclDemo", "inline": "|&msg:Hello\\! World\\!|$exclOut:!msg", "textContent": "Show !'s" } },
+          { "div": { "id": "exclOut", "class": "output-box", "text": "Click to see literal exclamation marks..." } }
+        ] } }
+      ] } },
+      { "h3": "Demo: ES6-style Interpolation" },
+      { "div": { "class": "demo-box", "children": [
+        { "div": { "class": "demo-title", "text": "Welcome Message with Variables and Punctuation" } },
+        { "div": { "class": "example-nest", "children": [
+          { "div": { "class": "code-block", "textContent": "<button id=\"welcomeBtn\" inline=\"|&user:Alice|&score:95|$welcomeOut:Welcome, !user! Your score is !score/100.\">Show Welcome</button>\n<div id=\"welcomeOut\" class=\"output-box\">Click the button to see your welcome message.</div>" } },
+          { "button": { "tagname": "button", "id": "welcomeBtn", "inline": "|&user:Alice|&score:95|$welcomeOut:Welcome, !user! Your score is !score/100.", "textContent": "Show Welcome" } },
+          { "div": { "id": "welcomeOut", "class": "output-box", "text": "Click the button to see your welcome message." } }
+        ] } }
+      ] } },
+      { "h3": "Try It Yourself" },
+      { "div": { "class": "demo-box", "children": [
+        { "div": { "class": "demo-title", "text": "Interactive Playground" } },
+        { "p": { "textcontent": "Create your own inline macro (limited to simple operations for safety):" } },
+        { "textarea": { "id": "customInline", "placeholder": "Try: |&myVar:Hello World|$playOutput:!myVar", "text": "|&myVar:Hello World|$playOutput:!myVar" } },
+        { "button": { "tagname": "button", "id": "runCustom", "textContent": "Run Custom Inline" } },
+        { "div": { "id": "playOutput", "class": "output-box", "text": "Your output will appear here..." } }
+      ] } }
+    ]
+  }
 }

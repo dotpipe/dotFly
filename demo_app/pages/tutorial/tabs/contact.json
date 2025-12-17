@@ -1,28 +1,40 @@
 {
     "div": {
-        "style": "padding: 20px;",
+        "style": "padding: 20px; color: #ffffff;",
         "children": [
             {
                 "h3": {
-                    "style": "color: #667eea;",
+                    "style": "color: #00d9ff;",
                     "text": "📞 Get in Touch"
                 }
             },
             {
-                "p": "Have questions about dotPipe? We'd love to hear from you!"
+                "p": {
+                    "style": "color: #ffffff;",
+                    "text": "Have questions about dotPipe? We'd love to hear from you!"
+                }
             },
             {
                 "div": {
-                    "style": "background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;",
+                    "style": "background: #000000; padding: 15px; border-radius: 3px; margin: 15px 0; border: 2px solid #00d9ff;",
                     "children": [
                         {
-                            "p": "<strong>📧 Email:</strong> support@dotpipe.dev"
+                            "p": {
+                                "style": "color: #ffffff;",
+                                "html": "<strong>📧 Email:</strong> support@dotpipe.dev"
+                            }
                         },
                         {
-                            "p": "<strong>🌐 Website:</strong> https://github.com/dotpipe"
+                            "p": {
+                                "style": "color: #ffffff;",
+                                "html": "<strong>🌐 Website:</strong> https://github.com/dotpipe"
+                            }
                         },
                         {
-                            "p": "<strong>💬 Community:</strong> Join our forums!"
+                            "p": {
+                                "style": "color: #ffffff;",
+                                "html": "<strong>💬 Community:</strong> Join our forums!"
+                            }
                         }
                     ]
                 }

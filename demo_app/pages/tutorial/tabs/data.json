@@ -1,50 +1,56 @@
 {
     "div": {
-        "style": "padding: 20px;",
+        "style": "padding: 20px; color: #ffffff;",
         "children": [
             {
-                "h3": "📈 Data Display"
+                "h3": {
+                    "style": "color: #00d9ff;",
+                    "text": "📈 Data Display"
+                }
             },
             {
-                "p": "Tabs are great for displaying structured data:"
+                "p": {
+                    "style": "color: #ffffff;",
+                    "text": "Tabs are great for displaying structured data:"
+                }
             },
             {
                 "table": {
-                    "style": "width: 100%; margin: 15px 0;",
+                    "style": "width: 100%; margin: 15px 0; border-collapse: collapse;",
                     "children": [
                         {
                             "tr": {
                                 "children": [
-                                    {"th": "Metric"},
-                                    {"th": "Value"},
-                                    {"th": "Status"}
+                                    {"th": {"style": "background: #000000; color: #00d9ff; border: 1px solid #00d9ff; padding: 10px;", "text": "Metric"}},
+                                    {"th": {"style": "background: #000000; color: #00d9ff; border: 1px solid #00d9ff; padding: 10px;", "text": "Value"}},
+                                    {"th": {"style": "background: #000000; color: #00d9ff; border: 1px solid #00d9ff; padding: 10px;", "text": "Status"}}
                                 ]
                             }
                         },
                         {
                             "tr": {
                                 "children": [
-                                    {"td": "Active Users"},
-                                    {"td": "1,234"},
-                                    {"td": "✅ Good"}
+                                    {"td": {"style": "color: #ffffff; border: 1px solid #00d9ff; padding: 10px;", "text": "Active Users"}},
+                                    {"td": {"style": "color: #ffffff; border: 1px solid #00d9ff; padding: 10px;", "text": "1,234"}},
+                                    {"td": {"style": "color: #ffffff; border: 1px solid #00d9ff; padding: 10px;", "text": "✅ Good"}}
                                 ]
                             }
                         },
                         {
                             "tr": {
                                 "children": [
-                                    {"td": "API Calls"},
-                                    {"td": "45,678"},
-                                    {"td": "✅ Normal"}
+                                    {"td": {"style": "color: #ffffff; border: 1px solid #00d9ff; padding: 10px;", "text": "API Calls"}},
+                                    {"td": {"style": "color: #ffffff; border: 1px solid #00d9ff; padding: 10px;", "text": "45,678"}},
+                                    {"td": {"style": "color: #ffffff; border: 1px solid #00d9ff; padding: 10px;", "text": "✅ Normal"}}
                                 ]
                             }
                         },
                         {
                             "tr": {
                                 "children": [
-                                    {"td": "Response Time"},
-                                    {"td": "124ms"},
-                                    {"td": "✅ Fast"}
+                                    {"td": {"style": "color: #ffffff; border: 1px solid #00d9ff; padding: 10px;", "text": "Response Time"}},
+                                    {"td": {"style": "color: #ffffff; border: 1px solid #00d9ff; padding: 10px;", "text": "124ms"}},
+                                    {"td": {"style": "color: #ffffff; border: 1px solid #00d9ff; padding: 10px;", "text": "✅ Fast"}}
                                 ]
                             }
                         }
@@ -53,7 +59,7 @@
             },
             {
                 "div": {
-                    "style": "background: #e7f3ff; padding: 15px; border-radius: 5px; margin-top: 15px;",
+                    "style": "background: #000000; padding: 15px; border-radius: 3px; margin-top: 15px; border: 2px solid #00d9ff; color: #ffffff;",
                     "html": "<strong>💡 Tip:</strong> You can load real data from APIs using pipe elements within tabs!"
                 }
             }

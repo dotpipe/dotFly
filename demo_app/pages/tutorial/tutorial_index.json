@@ -1,20 +1,20 @@
 {
     "style": {
-        "text": "\n            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; padding: 20px; min-height: 100vh; }\n            .tutorial-main { max-width: 1200px; margin: 0 auto; background: white; padding: 50px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }\n            .nav-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 30px 0; }\n            .nav-btn { padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s; font-weight: bold; }\n            .nav-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4); }\n            h1 { color: #667eea; text-align: center; font-size: 3em; margin-bottom: 10px; }\n            .subtitle { text-align: center; color: #666; font-size: 1.2em; margin-bottom: 40px; }\n        "
+        "text": "\n            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%); margin: 0; padding: 20px; min-height: 100vh; color: #ffffff; }\n            .tutorial-main { max-width: 1200px; margin: 0 auto; background: #16213e !important; padding: 50px; border-radius: 5px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid #1f4068; color: #e0e8f0 !important; }\n            .tutorial-main * { color: #e0e8f0; }\n            .tutorial-main h1 { color: #4fc3f7 !important; }\n            .tutorial-main h2 { color: #4fc3f7 !important; }\n            .tutorial-main h3 { color: #e94560 !important; }\n            .nav-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 30px 0; }\n            .nav-btn { padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #e94560 0%, #c72e4a 100%); color: white; border: none; border-radius: 3px; cursor: pointer; transition: all 0.3s; font-weight: bold; box-shadow: 0 4px 15px rgba(233,69,96,0.3); }\n            .nav-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(233,69,96,0.5); background: linear-gradient(135deg, #ff5577 0%, #e94560 100%); }\n            h1 { color: #4fc3f7; text-align: center; font-size: 3em; margin-bottom: 10px; text-shadow: 0 0 20px rgba(79,195,247,0.4); }\n            .subtitle { text-align: center; color: #e0e8f0; font-size: 1.2em; margin-bottom: 40px; }\n        "
     },
     "div": {
         "class": "tutorial-main",
         "children": [
             {
                 "h1": {
-                    "style": "color: #667eea; text-align: center; font-size: 3em; margin-bottom: 10px;",
+                    "style": "color: #4fc3f7; text-align: center; font-size: 3em; margin-bottom: 10px; text-shadow: 0 0 20px rgba(79,195,247,0.4);",
                     "text": "🚀 dotPipe.js"
                 }
             },
             {
                 "div": {
                     "class": "subtitle",
-                    "style": "text-align: center; color: #666; font-size: 1.2em; margin-bottom: 40px;",
+                    "style": "text-align: center; color: #e0e8f0; font-size: 1.2em; margin-bottom: 40px;",
                     "text": "Complete Interactive Tutorial & Documentation"
                 }
             },
@@ -27,7 +27,7 @@
                             "a": {
                                 "href": "?page=overview",
                                 "class": "nav-btn",
-                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #e94560 0%, #c72e4a 100%); color: white; border: none; border-radius: 3px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
                                 "text": "🎯 Overview"
                             }
                         },
@@ -35,7 +35,7 @@
                             "a": {
                                 "href": "?page=inline_macros",
                                 "class": "nav-btn",
-                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #e94560 0%, #c72e4a 100%); color: white; border: none; border-radius: 3px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
                                 "text": "⚡ Inline Macros"
                             }
                         },
@@ -43,7 +43,7 @@
                             "a": {
                                 "href": "?page=ajax_pipes",
                                 "class": "nav-btn",
-                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #e94560 0%, #c72e4a 100%); color: white; border: none; border-radius: 3px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
                                 "text": "🔗 AJAX & Pipes"
                             }
                         },
@@ -51,7 +51,7 @@
                             "a": {
                                 "href": "?page=tabs_demo",
                                 "class": "nav-btn",
-                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #e94560 0%, #c72e4a 100%); color: white; border: none; border-radius: 3px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
                                 "text": "📑 Tabs Component"
                             }
                         },
@@ -59,7 +59,7 @@
                             "a": {
                                 "href": "?page=csv_demo",
                                 "class": "nav-btn",
-                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #e94560 0%, #c72e4a 100%); color: white; border: none; border-radius: 3px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
                                 "text": "📊 CSV Component"
                             }
                         },
@@ -67,7 +67,7 @@
                             "a": {
                                 "href": "?page=carousel_demo",
                                 "class": "nav-btn",
-                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #e94560 0%, #c72e4a 100%); color: white; border: none; border-radius: 3px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
                                 "text": "🎠 Carousel"
                             }
                         },
@@ -75,7 +75,7 @@
                             "a": {
                                 "href": "?page=modala_demo",
                                 "class": "nav-btn",
-                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #e94560 0%, #c72e4a 100%); color: white; border: none; border-radius: 3px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
                                 "text": "🎨 Modala Templates"
                             }
                         },
@@ -83,7 +83,7 @@
                             "a": {
                                 "href": "?page=advanced",
                                 "class": "nav-btn",
-                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
+                                "style": "padding: 20px; font-size: 1.1em; background: linear-gradient(135deg, #e94560 0%, #c72e4a 100%); color: white; border: none; border-radius: 3px; cursor: pointer; display: block; text-decoration: none; text-align: center;",
                                 "text": "🛠️ Advanced"
                             }
                         }

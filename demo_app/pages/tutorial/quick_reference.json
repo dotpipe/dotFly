@@ -1,10 +1,10 @@
 {
     "div": {
-        "style": "font-family: 'Courier New', monospace; background: #2d2d2d; color: #f8f8f2; padding: 30px; border-radius: 10px; max-width: 900px; margin: 20px auto;",
+        "style": "font-family: 'Courier New', monospace; background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%); color: #ffffff; padding: 30px; border-radius: 3px; max-width: 900px; margin: 20px auto;",
         "children": [
             {
                 "h1": {
-                    "style": "color: #667eea; text-align: center; font-size: 2.5em; margin-bottom: 30px;",
+                    "style": "color: #4fc3f7; text-align: center; font-size: 2.5em; margin-bottom: 30px; text-shadow: 0 0 20px rgba(79,195,247,0.4);",
                     "text": "🚀 dotPipe.js Quick Reference"
                 }
             },
@@ -14,11 +14,11 @@
                     "children": [
                         {
                             "div": {
-                                "style": "background: #383838; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea;",
+                                "style": "background: #16213e; padding: 20px; border-radius: 8px; border-left: 4px solid #4fc3f7;",
                                 "children": [
                                     {
                                         "h2": {
-                                            "style": "color: #667eea; margin-top: 0;",
+                                            "style": "color: #4fc3f7; margin-top: 0;",
                                             "text": "⚡ Pipeline Operators"
                                         }
                                     },
@@ -33,11 +33,11 @@
                         },
                         {
                             "div": {
-                                "style": "background: #383838; padding: 20px; border-radius: 8px; border-left: 4px solid #764ba2;",
+                                "style": "background: #16213e; padding: 20px; border-radius: 8px; border-left: 4px solid #e94560;",
                                 "children": [
                                     {
                                         "h2": {
-                                            "style": "color: #764ba2; margin-top: 0;",
+                                            "style": "color: #e94560; margin-top: 0;",
                                             "text": "🏷️ Custom Tags"
                                         }
                                     },
@@ -52,11 +52,11 @@
                         },
                         {
                             "div": {
-                                "style": "background: #383838; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea;",
+                                "style": "background: #16213e; padding: 20px; border-radius: 8px; border-left: 4px solid #4fc3f7;",
                                 "children": [
                                     {
                                         "h2": {
-                                            "style": "color: #667eea; margin-top: 0;",
+                                            "style": "color: #4fc3f7; margin-top: 0;",
                                             "text": "📋 Key Attributes"
                                         }
                                     },
@@ -71,11 +71,11 @@
                         },
                         {
                             "div": {
-                                "style": "background: #383838; padding: 20px; border-radius: 8px; border-left: 4px solid #764ba2;",
+                                "style": "background: #16213e; padding: 20px; border-radius: 8px; border-left: 4px solid #e94560;",
                                 "children": [
                                     {
                                         "h2": {
-                                            "style": "color: #764ba2; margin-top: 0;",
+                                            "style": "color: #e94560; margin-top: 0;",
                                             "text": "🎨 Modala JSON"
                                         }
                                     },
@@ -93,11 +93,11 @@
             },
             {
                 "div": {
-                    "style": "margin-top: 30px; background: #383838; padding: 20px; border-radius: 8px;",
+                    "style": "margin-top: 30px; background: #16213e; padding: 20px; border-radius: 8px;",
                     "children": [
                         {
                             "h2": {
-                                "style": "color: #667eea; margin-top: 0;",
+                                "style": "color: #4fc3f7; margin-top: 0;",
                                 "text": "💡 Quick Examples"
                             }
                         },
@@ -198,7 +198,7 @@
                         },
                         {
                             "p": {
-                                "style": "margin: 20px 0 5px 0; color: #667eea; font-weight: bold;",
+                                "style": "margin: 20px 0 5px 0; color: #4fc3f7; font-weight: bold;",
                                 "text": "Built with ❤️ using dotPipe.js"
                             }
                         }

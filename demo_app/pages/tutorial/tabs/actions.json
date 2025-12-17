@@ -1,12 +1,18 @@
 {
     "div": {
-        "style": "padding: 20px;",
+        "style": "padding: 20px; color: #ffffff;",
         "children": [
             {
-                "h3": "🎯 Interactive Actions"
+                "h3": {
+                    "style": "color: #00d9ff;",
+                    "text": "🎯 Interactive Actions"
+                }
             },
             {
-                "p": "Tabs can contain interactive elements with inline macros:"
+                "p": {
+                    "style": "color: #ffffff;",
+                    "text": "Tabs can contain interactive elements with inline macros:"
+                }
             },
             {
                 "div": {
@@ -23,7 +29,7 @@
                         {
                             "button": {
                                 "id": "tabAction2",
-                                "inline": "|&msg:Action 2 executed!|$tabActionOut.innerHTML:!msg|$tabActionOut.style.background:#d4edda",
+                                "inline": "|&msg:Action 2 executed!|$tabActionOut.innerHTML:!msg|tabActionOut.background:#00ff88",
                                 "text": "Action 2",
                                 "style": "padding: 15px;"
                             }
@@ -31,7 +37,7 @@
                         {
                             "button": {
                                 "id": "tabAction3",
-                                "inline": "|&msg:Action 3 complete!|$tabActionOut.innerHTML:!msg|$tabActionOut.style.background:#fff3cd",
+                                "inline": "|&msg:Action 3 complete!|$tabActionOut.innerHTML:!msg|tabActionOut.background:#ff3366",
                                 "text": "Action 3",
                                 "style": "padding: 15px;"
                             }
@@ -42,7 +48,7 @@
             {
                 "div": {
                     "id": "tabActionOut",
-                    "style": "padding: 15px; background: #f8f9fa; border-radius: 5px; margin-top: 10px;",
+                    "style": "padding: 15px; background: #000000; border-radius: 3px; margin-top: 10px; border: 2px solid #00d9ff; color: #ffffff;",
                     "text": "Click buttons above to see actions..."
                 }
             }

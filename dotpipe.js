@@ -529,6 +529,11 @@ const dotPipe = {
         const segments = entry.inlineMacro.split('|').filter(s => s.trim() !== '');
         for (let i = 0; i < segments.length; i++) {
             let seg = segments[i].trim();
+            // Replace only single backslash-escaped ! (not double-backslash) with a placeholder
+            const EXCL_PLACEHOLDER = '__DOTPIPE_EXCL__';
+            seg = seg.replace(/(^|[^\\])\\!(?!\\)/g, (m, p1) => p1 + EXCL_PLACEHOLDER);
+            // Restore double-backslash-escaped ! to single backslash + !
+            seg = seg.replace(/\\\\!/g, '\\!');
             let m;
 
             // ===============================
@@ -544,9 +549,18 @@ const dotPipe = {
 
                 const s = currentShell || entry;
 
-                // Resolve !var
-                if (rawValue.startsWith('!')) {
-                    rawValue = s.dpVars[rawValue.slice(1)];
+                // Restore literal exclamation marks
+                rawValue = rawValue.replace(/__DOTPIPE_EXCL__/g, '!');
+                // Resolve !var (only if it starts with ! and not a literal)
+                // Interpolate all !var occurrences in the string (not preceded by a backslash)
+                if (typeof rawValue === 'string') {
+                    rawValue = rawValue.replace(/(^|[^\\])!([a-zA-Z_][a-zA-Z0-9_]*)/g, (m, pre, v) => {
+                        let val = s.dpVars[v];
+                        if (val === undefined || val === null) val = '';
+                        return pre + val;
+                    });
+                    // Restore literal exclamation marks
+                    rawValue = rawValue.replace(/__DOTPIPE_EXCL__/g, '!');
                 } else {
                     rawValue = dotPipe.parseValue(rawValue);
                 }
@@ -584,9 +598,16 @@ const dotPipe = {
 
                 const s = currentShell || entry;
 
-                // resolve variable references like !var
-                if (typeof rawValue === 'string' && rawValue.startsWith('!')) {
-                    rawValue = s.dpVars[rawValue.slice(1)];
+                // Restore literal exclamation marks
+                rawValue = rawValue.replace(/__DOTPIPE_EXCL__/g, '!');
+                // resolve variable references like !var (only if not a literal)
+                if (typeof rawValue === 'string') {
+                    rawValue = rawValue.replace(/(^|[^\\])!([a-zA-Z_][a-zA-Z0-9_]*)/g, (m, pre, v) => {
+                        let val = s.dpVars[v];
+                        if (val === undefined || val === null) val = '';
+                        return pre + val;
+                    });
+                    rawValue = rawValue.replace(/__DOTPIPE_EXCL__/g, '!');
                 } else {
                     rawValue = dotPipe.parseValue(rawValue);
                 }
@@ -653,13 +674,29 @@ const dotPipe = {
                 continue;
             }
 
+
+            // --- Property read: |#var:id.prop
+            if (m = /^#([a-zA-Z0-9_]+):([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)$/.exec(seg)) {
+                const varName = m[1];
+                const elemId = m[2];
+                const prop = m[3];
+                const el = document.getElementById(elemId);
+                let value = undefined;
+                if (el && prop in el) {
+                    value = el[prop];
+                }
+                (currentShell || entry).dpVars[varName] = value;
+                currentValue = value;
+                continue;
+            }
+
             // --- Literal assignment: |&var:value (supports !var?default)
             if (m = /^\&([a-zA-Z0-9_]+):(.+)$/.exec(seg)) {
                 const varName = m[1];
                 let value = m[2];
                 const s = currentShell || entry;
 
-                const initMatch = /^!(\w+)\?(.+)$/.exec(value);
+                const initMatch = /^!(\w+)?(.+)$/.exec(value);
                 if (initMatch) {
                     const existingVar = initMatch[1];
                     const defaultVal = initMatch[2];
@@ -681,11 +718,19 @@ const dotPipe = {
                 let selector = m[1];
                 let prop = m[2];
                 let value = m[3];
+
                 const s = currentShell || entry;
 
-                // resolve variables such as !hp or !color
-                if (value.startsWith('!')) {
-                    value = s.dpVars[value.slice(1)];
+                // Restore literal exclamation marks
+                value = value.replace(/__DOTPIPE_EXCL__/g, '!');
+                // resolve variables such as !hp or !color (only if not a literal)
+                if (typeof value === 'string') {
+                    value = value.replace(/(^|[^\\])!([a-zA-Z_][a-zA-Z0-9_]*)/g, (m, pre, v) => {
+                        let val = s.dpVars[v];
+                        if (val === undefined || val === null) val = '';
+                        return pre + val;
+                    });
+                    value = value.replace(/__DOTPIPE_EXCL__/g, '!');
                 } else {
                     value = dotPipe.parseValue(value);
                 }
@@ -708,14 +753,34 @@ const dotPipe = {
             }
 
             // --- Set element content: $id or $id:!var
-            if (m = /^\$([a-zA-Z0-9_-]+)(?::([a-zA-Z0-9_!]+))?$/.exec(seg)) {
+            if (m = /^\$([a-zA-Z0-9_-]+)(?::(.+))?$/.exec(seg)) {
                 const targetEl = document.getElementById(m[1]);
                 if (targetEl) {
                     let value;
-                    if (!m[2]) value = currentValue;
-                    else if (m[2].startsWith('!')) value = (currentShell || entry).dpVars[m[2].slice(1)];
-                    else value = (currentShell || entry).dpVars[m[2]];
-
+                    if (!m[2]) {
+                        value = currentValue;
+                    } else {
+                        // Improved: Replace !varName even if followed by punctuation or /number
+                        value = m[2].split(' ').map(word => {
+                            if (word.startsWith('!')) {
+                                // Extract variable name (letters, numbers, underscores)
+                                const match = /^!([a-zA-Z_][a-zA-Z0-9_]*)(.*)$/.exec(word);
+                                if (match) {
+                                    const varName = match[1];
+                                    const suffix = match[2] || '';
+                                    let v = (currentShell || entry).dpVars[varName];
+                                    if (v === undefined || v === null) v = '';
+                                    return v + suffix;
+                                } else {
+                                    return word;
+                                }
+                            } else {
+                                return word;
+                            }
+                        }).join(' ');
+                    }
+                    // Restore literal exclamation marks
+                    if (typeof value === 'string') value = value.replace(/__DOTPIPE_EXCL__/g, '!');
                     if (typeof value === "boolean") value = value ? "ON" : "OFF";
                     targetEl.innerHTML = value;
                 }
@@ -846,15 +911,32 @@ const dotPipe = {
                 continue;
             }
 
-            // $id
-            if (m = /^\$([a-zA-Z0-9_-]+)(?::([a-zA-Z0-9_!]+))?$/.exec(seg)) {
+            // $id or $id:!var or $id:Hello !user !score
+            if (m = /^\$([a-zA-Z0-9_-]+)(?::(.+))?$/.exec(seg)) {
                 const targetEl = document.getElementById(m[1]);
                 if (targetEl) {
                     let value;
-                    if (!m[2]) value = currentValue;
-                    else if (m[2].startsWith('!')) value = shell.dpVars[m[2].slice(1)];
-                    else value = shell.dpVars[m[2]];
-
+                    if (!m[2]) {
+                        value = currentValue;
+                    } else {
+                        // Improved: Replace !varName even if followed by punctuation or /number
+                        value = m[2].split(' ').map(word => {
+                            if (word.startsWith('!')) {
+                                const match = /^!([a-zA-Z_][a-zA-Z0-9_]*)(.*)$/.exec(word);
+                                if (match) {
+                                    const varName = match[1];
+                                    const suffix = match[2] || '';
+                                    let v = shell.dpVars[varName];
+                                    if (v === undefined || v === null) v = '';
+                                    return v + suffix;
+                                } else {
+                                    return word;
+                                }
+                            } else {
+                                return word;
+                            }
+                        }).join(' ');
+                    }
                     if (typeof value === "boolean") value = value ? "ON" : "OFF";
                     targetEl.innerHTML = value;
                 }
@@ -2965,7 +3047,7 @@ function initCart() {
  */
 function addToCart(productId, name, price, quantity = 1, image = '') {
     const cartData = localStorage.getItem('dotPipeCart');
-    const cart = cartData ? JSON.parse(cartData) : {items: [], subtotal: 0, tax: 0, shipping: 0, total: 0};
+    const cart = cartData ? JSON.parse(cartData) : { items: [], subtotal: 0, tax: 0, shipping: 0, total: 0 };
 
     // Check if item already exists in cart
     const existingItemIndex = cart.items.findIndex(item => item.productId === productId);
@@ -3285,7 +3367,7 @@ function setupTabSwitching(container, validatedTabs) {
 
     // Attach click handlers to each header
     headers.forEach(tab => {
-        tab.addEventListener('click', function(e) {
+        tab.addEventListener('click', function (e) {
             e.preventDefault();
             const tabId = this.getAttribute('data-tab');
             if (tabId) {
@@ -3294,7 +3376,7 @@ function setupTabSwitching(container, validatedTabs) {
         });
 
         // Keyboard navigation support
-        tab.addEventListener('keydown', function(e) {
+        tab.addEventListener('keydown', function (e) {
             const allTabs = Array.from(headers);
             const currentIndex = allTabs.indexOf(this);
             let nextTab = null;
@@ -3475,8 +3557,8 @@ function preloadAllTabContent(validatedTabs) {
                 try {
                     // Check if JSON looks like a modala definition
                     const keys = Object.keys(jsonObj || {});
-                    const looksLikeModala = keys.some(k => ['tagname','tagName','header','buttons','select','options','textcontent','innerhtml','innertext'].includes(k));
-                    
+                    const looksLikeModala = keys.some(k => ['tagname', 'tagName', 'header', 'buttons', 'select', 'options', 'textcontent', 'innerhtml', 'innertext'].includes(k));
+
                     if (!looksLikeModala) {
                         // Build a simple key/value HTML list for simple JSON objects
                         const html = '<div class="kv-list">' + keys.map(k => `<div class="kv-row"><strong>${escapeHtml(k)}:</strong> ${escapeHtml(String(jsonObj[k]))}</div>`).join('') + '</div>';
@@ -3512,7 +3594,7 @@ function preloadAllTabContent(validatedTabs) {
 
         // Clear loading placeholder and inject pipe element
         contentElem.innerHTML = `<div class="tab-preload-wrapper" id="preload-wrap-${tabId}"></div>`;
-        
+
         const wrapperElem = document.getElementById(`preload-wrap-${tabId}`);
         if (wrapperElem) {
             wrapperElem.appendChild(pipeElement);
@@ -5420,9 +5502,184 @@ function renderTree(value, tempTag) {
 
     // temp = htmlDecode(temp);
 
-    tempTag.appendChild(temp);
 
-    return tempTag;
+    if (value["header"] !== undefined && value["header"] instanceof Object) {
+        modalaHead(value["header"], "head", root, null);
+        var meta = document.createElement("meta");
+        meta.content = "default-src 'self'; script-src-elem 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; connect-src 'self' https: http:; child-src 'none'; object-src 'none'";
+        meta.httpEquiv = "Content-Security-Policy";
+        document.head.appendChild(meta);
+    }
+    Object.entries(value).forEach((nest) => {
+        Object.entries(value).forEach((nest) => {
+            const [k, v] = nest;
+            if (k.toLowerCase() == "header");
+            else if (k.toLocaleLowerCase() == "buttons" && v instanceof Object) {
+                var buttons = document.createElement("div");
+                v.forEach(z => {
+                    var button = document.createElement("input");
+                    button.type = "button";
+                    var keys = ["text", "value", "textcontent", "innerhtml", "innerText"];
+                    Object.entries(z).forEach(x => {
+                        const [key, val] = x;
+                        vals = escapeHtml(val);
+                        if (["text", "value", "textcontent", "innerhtml", "innertext"].includes(key.toLowerCase()))
+                            button.value = val;
+                        else
+                            button.setAttribute(key, val);
+                    });
+                    temp.appendChild(button);
+                });
+            }
+            else if (v instanceof Object)
+                modala(v, tempTag, root, id);
+            else if (v instanceof Object)
+                modala(v, tempTag, root, id);
+            else if (k.toLowerCase() == "br") {
+                let brs = v;
+                while (brs) {
+                    temp.appendChild(document.createElement("br"));
+                    brs--;
+                }
+            }
+            else if (k.toLowerCase() == "select") {
+                var select = document.createElement("select");
+                temp.appendChild(select);
+                modala(v, temp, root, id);
+            }
+            else if (k.toLowerCase() == "options" && temp.tagName.toLowerCase() == "select") {
+                var optsArray = v.split(";");
+                var options = null;
+                optsArray.forEach((e, f) => {
+                    var colonIndex = e.indexOf(":");
+                    var g = colonIndex > 0 ? [e.substring(0, colonIndex), e.substring(colonIndex + 1)] : [e, e];
+                    options = document.createElement("option");
+                    options.setAttribute("value", g[1]);
+                    options.textContent = (g[0]);
+                    temp.appendChild(options);
+                });
+                temp.appendChild(options);
+            }
+            else if (k.toLowerCase() == "sources" && (temp.tagName.toLowerCase() == "card" || temp.tagName.toLowerCase() == "carousel")) {
+                var optsArray = v.split(";");
+                var options = null;
+                var i = (value['index'] == undefined) ? 0 : value['index'];
+                temp.id = value['id'];
+                optsArray.forEach((e, f) => {
+                    if (value['boxes'] == temp.childElementCount)
+                        return;
+                    if (value['type'] == "img") {
+                        var gth = document.createElement("img");
+                        gth.src = e;
+                        gth.width = value['width'];
+                        gth.height = value['height'];
+                        gth.style.display = "hidden";
+                        temp.setAttribute("sources", value['sources'])
+                        temp.appendChild(gth);
+                    }
+                    else if (value['type'] == "audio") {
+                        var gth = document.createElement("source");
+                        gth.src = e;
+                        gth.width = value['width'];
+                        gth.height = value['height'];
+                        while (e.substr(-i, 1) != '.') i++;
+                        gth.type = "audio/" + e.substring(-(i - 1));
+                        gth.controls = (values['controls'] != undefined && value['controls'] != false) ? true : false;
+                        temp.appendChild(gth);
+                    }
+                    else if (value['type'] == "video") {
+                        var gth = document.createElement("source");
+                        gth.src = e;
+                        gth.width = value['width'];
+                        gth.height = value['height'];
+                        gth.style.display = "hidden";
+                        var i = 0;
+                        while (e.substr(-i, 1) != '.') i++;
+                        gth.type = "video/" + e.substring(-(i - 1));
+                        gth.controls = (values['controls'] != undefined && value['controls'] != false) ? true : false;
+                        temp.appendChild(gth);
+                    }
+                    else if (value['type'] == "modal") {
+                        modalList(v)
+                    }
+                    else if (value['type'] == "html") {
+                        fetch(e)
+                            .then(response => response.text())
+                            .then(data => {
+                                var div = document.createElement("div");
+                                div.innerHTML = data;
+                                tempTag.appendChild(div);
+                            });
+                    }
+                    else if (value['type'] == "php") {
+                        fetch(e)
+                            .then(response => response.text())
+                            .then(data => {
+                                var div = document.createElement("div");
+                                div.innerHTML = data;
+                                tempTag.appendChild(div);
+                            });
+                    }
+                });
+            }
+            else if (k.toLowerCase() == "css") {
+                var cssvar = document.createElement("link");
+                cssvar.href = v;
+                cssvar.rel = "stylesheet";
+                tempTag.appendChild(cssvar);
+            }
+            else if (k.toLowerCase() == "js") {
+                var js = document.createElement("script");
+                js.src = v;
+                js.setAttribute("defer", "true");
+                tempTag.appendChild(js);
+            }
+            else if (k.toLowerCase()[0] == "h" && k.length == 2) {
+                var h = document.createElement(k);
+                h.innerText = v;
+                tempTag.appendChild(h);
+            }
+            else if (k.toLowerCase() == "modal") {
+                modalList(v)
+            }
+            else if (k.toLowerCase() == "html") {
+                fetch(v)
+                    .then(response => response.text())
+                    .then(data => {
+                        var div = document.createElement("div");
+                        div.innerHTML = data;
+                        tempTag.appendChild(div);
+                    });
+            }
+            else if (k.toLowerCase() == "php") {
+                fetch(v)
+                    .then(response => response.text())
+                    .then(data => {
+                        var div = document.createElement("div");
+                        div.innerHTML = data;
+                        tempTag.appendChild(div);
+                    });
+            }
+            else if (k.toLowerCase() == "boxes") {
+                temp.setAttribute("boxes", v);
+            }
+            else if (!Number(k) && k.toLowerCase() != "tagname" && k.toLowerCase() != "textcontent" && k.toLowerCase() != "innerhtml" && k.toLowerCase() != "innertext") {
+                try {
+                    temp.setAttribute(k, v);
+                }
+                catch (e) {
+                    console.error(`Error setting attribute ${k}:`, e);
+                }
+            }
+            else if (!Number(k) && k.toLowerCase() != "tagname" && (k.toLowerCase() == "textcontent" || k.toLowerCase() == "innerhtml" || k.toLowerCase() == "innertext")) {
+                const val = v.replace(/\r?\n/g, "<br>");
+                (k.toLowerCase() == "textcontent") ? temp.textContent = val : (k.toLowerCase() == "innerhtml") ? temp.innerHTML = val : temp.innerText = val;
+            }
+            else if (k.toLowerCase() == "style") {
+                temp.style.cssText = v;
+            }
+        });
+    });
 }
 
 /**
@@ -5440,58 +5697,58 @@ function modalaHead(value) {
             console.error("value of reference incorrect");
             return;
         }
-    }
-    catch (e) {
+    } catch (e) {
         // console.log(e)
-    }
-    var temp = document.createElement(value["tagname"]);
-    Object.entries(value).forEach((nest) => {
-        const [k, v] = nest;
-        if (v instanceof Object) {
-            modalaHead(v);
-        }
-        else if (k.toLowerCase() == "title") {
-            var title = document.createElement("title");
-            title.innerText = v;
-            document.head.appendChild(title);
-        }
-        else if (k.toLowerCase() == "css") {
-            var optsArray = v.split(";");
-            // console.log(v)
-            optsArray.forEach((e, f) => {
-                var cssvar = document.createElement("link");
-                cssvar.href = v;
-                cssvar.rel = "stylesheet";
-                document.head.appendChild(cssvar);
-            });
 
-        }
-        else if (k.toLowerCase() == "js") {
-            var optsArray = v.split(";");
-            // console.log(v)
-            optsArray.forEach((e, f) => {
-                const js = document.createElement("script");
-                js.src = e;
-                document.head.appendChild(js);
-            });
-        }
-        else if (k.toLowerCase() == "modal") {
-            fetch(v)
-                .then(response => response.json())
-                .then(data => {
-                    const tmp = modalaHead(data, temp, root, id);
-                    document.head.appendChild(tmp);
+        var temp = document.createElement(value["tagname"]);
+        Object.entries(value).forEach((nest) => {
+            const [k, v] = nest;
+            if (v instanceof Object) {
+                modalaHead(v);
+            }
+            else if (k.toLowerCase() == "title") {
+                var title = document.createElement("title");
+                title.innerText = v;
+                document.head.appendChild(title);
+            }
+            else if (k.toLowerCase() == "css") {
+                var optsArray = v.split(";");
+                // console.log(v)
+                optsArray.forEach((e, f) => {
+                    var cssvar = document.createElement("link");
+                    cssvar.href = v;
+                    cssvar.rel = "stylesheet";
+                    document.head.appendChild(cssvar);
                 });
-        }
-        else if (!Number(k) && k.toLowerCase() != "tagname" && k.toLowerCase() != "textcontent" && k.toLowerCase() != "innerhtml" && k.toLowerCase() != "innertext") {
-            temp.setAttribute(k, v);
-        }
-        else if (!Number(k) && k.toLowerCase() != "tagname" && (k.toLowerCase() == "textcontent" || k.toLowerCase() == "innerhtml" || k.toLowerCase() == "innertext")) {
-            (k.toLowerCase() == "textcontent") ? temp.textContent = v : (k.toLowerCase() == "innerhtml") ? temp.innerHTML = v : temp.innerText = v;
-        }
-    });
 
-    return;
+            }
+            else if (k.toLowerCase() == "js") {
+                var optsArray = v.split(";");
+                // console.log(v)
+                optsArray.forEach((e, f) => {
+                    const js = document.createElement("script");
+                    js.src = e;
+                    document.head.appendChild(js);
+                });
+            }
+            else if (k.toLowerCase() == "modal") {
+                fetch(v)
+                    .then(response => response.json())
+                    .then(data => {
+                        const tmp = modalaHead(data, temp, root, id);
+                        document.head.appendChild(tmp);
+                    });
+            }
+            else if (!Number(k) && k.toLowerCase() != "tagname" && k.toLowerCase() != "textcontent" && k.toLowerCase() != "innerhtml" && k.toLowerCase() != "innertext") {
+                temp.setAttribute(k, v);
+            }
+            else if (!Number(k) && k.toLowerCase() != "tagname" && (k.toLowerCase() == "textcontent" || k.toLowerCase() == "innerhtml" || k.toLowerCase() == "innertext")) {
+                (k.toLowerCase() == "textcontent") ? temp.textContent = v : (k.toLowerCase() == "innerhtml") ? temp.innerHTML = v : temp.innerText = v;
+            }
+        });
+
+        return;
+    }
 }
 
 /**
@@ -5602,22 +5859,30 @@ function modala(value, tempTag, root, id) {
         return;
     }
 
-    var temp = document.createElement(value["tagname"]);
-    if (value["tagname"] === null | "undefined") {
-        temp.tagName = "div";
-        temp = document.createElement("div");
+    // Determine tag to use: key if real HTML/dotpipe tag, else tagname property, else div
+    function isValidTag(tag) {
+        if (!tag || typeof tag !== "string") return false;
+        const htmlTags = [
+            "div", "span", "input", "button", "select", "option", "form", "label", "ul", "li", "ol", "table", "tr", "td", "th", "thead", "tbody", "tfoot", "a", "img", "p", "h1", "h2", "h3", "h4", "h5", "h6", "br", "hr", "textarea", "section", "article", "nav", "header", "footer", "main", "aside", "details", "summary", "dialog", "canvas", "svg", "video", "audio", "source", "iframe", "b", "i", "u", "strong", "em", "small", "big", "pre", "code", "blockquote", "cite", "q", "abbr", "address", "area", "base", "body", "caption", "col", "colgroup", "datalist", "dd", "del", "dfn", "dl", "dt", "embed", "fieldset", "figcaption", "figure", "font", "frame", "frameset", "head", "html", "ins", "kbd", "legend", "link", "map", "mark", "meta", "meter", "noscript", "object", "optgroup", "output", "param", "picture", "progress", "rp", "rt", "ruby", "s", "samp", "script", "slot", "style", "sub", "sup", "template", "time", "title", "track", "var", "wbr"
+        ];
+        const dotpipeTags = ["pipe", "cart", "item", "dyn", "search", "csv", "tabs", "login", "checkout", "carousel", "columns", "timed", "refresh", "order-confirmation", "lnk"];
+        return htmlTags.includes(tag.toLowerCase()) || dotpipeTags.includes(tag.toLowerCase());
     }
-    else if (value["tagName"]) {
-        temp.tagName = value["tagName"];
-        temp = document.createElement(value["tagName"]);
+
+    let temp;
+    if (typeof value === "object" && !Array.isArray(value) && Object.keys(value).length === 1) {
+        const onlyKey = Object.keys(value)[0];
+        if (isValidTag(onlyKey)) {
+            temp = document.createElement(onlyKey);
+            modala(value[onlyKey], temp, root, id);
+            tempTag.appendChild(temp);
+            domContentLoad();
+            return tempTag;
+        }
     }
-    if (value["header"] !== undefined && value["header"] instanceof Object) {
-        modalaHead(value["header"], "head", root, null);
-        var meta = document.createElement("meta");
-        meta.content = "default-src 'self'; script-src-elem 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; connect-src 'self' https: http:; child-src 'none'; object-src 'none'";
-        meta.httpEquiv = "Content-Security-Policy";
-        document.head.appendChild(meta);
-    }
+    let tag = value["tagname"] || value["tagName"] || "div";
+    temp = document.createElement(tag);
+    // ...existing code...
     Object.entries(value).forEach((nest) => {
         const [k, v] = nest;
         if (k.toLowerCase() == "header");
@@ -5625,12 +5890,10 @@ function modala(value, tempTag, root, id) {
             var buttons = document.createElement("div");
             v.forEach(z => {
                 var button = document.createElement("input");
-                // console.log(z);
                 button.type = "button";
                 var keys = ["text", "value", "textcontent", "innerhtml", "innerText"];
                 Object.entries(z).forEach(x => {
                     const [key, val] = x;
-                    // console.log(["text", "value", "textcontent", "innerhtml", "innertext"].includes(key.toLowerCase()));
                     vals = escapeHtml(val);
                     if (["text", "value", "textcontent", "innerhtml", "innertext"].includes(key.toLowerCase()))
                         button.value = val;
@@ -5639,7 +5902,6 @@ function modala(value, tempTag, root, id) {
                 });
                 temp.appendChild(button);
             });
-            // modala(v, tempTag, root, id);
         }
         else if (v instanceof Object)
             modala(v, tempTag, root, id);
@@ -5660,9 +5922,7 @@ function modala(value, tempTag, root, id) {
         else if (k.toLowerCase() == "options" && temp.tagName.toLowerCase() == "select") {
             var optsArray = v.split(";");
             var options = null;
-            // console.log(v)
             optsArray.forEach((e, f) => {
-                // Split only on first colon to support URLs (http://...)
                 var colonIndex = e.indexOf(":");
                 var g = colonIndex > 0 ? [e.substring(0, colonIndex), e.substring(colonIndex + 1)] : [e, e];
                 options = document.createElement("option");
@@ -5671,10 +5931,8 @@ function modala(value, tempTag, root, id) {
                 temp.appendChild(options);
             });
             temp.appendChild(options);
-            // console.log("*")
         }
         else if (k.toLowerCase() == "sources" && (temp.tagName.toLowerCase() == "card" || temp.tagName.toLowerCase() == "carousel")) {
-            // console.log(value);
             var optsArray = v.split(";");
             var options = null;
             var i = (value['index'] == undefined) ? 0 : value['index'];
@@ -5717,7 +5975,6 @@ function modala(value, tempTag, root, id) {
                     modalList(v)
                 }
                 else if (value['type'] == "html") {
-                    // console.log(e);
                     fetch(e)
                         .then(response => response.text())
                         .then(data => {
@@ -5727,7 +5984,6 @@ function modala(value, tempTag, root, id) {
                         });
                 }
                 else if (value['type'] == "php") {
-                    // console.log(e);
                     fetch(e)
                         .then(response => response.text())
                         .then(data => {
@@ -5737,7 +5993,6 @@ function modala(value, tempTag, root, id) {
                         });
                 }
             });
-
         }
         else if (k.toLowerCase() == "css") {
             var cssvar = document.createElement("link");
@@ -5778,7 +6033,116 @@ function modala(value, tempTag, root, id) {
                 });
         }
         else if (k.toLowerCase() == "boxes") {
-            // console.log(v);
+            temp.setAttribute("boxes", v);
+        }
+        else if (!Number(k) && k.toLowerCase() != "tagname" && k.toLowerCase() != "textcontent" && k.toLowerCase() != "innerhtml" && k.toLowerCase() != "innertext") {
+            try {
+                temp.setAttribute(k, v);
+            }
+            catch (e) {
+                console.error(`Error setting attribute ${k}:`, e);
+            }
+        }
+        else if (!Number(k) && k.toLowerCase() != "tagname" && (k.toLowerCase() == "textcontent" || k.toLowerCase() == "innerhtml" || k.toLowerCase() == "innertext")) {
+            const val = v.replace(/\r?\n/g, "<br>");
+            (k.toLowerCase() == "textcontent") ? temp.textContent = val : (k.toLowerCase() == "innerhtml") ? temp.innerHTML = val : temp.innerText = val;
+        }
+        else if (k.toLowerCase() == "style") {
+            temp.style.cssText = v;
+        }
+        if (value['boxes'] == temp.childElementCount)
+            return;
+        if (value['type'] == "img") {
+            var gth = document.createElement("img");
+            gth.src = e;
+            gth.width = value['width'];
+            gth.height = value['height'];
+            gth.style.display = "hidden";
+            temp.setAttribute("sources", value['sources'])
+            temp.appendChild(gth);
+        }
+        else if (value['type'] == "audio") {
+            var gth = document.createElement("source");
+            gth.src = e;
+            gth.width = value['width'];
+            gth.height = value['height'];
+            while (e.substr(-i, 1) != '.') i++;
+            gth.type = "audio/" + e.substring(-(i - 1));
+            gth.controls = (values['controls'] != undefined && value['controls'] != false) ? true : false;
+            temp.appendChild(gth);
+        }
+        else if (value['type'] == "video") {
+            var gth = document.createElement("source");
+            gth.src = e;
+            gth.width = value['width'];
+            gth.height = value['height'];
+            gth.style.display = "hidden";
+            var i = 0;
+            while (e.substr(-i, 1) != '.') i++;
+            gth.type = "video/" + e.substring(-(i - 1));
+            gth.controls = (values['controls'] != undefined && value['controls'] != false) ? true : false;
+            temp.appendChild(gth);
+        }
+        else if (value['type'] == "modal") {
+            modalList(v)
+        }
+        else if (value['type'] == "html") {
+            fetch(e)
+                .then(response => response.text())
+                .then(data => {
+                    var div = document.createElement("div");
+                    div.innerHTML = data;
+                    tempTag.appendChild(div);
+                });
+        }
+        else if (value['type'] == "php") {
+            fetch(e)
+                .then(response => response.text())
+                .then(data => {
+                    var div = document.createElement("div");
+                    div.innerHTML = data;
+                    tempTag.appendChild(div);
+                });
+        }
+        else if (k.toLowerCase() == "css") {
+            var cssvar = document.createElement("link");
+            cssvar.href = v;
+            cssvar.rel = "stylesheet";
+            tempTag.appendChild(cssvar);
+        }
+        else if (k.toLowerCase() == "js") {
+            var js = document.createElement("script");
+            js.src = v;
+            js.setAttribute("defer", "true");
+            tempTag.appendChild(js);
+        }
+        else if (k.toLowerCase()[0] == "h" && k.length == 2) {
+            var h = document.createElement(k);
+            h.innerText = v;
+            tempTag.appendChild(h);
+        }
+        else if (k.toLowerCase() == "modal") {
+            modalList(v)
+        }
+        else if (k.toLowerCase() == "html") {
+            fetch(v)
+                .then(response => response.text())
+                .then(data => {
+                    var div = document.createElement("div");
+                    div.innerHTML = data;
+                    tempTag.appendChild(div);
+                });
+        }
+        else if (k.toLowerCase() == "php") {
+            fetch(v)
+                .then(response => response.text())
+                .then(data => {
+                    var div = document.createElement("div");
+                    div.innerHTML = data;
+                    tempTag.appendChild(div);
+                });
+        }
+        else if (k.toLowerCase() == "boxes") {
             temp.setAttribute("boxes", v);
         }
         else if (!Number(k) && k.toLowerCase() != "tagname" && k.toLowerCase() != "textcontent" && k.toLowerCase() != "innerhtml" && k.toLowerCase() != "innertext") {
@@ -5800,6 +6164,7 @@ function modala(value, tempTag, root, id) {
     tempTag.appendChild(temp);
     domContentLoad();
     return tempTag;
+
 }
 
 /**
@@ -5985,7 +6350,7 @@ function fileShift(elem) {
 function fileOrder(elem) {
     if (typeof (elem) === "string")
         elem = document.getElementById(elem);
-    
+
     if (!elem) return;
 
     var arr = elem.getAttribute("sources").split(";");
@@ -6089,16 +6454,16 @@ function addPipe(rootElem = document) {
 
         // Check for carousel control classes
         const hasCarouselClass = target.classList.contains('carousel-step-left') ||
-                                  target.classList.contains('carousel-step-right') ||
-                                  target.classList.contains('carousel-slide-left') ||
-                                  target.classList.contains('carousel-slide-right');
+            target.classList.contains('carousel-step-right') ||
+            target.classList.contains('carousel-slide-left') ||
+            target.classList.contains('carousel-slide-right');
 
         // Only process elements with id AND ('mouse' class OR dotpipe attributes OR carousel classes)
-        const hasDotpipeAttr = target.hasAttribute('ajax') || 
-                                target.hasAttribute('modal') || 
-                                target.hasAttribute('inline') ||
-                                target.hasAttribute('event');
-        
+        const hasDotpipeAttr = target.hasAttribute('ajax') ||
+            target.hasAttribute('modal') ||
+            target.hasAttribute('inline') ||
+            target.hasAttribute('event');
+
         if ((target.id || hasCarouselClass) && (target.classList.contains('mouse') || hasDotpipeAttr || hasCarouselClass) && !hasPipeListener(target)) {
             // Stop event propagation to prevent duplicate firing
             event.stopPropagation();
@@ -6402,7 +6767,7 @@ function pipes(elem, stop = false) {
                 var protocolEnd = part.indexOf('://') + 3;
                 var afterProtocol = part.substring(protocolEnd);
                 var lastColon = afterProtocol.lastIndexOf(':');
-                
+
                 if (lastColon !== -1) {
                     file = part.substring(0, protocolEnd + lastColon);
                     var remaining = afterProtocol.substring(lastColon + 1).split(':');
@@ -6415,7 +6780,7 @@ function pipes(elem, stop = false) {
                 // No protocol, use simple split
                 [file, target, limit] = part.split(":");
             }
-            
+
             var clone = elem.cloneNode(true);
             clone.setAttribute("ajax", file);
             clone.setAttribute("insert", target);
