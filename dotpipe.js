@@ -373,6 +373,40 @@ class DotPipeBinder {
     }
 }
 
+// Tutorial helper utilities (exposed on window) moved from demo HTML
+window.showAlert = function(message) {
+    alert(message);
+};
+
+window.updateOutput = function(outputId, content) {
+    const elem = document.getElementById(outputId);
+    if (elem) elem.innerHTML = content;
+};
+
+window.highlightElement = function(elementId) {
+    const elem = document.getElementById(elementId);
+    if (elem) {
+        const prev = elem.style.background;
+        elem.style.background = '#ffff00';
+        setTimeout(() => { elem.style.background = prev; }, 2000);
+    }
+};
+
+window.processData = function(data) {
+    try { console.log('Processing data:', data); return JSON.stringify(data, null, 2); }
+    catch (e) { return String(data); }
+};
+
+window.clearOutput = function(outputId) {
+    const elem = document.getElementById(outputId);
+    if (elem) elem.innerHTML = '<em>Output cleared. Ready for next demo...</em>';
+};
+
+// Simple in-memory storage for demo usage
+window.demoVars = window.demoVars || {};
+window.storeValue = function(key, value) { window.demoVars[key] = value; console.log(`Stored ${key} = ${value}`); };
+window.retrieveValue = function(key) { return window.demoVars[key] || 'undefined'; };
+
 document.addEventListener("DOMContentLoaded", function () {
     try {
         if (document.body != null && JSON.parse(document.body.textContent)) {
@@ -1124,12 +1158,17 @@ let domContentLoad = (again = false) => {
         elem.classList.toggle("disabled");
     });
 
+    // Process generic `append` attributes on any element
+    try { processAppendAttributes(); } catch (e) { /* ignore */ }
+
     // Process search tags
     processSearchTags();
     // Process CSV tags
     processCsvTags();
     processLoginTags();
     processTabTags();
+    // Wire demo helpers (e.g., dynamic add-tab button)
+    try { wireAddTabButton(); } catch (e) { /* ignore */ }
     processCartTags();
     processOrderConfirmationTags();
     processColumnsTags();
@@ -3273,20 +3312,40 @@ function processTabTags() {
     let tabElements = document.getElementsByTagName("tabs");
 
     Array.from(tabElements).forEach(function (element) {
-        if (element.classList.contains("processed")) {
-            return;
-        }
-
         // Get attributes (support both `tab` and `tabs` for compatibility)
         const rawTabs = element.getAttribute("tab") || element.getAttribute("tabs") || "";
+
+        // If we've processed this element before, only skip it when the
+        // tab definition string hasn't changed. This lets callers update
+        // `tab` dynamically and call `domContentLoad()` to reinitialize.
+        const prevRaw = element.getAttribute('data-tab-raw') || null;
+        if (element.classList.contains("processed") && prevRaw === rawTabs) {
+            return;
+        }
+        // If processed but changed, clear existing generated content and continue
+        if (element.classList.contains("processed") && prevRaw !== rawTabs) {
+            element.innerHTML = '';
+            element.classList.remove('processed');
+        }
         const tabsData = rawTabs.split(";").map(s => s.trim()).filter(Boolean);
         const tabClass = element.getAttribute("class") || "";
         const tabStyle = element.getAttribute("style") || "";
         const parentId = element.getAttribute("id") || `tabs-${Math.random().toString(36).substring(2, 9)}`;
 
         if (tabsData.length === 0) {
-            console.error("Tabs tag requires a 'tab' or 'tabs' attribute with definitions");
-            element.innerHTML = "<div class='tabs-error'>Configuration error: No tabs specified</div>";
+            // No tab definitions provided.
+            // If the element already contains rendered .tabs-container markup,
+            // wire up switching handlers and treat as processed. Otherwise,
+            // quietly record and skip so dynamic updates can re-run processing.
+            const hasRendered = element.querySelector && (element.querySelector('.tabs-container') || element.querySelector('.tab-header'));
+            if (hasRendered) {
+                element.classList.add('processed');
+                try { setupTabSwitching(element, []); } catch (e) { /* ignore */ }
+                // don't attempt preload since validated tabs aren't available
+                element.setAttribute('data-tab-raw', rawTabs);
+                return;
+            }
+            element.setAttribute('data-tab-raw', rawTabs);
             element.classList.add("processed");
             return;
         }
@@ -3313,17 +3372,21 @@ function processTabTags() {
         // Replace the tabs tag content with our generated HTML
         element.innerHTML = tabsHTML;
 
-        // Mark as processed
+        // Mark as processed and record the raw tab definition string
         element.classList.add("processed");
+        element.setAttribute('data-tab-raw', rawTabs);
 
-        // Set up tab switching functionality (can't rely on inline script with innerHTML)
-        setupTabSwitching(element, validatedTabs);
-
-        // Process the newly added elements with dotpipe.js
-        domContentLoad();
-
-        // Preload all tab content
-        preloadAllTabContent(validatedTabs);
+        // Defer wiring and preloading to the next tick so the browser
+        // has fully parsed the inserted HTML and `.tabs-container` exists.
+        setTimeout(function () {
+            try {
+                // Prefer the actual .tabs-container node when calling setupTabSwitching
+                const rendered = element.querySelector && element.querySelector('.tabs-container') ? element.querySelector('.tabs-container') : element;
+                setupTabSwitching(rendered, validatedTabs);
+            } catch (e) { console.error('setupTabSwitching deferred failed', e); }
+            try { domContentLoad(); } catch (e) { /* ignore */ }
+            try { preloadAllTabContent(validatedTabs); } catch (e) { console.error('preloadAllTabContent failed', e); }
+        }, 0);
     });
 }
 
@@ -3334,9 +3397,38 @@ function processTabTags() {
  * @param {Array} validatedTabs - Array of validated tab objects
  */
 function setupTabSwitching(container, validatedTabs) {
-    const tabsContainer = container.querySelector('.tabs-container');
+    let tabsContainer = null;
+    try { tabsContainer = container.querySelector('.tabs-container'); } catch (e) { tabsContainer = null; }
     if (!tabsContainer) {
-        console.error('Could not find tabs-container');
+        // Fallbacks: the container itself might be the rendered tabs container,
+        // or a parent might contain the .tabs-container markup.
+        if (container && container.classList && container.classList.contains('tabs-container')) {
+            tabsContainer = container;
+        } else if (container && typeof container.closest === 'function') {
+            tabsContainer = container.closest('.tabs-container');
+        } else if (container && container.parentElement) {
+            tabsContainer = container.parentElement.querySelector ? container.parentElement.querySelector('.tabs-container') : null;
+        }
+    }
+
+    // Final fallback: search document for an element with this container's id,
+    // then find its .tabs-container. This covers cases where the element reference
+    // is different (e.g. re-rendered or moved) but the id remains.
+    if (!tabsContainer && container && container.id) {
+        try {
+            const byId = document.getElementById(container.id) || document.querySelector(`[id="${container.id}"]`);
+            if (byId) {
+                tabsContainer = byId.querySelector ? byId.querySelector('.tabs-container') : null;
+                if (!tabsContainer && byId.classList && byId.classList.contains('tabs-container')) tabsContainer = byId;
+            }
+        } catch (e) {
+            // ignore selector errors
+        }
+    }
+
+    if (!tabsContainer) {
+        // Nothing to wire up — avoid noisy errors for placeholder or partially-rendered markup
+        console.debug('setupTabSwitching: tabs-container not found, skipping setup for element', container && container.id ? container.id : container);
         return;
     }
 
@@ -4193,6 +4285,95 @@ function createLoginRegistrationTabs(loginPage, registrationPage, cssPage) {
     return html;
 }
 
+/**
+ * Wire demo Add Tab button (id `addTabBtn`) to dynamically prepend a new tab
+ * This is intentionally simple: it updates the `tab` attribute and calls
+ * `domContentLoad()`. If the new tab has no source, it injects basic content.
+ */
+function wireAddTabButton() {
+    const btn = document.getElementById('addTabBtn');
+    if (!btn || btn.dataset.addTabWired) return;
+
+    btn.addEventListener('click', function () {
+        try {
+            const tabsEl = document.getElementById('demo1Tabs');
+            // Determine next index and id
+            const now = Date.now();
+            const newId = `dynamic-${now}`;
+            const label = `New Tab ${now.toString().slice(-4)}`;
+
+            // If we have a rendered tabs UI, insert directly into headers/content
+            let tabsContainer = null;
+            if (tabsEl) tabsContainer = tabsEl.querySelector ? tabsEl.querySelector('.tabs-container') : null;
+            if (!tabsContainer) tabsContainer = document.querySelector('#demo1Tabs .tabs-container');
+
+            if (tabsContainer) {
+                try {
+                    const headersWrap = tabsContainer.querySelector('.tabs-header');
+                    const contentsWrap = tabsContainer.querySelector('.tabs-content');
+
+                    // Create header
+                    const headerId = `tab-header-${newId}`;
+                    const header = document.createElement('div');
+                    header.className = 'tab-header';
+                    header.id = headerId;
+                    header.setAttribute('data-tab', newId);
+                    header.setAttribute('data-index', '0');
+                    header.setAttribute('role', 'button');
+                    header.setAttribute('tabindex', '0');
+                    header.setAttribute('aria-selected', 'true');
+                    header.textContent = label;
+
+                    // Create content
+                    const contentId = `tab-content-${newId}`;
+                    const content = document.createElement('div');
+                    content.className = 'tab-content active';
+                    content.id = contentId;
+                    content.innerHTML = `<div class="demo-box"><div class="demo-title">${label}</div><p>Content added dynamically at ${new Date().toLocaleString()}</p></div>`;
+
+                    // Deactivate existing
+                    Array.from(tabsContainer.querySelectorAll('.tab-header')).forEach(h => { h.classList.remove('active'); h.setAttribute('aria-selected', 'false'); });
+                    Array.from(tabsContainer.querySelectorAll('.tab-content')).forEach(c => { c.classList.remove('active'); });
+
+                    // Prepend so the new tab appears first
+                    if (headersWrap) headersWrap.insertBefore(header, headersWrap.firstChild);
+                    if (contentsWrap) contentsWrap.insertBefore(content, contentsWrap.firstChild);
+
+                    // Add click handler to new header to activate its tab
+                    header.addEventListener('click', function () {
+                        Array.from(tabsContainer.querySelectorAll('.tab-header')).forEach(h => { h.classList.remove('active'); h.setAttribute('aria-selected', 'false'); });
+                        Array.from(tabsContainer.querySelectorAll('.tab-content')).forEach(c => { c.classList.remove('active'); });
+                        header.classList.add('active');
+                        header.setAttribute('aria-selected', 'true');
+                        content.classList.add('active');
+                        header.focus();
+                    });
+
+                    // Focus/activate the new tab
+                    header.click();
+                    return;
+                } catch (e) {
+                    console.error('Failed to insert dynamic tab directly', e);
+                }
+            }
+
+            // Fallback: modify the `tab` attribute and rebuild UI
+            if (!tabsEl) {
+                console.warn('wireAddTabButton: demo tabs element not found (id=demo1Tabs)');
+                return;
+            }
+            const existing = tabsEl.getAttribute('tab') || '';
+            const newDef = `${label}:${newId}:`;
+            tabsEl.setAttribute('tab', newDef + (existing ? (';' + existing) : ''));
+            if (typeof domContentLoad === 'function') domContentLoad();
+        } catch (e) {
+            console.error('addTabBtn click failed', e);
+        }
+    });
+
+    btn.dataset.addTabWired = '1';
+}
+
 
 /**
  * Process all search tags in the document
@@ -4428,8 +4609,67 @@ function processCsvTags() {
             return; // Skip if already being processed
         }
 
+        // Debug: log found csv element attributes to help diagnose missing output
+        try {
+            console.debug('processCsvTags: found <csv>', {
+                id: element.id || null,
+                sources: element.getAttribute('sources') ||  element.getAttribute('ajax'),
+                insert: element.getAttribute('insert')
+            });
+        } catch (e) { /* ignore logging errors */ }
+
+        // Skip CSV elements that are inside code examples or intentionally marked as examples.
+        // These often appear when tutorial pages include literal snippets that should not be executed.
+        try {
+            if (element.closest && (element.closest('.code-block, pre, .example') || element.hasAttribute('data-example'))) {
+                element.classList.add('processed');
+                return;
+            }
+        } catch (e) { /* ignore */ }
+
         // Get attributes
-        const sources = element.getAttribute("sources")?.split(";") || [];
+        // Support the case where the author placed attributes on a child element
+        // inside the <csv> tag (e.g., <csv><div id="x" sources="..."></div></csv>).
+        // In that case, copy missing attributes up to the <csv> element so
+        // processing works as if they were declared on the <csv> itself.
+        try {
+            const hasSources = element.hasAttribute('sources');
+            if (!hasSources && element.firstElementChild) {
+                const child = element.firstElementChild;
+                const childSources = child.getAttribute('sources');
+                if (childSources) {
+                    // Copy sources
+                    element.setAttribute('sources', childSources);
+                    // Copy common attributes if missing on parent
+                    ['insert', 'id'].forEach(attr => {
+                        if (child.hasAttribute(attr) && !element.hasAttribute(attr)) {
+                            element.setAttribute(attr, child.getAttribute(attr));
+                        }
+                    });
+                    // Merge classes (avoid overwriting parent's classes)
+                    if (child.hasAttribute('class')) {
+                        const parentCls = element.getAttribute('class') || '';
+                        const childCls = child.getAttribute('class');
+                        const merged = (parentCls + ' ' + childCls).trim().split(/\s+/).filter(Boolean);
+                        element.setAttribute('class', Array.from(new Set(merged)).join(' '));
+                    }
+                }
+            }
+        } catch (e) { /* ignore attribute-copy failures */ }
+
+        // Resolve sources: support `sources`, `ajax`, `data-sources` (JSON array), or child attributes
+        let rawSources = element.getAttribute("sources") || element.getAttribute('ajax') || element.getAttribute('data-sources') || '';
+        // If attribute is a JSON array string, parse it
+        if (rawSources && rawSources.trim().startsWith('[')) {
+            try {
+                const parsed = JSON.parse(rawSources);
+                if (Array.isArray(parsed)) rawSources = parsed.join(';');
+            } catch (e) {
+                // ignore parse error and fall back to raw string
+            }
+        }
+        // split, trim and filter empties
+        const sources = String(rawSources || '').split(';').map(s => (s || '').trim()).filter(Boolean);
         const displayMode = element.getAttribute("csv-as") || "table";
         const sortAttr = element.getAttribute("sort");
         const csvClass = element.getAttribute("csv-class");
@@ -4437,7 +4677,13 @@ function processCsvTags() {
         const lazyLoad = element.getAttribute("lazy-load") !== "false"; // Default to true
 
         if (sources.length === 0) {
-            console.error("CSV tag requires sources attribute");
+            try {
+                console.error("CSV tag requires sources attribute (or ajax/data-sources)", element, element.outerHTML);
+            } catch (e) {
+                console.error("CSV tag requires sources attribute (outerHTML unavailable)");
+            }
+            // Mark as processed so we don't continually error on the same element
+            try { element.classList.add('processed'); } catch (e) { /* ignore */ }
             return;
         }
 
@@ -4453,8 +4699,13 @@ function processCsvTags() {
         // Store original inner content for templates
         const originalContent = element.innerHTML;
 
-        // Process all sources and concatenate the results
-        processMultipleCSVSources(sources, element, displayMode, sortAttr, pageSize, lazyLoad, originalContent);
+        // Process all sources and concatenate the results. Wrap in try/catch
+        try {
+            processMultipleCSVSources(sources, element, displayMode, sortAttr, pageSize, lazyLoad, originalContent);
+        } catch (e) {
+            console.error('processCsvTags: unexpected error while processing sources', e, element);
+            try { element.classList.remove('processing'); element.classList.add('processed'); } catch (ee) { /* ignore */ }
+        }
     });
 }
 
@@ -4472,7 +4723,13 @@ function processMultipleCSVSources(sources, element, displayMode, sortAttr, page
 
     // Process each source that should be loaded initially
     sourcesToLoad.forEach((source) => {
-        fetch(source)
+        const src = String(source || '').trim();
+        if (!src) {
+            // count as loaded but skip
+            loadedCount++;
+            return;
+        }
+        fetch(src)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -5269,61 +5526,76 @@ function renderCardsView(container, headers, rows, originalContent) {
  * @returns {Object} - Object with headers and rows
  */
 function parseCSV(text) {
-    // Handle different line endings
-    const lines = text.replace(/\r\n/g, '\n').split('\n');
-    const result = {
-        headers: [],
-        rows: []
-    };
-
-    if (lines.length === 0) return result;
-
-    // Parse headers
-    result.headers = parseCSVLine(lines[0]);
-
-    // Parse data rows
-    for (let i = 1; i < lines.length; i++) {
-        if (lines[i].trim() === '') continue;
-        result.rows.push(parseCSVLine(lines[i]));
-    }
-
-    return result;
-}
-
-/**
- * Parse a single CSV line, handling quoted values
- * @param {string} line - A single line of CSV text
- * @returns {Array} - Array of values
- */
-function parseCSVLine(line) {
-    const values = [];
+    // Robust CSV parser that supports quoted fields with commas and newlines
+    const rows = [];
+    let cur = '';
+    let curRow = [];
     let inQuote = false;
-    let currentValue = '';
 
-    for (let i = 0; i < line.length; i++) {
-        const char = line[i];
+    for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
 
-        if (char === '"') {
+        if (ch === '"') {
+            // Handle escaped double-quote ""
+            if (inQuote && text[i + 1] === '"') {
+                cur += '"';
+                i++; // skip next
+                continue;
+            }
             inQuote = !inQuote;
-        } else if (char === ',' && !inQuote) {
-            values.push(currentValue);
-            currentValue = '';
-        } else {
-            currentValue += char;
+            continue;
         }
+
+        if (ch === ',' && !inQuote) {
+            curRow.push(cur);
+            cur = '';
+            continue;
+        }
+
+        // Handle CRLF and LF newlines when not in quotes
+        if ((ch === '\n' || ch === '\r') && !inQuote) {
+            // If CRLF, skip the following LF
+            if (ch === '\r' && text[i + 1] === '\n') {
+                // push current value and row
+                curRow.push(cur);
+                rows.push(curRow);
+                curRow = [];
+                cur = '';
+                i++; // skip the LF
+                continue;
+            }
+            // Single newline
+            curRow.push(cur);
+            rows.push(curRow);
+            curRow = [];
+            cur = '';
+            continue;
+        }
+
+        // Default: append character
+        cur += ch;
     }
 
-    // Add the last value
-    values.push(currentValue);
+    // Push any remaining content
+    if (cur !== '' || curRow.length > 0) {
+        curRow.push(cur);
+        rows.push(curRow);
+    }
 
-    // Clean up values - remove quotes and trim
-    return values.map(val => {
-        val = val.trim();
-        if (val.startsWith('"') && val.endsWith('"')) {
-            val = val.substring(1, val.length - 1);
+    // Clean values: trim and unquote
+    const cleaned = rows.map(r => r.map(v => {
+        v = String(v || '').trim();
+        if (v.startsWith('"') && v.endsWith('"')) {
+            v = v.substring(1, v.length - 1).replace(/""/g, '"');
         }
-        return val;
-    });
+        return v;
+    }));
+
+    const result = { headers: [], rows: [] };
+    if (cleaned.length === 0) return result;
+    result.headers = cleaned[0];
+    result.rows = cleaned.slice(1).filter(r => r.some(c => c !== ''));
+    return result;
 }
 
 /**
@@ -5847,10 +6119,10 @@ function escapeHtml(html) {
 function modala(value, tempTag, root, id) {
     if (typeof (tempTag) == "string") tempTag = document.getElementById(tempTag);
     if (root === undefined) root = tempTag;
-    if (tempTag == undefined) return;
+    if (tempTag == undefined) return null;
     if (value == undefined) {
         console.error("value of reference incorrect");
-        return;
+        return tempTag;
     }
 
     // Helper: valid tag names (HTML + dotPipe custom tags)
@@ -5880,9 +6152,22 @@ function modala(value, tempTag, root, id) {
         }
     }
 
+    // Determine whether caller flagged the provided tempTag to be used as the
+    // element itself (see where we set `dataset._useAsSelf`). This allows
+    // callers to create an element and have modala populate it instead of
+    // creating a new inner element.
+    const callerMarkedSelf = tempTag && tempTag.dataset && tempTag.dataset._useAsSelf === '1';
+    if (callerMarkedSelf) {
+        try { delete tempTag.dataset._useAsSelf; } catch (e) { /* ignore */ }
+    }
+
     // Determine tag name (value.tagname preferred), fallback to div
     let tag = value["tagname"] || value["tagName"] || "div";
-    const temp = document.createElement(tag);
+
+    // If caller marked the element to be used as-is and the value doesn't
+    // explicitly request a different tag, use the provided element instead
+    // of creating a new one.
+    const temp = (callerMarkedSelf && !value.hasOwnProperty('tagname') && !value.hasOwnProperty('tagName')) ? tempTag : document.createElement(tag);
 
     // Iterate through entries on the object and create/apply accordingly
     Object.entries(value).forEach(([k, v]) => {
@@ -5904,6 +6189,9 @@ function modala(value, tempTag, root, id) {
         if (v instanceof Object && !Array.isArray(v)) {
             if (isValidTag(k) && !(v.hasOwnProperty('tagname') || v.hasOwnProperty('tagName'))) {
                 const child = document.createElement(k);
+                // Mark the created child so modala() knows to use this element
+                // as the target itself (prevents creating an inner default div).
+                try { child.dataset._useAsSelf = '1'; } catch (e) { /* ignore */ }
                 modala(v, child, root, id);
                 temp.appendChild(child);
                 return;
@@ -5925,10 +6213,11 @@ function modala(value, tempTag, root, id) {
             return;
         }
 
-        if (k.toLowerCase() === "textcontent" || k.toLowerCase() === "innerhtml" || k.toLowerCase() === "innertext") {
+        if (["text", "textcontent", "innerhtml", "innertext"].includes(k.toLowerCase())) {
+            const normalizedKey = k.toLowerCase();
             const val = String(v).replace(/\r?\n/g, "<br>");
-            if (k.toLowerCase() === "textcontent") temp.textContent = val;
-            else if (k.toLowerCase() === "innerhtml") temp.innerHTML = val;
+            if (normalizedKey === "text" || normalizedKey === "textcontent") temp.textContent = val;
+            else if (normalizedKey === "innerhtml") temp.innerHTML = val;
             else temp.innerText = val;
             return;
         }
@@ -5938,6 +6227,69 @@ function modala(value, tempTag, root, id) {
             cssvar.href = v;
             cssvar.rel = "stylesheet";
             tempTag.appendChild(cssvar);
+            return;
+        }
+
+        // Append helper: allows adding/appending attributes to elements.
+        // Format options (string or array):
+        // - "attr:value" -> append to attribute `attr` on the current element (`temp`).
+        // - "target:attr:value" -> append to attribute `attr` on element with id `target` or selector (if starts with '.' or '#').
+        // Multiple entries may be separated by ';'.
+        if (k.toLowerCase() === "append") {
+            const entries = Array.isArray(v) ? v : String(v).split(';');
+            entries.forEach(entryRaw => {
+                const entry = String(entryRaw || '').trim();
+                if (!entry) return;
+                const parts = entry.split(':');
+                let targetElem = temp; // default target is the temp element
+                let attrName, attrValue;
+
+                if (parts.length === 2) {
+                    // attr:value -> apply to current element
+                    attrName = parts[0].trim();
+                    attrValue = parts[1].trim();
+                } else if (parts.length >= 3) {
+                    const targetSpec = parts[0].trim();
+                    attrName = parts[1].trim();
+                    attrValue = parts.slice(2).join(':').trim();
+
+                    // Resolve target: support 'self'/'this'/'temp' to mean current temp
+                    if (['this', 'self', 'temp'].includes(targetSpec.toLowerCase())) {
+                        targetElem = temp;
+                    } else if (targetSpec.startsWith('#') || targetSpec.startsWith('.')) {
+                        targetElem = document.querySelector(targetSpec);
+                    } else {
+                        // Try by id first
+                        const byId = document.getElementById(targetSpec);
+                        if (byId) targetElem = byId;
+                        else {
+                            // Try treating as selector fallback
+                            try { targetElem = document.querySelector(targetSpec); } catch (e) { targetElem = null; }
+                        }
+                    }
+                } else {
+                    // Unexpected format
+                    console.warn('Invalid append entry format:', entry);
+                    return;
+                }
+
+                if (!targetElem) {
+                    console.warn('append: target element not found for entry', entry);
+                    return;
+                }
+
+                const existing = targetElem.getAttribute(attrName) || '';
+                // special-case class merging to avoid duplicate tokens
+                if (attrName.toLowerCase() === 'class') {
+                    const existingTokens = existing.split(/\s+/).filter(Boolean);
+                    const newTokens = attrValue.split(/\s+/).filter(Boolean);
+                    const merged = Array.from(new Set(existingTokens.concat(newTokens))).join(' ');
+                    targetElem.setAttribute('class', merged);
+                } else {
+                    const sep = existing && !existing.endsWith(' ') ? ' ' : '';
+                    targetElem.setAttribute(attrName, existing ? existing + sep + attrValue : attrValue);
+                }
+            });
             return;
         }
 
@@ -6014,7 +6366,17 @@ function modala(value, tempTag, root, id) {
         }
     });
 
-    tempTag.appendChild(temp);
+    // Only append if the created `temp` is not the same node as `tempTag`.
+    // In cases where callers mark the provided element to be used as-is
+    // (`dataset._useAsSelf`), `temp` === `tempTag` and appending would
+    // attempt to insert an element into itself, causing a HierarchyRequestError.
+    try {
+        if (temp !== tempTag) {
+            tempTag.appendChild(temp);
+        }
+    } catch (e) {
+        console.error('modala: appendChild failed', e, { tempTag, temp });
+    }
     domContentLoad();
     return tempTag;
 
@@ -6787,6 +7149,65 @@ function pipes(elem, stop = false) {
             }
         });
     }
+
+    // Append helper on pipe elements: allows adding/appending attributes to elements.
+    // Format: "attr:value" -> append to attribute on the resolved target (default: insert target or elem)
+    // Or: "target:attr:value" -> append to attribute `attr` on element with id or selector `target`.
+    if (elem.hasAttribute('append') && elem.getAttribute('append')) {
+        const raw = elem.getAttribute('append');
+        const entries = Array.isArray(raw) ? raw : String(raw).split(';');
+        entries.forEach(entryRaw => {
+            const entry = String(entryRaw || '').trim();
+            if (!entry) return;
+            const parts = entry.split(':');
+            let targetElem = null;
+            let attrName, attrValue;
+
+            if (parts.length === 2) {
+                // attr:value -> apply to element specified by insert attribute, or current elem
+                attrName = parts[0].trim();
+                attrValue = parts[1].trim();
+                if (elem.hasAttribute('insert') && document.getElementById(elem.getAttribute('insert'))) {
+                    targetElem = document.getElementById(elem.getAttribute('insert'));
+                } else {
+                    targetElem = elem;
+                }
+            } else if (parts.length >= 3) {
+                const targetSpec = parts[0].trim();
+                attrName = parts[1].trim();
+                attrValue = parts.slice(2).join(':').trim();
+
+                if (['this', 'self', 'elem', 'pipe'].includes(targetSpec.toLowerCase())) {
+                    targetElem = elem;
+                } else if (targetSpec.startsWith('#') || targetSpec.startsWith('.')) {
+                    try { targetElem = document.querySelector(targetSpec); } catch (e) { targetElem = null; }
+                } else {
+                    targetElem = document.getElementById(targetSpec) || (function(){ try { return document.querySelector(targetSpec); } catch(e){return null;} })();
+                }
+            } else {
+                console.warn('pipes.append: invalid entry format', entry);
+                return;
+            }
+
+            if (!targetElem) {
+                console.warn('pipes.append: target not found for entry', entry);
+                return;
+            }
+
+            const existing = targetElem.getAttribute(attrName) || '';
+            if (attrName.toLowerCase() === 'class') {
+                const existingTokens = existing.split(/\s+/).filter(Boolean);
+                const newTokens = attrValue.split(/\s+/).filter(Boolean);
+                const merged = Array.from(new Set(existingTokens.concat(newTokens))).join(' ');
+                targetElem.setAttribute('class', merged);
+            } else {
+                const sep = existing && !existing.endsWith(' ') ? ' ' : '';
+                targetElem.setAttribute(attrName, existing ? existing + sep + attrValue : attrValue);
+            }
+        });
+    }
+    // If append changed attributes that affect UI (like `tab`), re-run initialization
+    try { if (typeof domContentLoad === 'function') domContentLoad(); } catch (e) { /* ignore */ }
     if (elem.hasAttribute("remove") && elem.getAttribute("remove")) {
         var optsArray = elem.getAttribute("remove").split(";");
         optsArray.forEach((e, f) => {
@@ -6915,6 +7336,80 @@ function pipes(elem, stop = false) {
     else if (elem.hasAttribute("modal")) {
         modalList(elem.getAttribute("modal"));
     }
+}
+
+/**
+ * Process `append` attributes on generic elements.
+ * Syntax: entries separated by `;`.
+ * - "attr:value" => append `value` to `attr` on the current element (elem)
+ * - "target:attr:value" => append `value` to `attr` on element resolved by `target` (id, selector, or 'self')
+ */
+function processAppendAttributes() {
+    const elems = document.querySelectorAll('[append]');
+    Array.from(elems).forEach(elem => {
+        // Avoid re-processing
+        if (elem.dataset.appendProcessed === '1') return;
+        const raw = elem.getAttribute('append');
+        if (!raw) {
+            elem.dataset.appendProcessed = '1';
+            return;
+        }
+        const entries = String(raw).split(';');
+        let changed = false;
+        entries.forEach(entryRaw => {
+            const entry = String(entryRaw || '').trim();
+            if (!entry) return;
+            const parts = entry.split(':');
+            let targetElem = elem;
+            let attrName, attrValue;
+
+            if (parts.length === 2) {
+                attrName = parts[0].trim();
+                attrValue = parts[1].trim();
+                targetElem = elem;
+            } else if (parts.length >= 3) {
+                const targetSpec = parts[0].trim();
+                attrName = parts[1].trim();
+                attrValue = parts.slice(2).join(':').trim();
+
+                if (['this','self','elem','me'].includes(targetSpec.toLowerCase())) {
+                    targetElem = elem;
+                } else if (targetSpec.startsWith('#') || targetSpec.startsWith('.')) {
+                    try { targetElem = document.querySelector(targetSpec); } catch (e) { targetElem = null; }
+                } else {
+                    targetElem = document.getElementById(targetSpec) || (function(){ try { return document.querySelector(targetSpec); } catch(e){return null;} })();
+                }
+            } else {
+                console.warn('processAppendAttributes: invalid entry format', entry);
+                return;
+            }
+
+            if (!targetElem) {
+                console.warn('processAppendAttributes: target not found for entry', entry);
+                return;
+            }
+
+            const existing = targetElem.getAttribute(attrName) || '';
+            if (attrName.toLowerCase() === 'class') {
+                const existingTokens = existing.split(/\s+/).filter(Boolean);
+                const newTokens = attrValue.split(/\s+/).filter(Boolean);
+                const merged = Array.from(new Set(existingTokens.concat(newTokens))).join(' ');
+                targetElem.setAttribute('class', merged);
+                changed = true;
+            } else {
+                const sep = existing && !existing.endsWith(' ') ? ' ' : '';
+                targetElem.setAttribute(attrName, existing ? existing + sep + attrValue : attrValue);
+                changed = true;
+            }
+        });
+
+        elem.dataset.appendProcessed = '1';
+
+        // If we modified attributes that can affect UI, re-run DOM processing
+        if (changed) {
+            try { if (typeof domContentLoad === 'function') domContentLoad(); } catch (e) { /* ignore */ }
+        }
+    });
 }
 
 function setAJAXOpts(elem, opts) {

@@ -1,0 +1,9 @@
+{
+  "modal": {
+    "csv": {
+      "sources": "/dotfly/demo_app/data/files.csv",
+      "display": "table",
+      "pageSize": 20
+    }
+  }
+}

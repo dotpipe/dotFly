@@ -44,7 +44,7 @@
                                     {
                                         "pre": {
                                             "style": "color: #f8f8f2; margin: 10px 0;",
-                                            "text": "<pipe>              AJAX loader\n<tabs>              Tabbed UI\n<csv>               CSV tables\n<carousel>          Sliders\n<cart>              Shopping cart\n<login>             Auth forms\n<checkout>          Checkout\n<search>            Filter\n<columns>           Multi-column\n<timed>             Auto-refresh"
+                                            "textcontent": "<pipe>              AJAX loader\n<tabs>              Tabbed UI\n<csv>               CSV tables\n<carousel>          Sliders\n<cart>              Shopping cart\n<login>             Auth forms\n<checkout>          Checkout\n<search>            Filter\n<columns>           Multi-column\n<timed>             Auto-refresh"
                                         }
                                     }
                                 ]
@@ -114,7 +114,7 @@
                                     {
                                         "pre": {
                                             "style": "background: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto;",
-                                            "text": "<button id=\"btn1\" inline=\"\n  |&msg:Hello World\n  |$output.innerHTML:!msg\n\">Click Me</button>"
+                                            "textcontent": "<button id=\"btn1\" inline=\"\n  |&msg:Hello World\n  |$output.innerHTML:!msg\n\">Click Me</button>"
                                         }
                                     }
                                 ]
@@ -133,7 +133,7 @@
                                     {
                                         "pre": {
                                             "style": "background: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto;",
-                                            "text": "<button ajax=\"/api/data.json\" \n        insert=\"target\">\n  Load\n</button>"
+                                            "textcontent": "<button ajax=\"/api/data.json\" \n        insert=\"target\">\n  Load\n</button>"
                                         }
                                     }
                                 ]
@@ -152,7 +152,7 @@
                                     {
                                         "pre": {
                                             "style": "background: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto;",
-                                            "text": "<tabs id=\"nav\" tab=\"\n  Home:homeTab:/pages/home.json;\n  About:aboutTab:/pages/about.json\n\"></tabs>"
+                                            "textcontent": "<tabs id=\"nav\" tab=\"\n  Home:homeTab:/pages/home.json;\n  About:aboutTab:/pages/about.json\n\">\n</tabs>"
                                         }
                                     }
                                 ]
@@ -171,7 +171,7 @@
                                     {
                                         "pre": {
                                             "style": "background: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto;",
-                                            "text": "<csv id=\"table\" \n     ajax=\"/data/users.csv\" \n     insert=\"container\" \n     sort=\"Name:csv-asc\" \n     page-size=\"10\">\n</csv>"
+                                            "textcontent": "<csv id=\"table\" \n     ajax=\"/data/users.csv\" \n     insert=\"container\" \n     sort=\"Name:csv-asc\" \n     page-size=\"10\">\n</csv>"
                                         }
                                     }
                                 ]

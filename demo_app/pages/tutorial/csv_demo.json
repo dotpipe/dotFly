@@ -13,7 +13,6 @@
             {
                 "p": "The <csv> element transforms CSV data into beautiful tables, lists, or card layouts with built-in sorting and pagination."
             },
-
             {
                 "h3": "📖 CSV Data Format"
             },
@@ -32,13 +31,13 @@
                         },
                         {
                             "div": {
-                                "class": "code-block", "textContent": "Name,Email,Status,Date\nJohn Doe,john@example.com,Active,2024-01-15\nJane Smith,jane@example.com,Active,2024-01-16\nBob Johnson,bob@example.com,Inactive,2024-01-17"
+                                "class": "code-block",
+                                "textContent": "Name,Email,Status,Date\nJohn Doe,john@example.com,Active,2024-01-15\nJane Smith,jane@example.com,Active,2024-01-16\nBob Johnson,bob@example.com,Inactive,2024-01-17"
                             }
                         }
                     ]
                 }
             },
-
             {
                 "h3": "📋 Basic Table Display"
             },
@@ -57,37 +56,23 @@
                         },
                         {
                             "div": {
-                                "class": "code-block", "textContent": "&lt;csv id=\"usersTable\" \n     ajax=\"/dotfly/demo_app/data/tasks.csv\"\n     insert=\"csvOut1\">\n"
-                            }
-                        },
-                        {
-                            "button": {
-                                "tagname": "button",
-                                "id": "csvLoadBtn",
-                                "ajax": "/dotfly/demo_app/data/tasks.csv",
-                                "insert": "csvOut1",
-                                "event": "click",
-                                "textContent": "📊 Load CSV Data"
+                                "class": "code-block",
+                                "textContent": "&lt;csv id=\"usersTable\" \n     ajax=\"/dotfly/demo_app/data/tasks.csv\"\n     insert=\"csvOut1\">\n"
                             }
                         },
                         {
                             "div": {
-                                "id": "csvOut1",
-                                "class": "output-box",
-                                "text": "Click to load CSV data..."
+                                "tagname":"csv",
+                                "id": "csvDemo0",
+                                "sources": "/dotfly/demo_app/data/tasks.csv",
+                                "insert": "csvDemo0",
+                                "display": "table",
+                                "pageSize": 20
                             }
                         }
                     ]
                 }
             },
-            {
-                "csv": {
-                    "id": "csvDemo1",
-                    "ajax": "/dotfly/demo_app/data/tasks.csv",
-                    "insert": "csvOut1"
-                }
-            },
-
             {
                 "h3": "🔄 Sorting Data"
             },
@@ -106,20 +91,21 @@
                         },
                         {
                             "div": {
-                                "class": "code-block", "textContent": "&lt;csv id=\"sortableTable\"\n     ajax=\"/data/users.csv\"\n     insert=\"csvOut2\"\n     sort=\"Name:csv-asc\">\n\n\n\ncv-asc  = Ascending\ncsv-desc = Descending"
+                                "class": "code-block",
+                                "textContent": "&lt;csv id=\"sortableTable\"\n     ajax=\"/data/users.csv\"\n     insert=\"csvOut2\"\n     sort=\"Name:csv-asc\">\n\n\n\ncv-asc  = Ascending\ncsv-desc = Descending"
                             }
                         },
                         {
                             "p": "In a real implementation, click column headers to sort!"
                         },
                         {
-                            "div": { "html": "💡 Interactive Sorting: The CSV component automatically makes table headers clickable for sorting when you click them."
+                            "div": {
+                                "html": "💡 Interactive Sorting: The CSV component automatically makes table headers clickable for sorting when you click them."
                             }
                         }
                     ]
                 }
             },
-
             {
                 "h3": "📄 Pagination"
             },
@@ -134,20 +120,24 @@
                             }
                         },
                         {
-                            "p": {"text": "Control how many rows display per page:"}
-                        },
-                        {
-                            "div": {
-                                "class": "code-block", "textContent": "&lt;csv id=\"paginatedTable\"\n     ajax=\"/data/large-dataset.csv\"\n     insert=\"csvOut3\"\n     page-size=\"10\">\n"
+                            "p": {
+                                "text": "Control how many rows display per page:"
                             }
                         },
                         {
-                            "p": {"text": "The page-size attribute limits rows per page and adds navigation controls."}
+                            "div": {
+                                "class": "code-block",
+                                "textContent": "&lt;csv id=\"paginatedTable\"\n     ajax=\"/data/large-dataset.csv\"\n     insert=\"csvOut3\"\n     page-size=\"10\">\n"
+                            }
+                        },
+                        {
+                            "p": {
+                                "text": "The page-size attribute limits rows per page and adds navigation controls."
+                            }
                         }
                     ]
                 }
             },
-
             {
                 "h3": "🎨 Display Modes"
             },
@@ -162,7 +152,9 @@
                             }
                         },
                         {
-                            "p": {"text": "CSV data can be displayed in multiple formats:"}
+                            "p": {
+                                "text": "CSV data can be displayed in multiple formats:"
+                            }
                         },
                         {
                             "table": {
@@ -170,36 +162,84 @@
                                     {
                                         "tr": {
                                             "children": [
-                                                {"th": {"text": "Format"}},
-                                                {"th": {"text": "Description"}},
-                                                {"th": {"text": "Use Case"}}
+                                                {
+                                                    "th": {
+                                                        "text": "Format"
+                                                    }
+                                                },
+                                                {
+                                                    "th": {
+                                                        "text": "Description"
+                                                    }
+                                                },
+                                                {
+                                                    "th": {
+                                                        "text": "Use Case"
+                                                    }
+                                                }
                                             ]
                                         }
                                     },
                                     {
                                         "tr": {
                                             "children": [
-                                                {"td": {"text": "Table (default)"}},
-                                                {"td": {"text": "Standard HTML table"}},
-                                                {"td": {"text": "Data grids, reports"}}
+                                                {
+                                                    "td": {
+                                                        "text": "Table (default)"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Standard HTML table"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Data grids, reports"
+                                                    }
+                                                }
                                             ]
                                         }
                                     },
                                     {
                                         "tr": {
                                             "children": [
-                                                {"td": {"text": "List"}},
-                                                {"td": {"text": "Unordered/ordered list"}},
-                                                {"td": {"text": "Simple data display"}}
+                                                {
+                                                    "td": {
+                                                        "text": "List"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Unordered/ordered list"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Simple data display"
+                                                    }
+                                                }
                                             ]
                                         }
                                     },
                                     {
                                         "tr": {
                                             "children": [
-                                                {"td": {"text": "Cards"}},
-                                                {"td": {"text": "Card-based layout"}},
-                                                {"td": {"text": "Products, profiles"}}
+                                                {
+                                                    "td": {
+                                                        "text": "Cards"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Card-based layout"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Products, profiles"
+                                                    }
+                                                }
                                             ]
                                         }
                                     }
@@ -209,7 +249,6 @@
                     ]
                 }
             },
-
             {
                 "h3": "⚡ Lazy Loading"
             },
@@ -224,24 +263,29 @@
                             }
                         },
                         {
-                            "p": {"text": "For large CSV files, enable lazy loading:"}
-                        },
-                        {
-                            "div": {
-                                "class": "code-block", "textContent": "&lt;csv id=\"lazyTable\"\n     ajax=\"/data/big-data.csv\"\n     insert=\"csvOut4\"\n     lazy-load=\"true\"\n     page-size=\"20\">\n"
+                            "p": {
+                                "text": "For large CSV files, enable lazy loading:"
                             }
                         },
                         {
-                            "p": {"text": "Lazy loading is enabled by default. It loads data incrementally as needed."}
+                            "div": {
+                                "class": "code-block",
+                                "textContent": "&lt;csv id=\"lazyTable\"\n     ajax=\"/data/big-data.csv\"\n     insert=\"csvOut4\"\n     lazy-load=\"true\"\n     page-size=\"20\">\n"
+                            }
                         },
                         {
-                            "div": { "html": "✅ Performance: Lazy loading prevents browser slowdown with large datasets."
+                            "p": {
+                                "text": "Lazy loading is enabled by default. It loads data incrementally as needed."
+                            }
+                        },
+                        {
+                            "div": {
+                                "html": "✅ Performance: Lazy loading prevents browser slowdown with large datasets."
                             }
                         }
                     ]
                 }
             },
-
             {
                 "h3": "🔍 Filtering Data"
             },
@@ -256,11 +300,14 @@
                             }
                         },
                         {
-                            "p": {"text": "Combine CSV with the <search> element to filter data:"}
+                            "p": {
+                                "text": "Combine CSV with the <search> element to filter data:"
+                            }
                         },
                         {
                             "div": {
-                                "class": "code-block", "textContent": "&lt;search id=\"tableSearch\" \n        target=\"csvTableId\">\n\n\n\n\n\n"
+                                "class": "code-block",
+                                "textContent": "&lt;search id=\"tableSearch\" \n        target=\"csvTableId\">\n\n\n\n\n\n"
                             }
                         },
                         {
@@ -271,13 +318,13 @@
                             }
                         },
                         {
-                            "p": { "text": "(Search functionality works with dotPipe's search element)"
+                            "p": {
+                                "text": "(Search functionality works with dotPipe's search element)"
                             }
                         }
                     ]
                 }
             },
-
             {
                 "h3": "🎯 CSV Attributes Reference"
             },
@@ -291,64 +338,131 @@
                                     {
                                         "tr": {
                                             "children": [
-                                                {"th": {"text": "Attribute"}},
-                                                {"th": {"text": "Type"}},
-                                                {"th": {"text": "Description"}}
+                                                {
+                                                    "th": {
+                                                        "text": "Attribute"
+                                                    }
+                                                },
+                                                {
+                                                    "th": {
+                                                        "text": "Type"
+                                                    }
+                                                },
+                                                {
+                                                    "th": {
+                                                        "text": "Description"
+                                                    }
+                                                }
                                             ]
                                         }
                                     },
                                     {
                                         "tr": {
                                             "children": [
-                                                {"td": {
-                                                    "class": "code-block", "textContent": "ajax"
-                                                }},
-                                                {"td": {"text": "String"}},
-                                                {"td": {"text": "Path to CSV file"}}
+                                                {
+                                                    "td": {
+                                                        "class": "code-block",
+                                                        "textContent": "ajax"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "String"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Path to CSV file"
+                                                    }
+                                                }
                                             ]
                                         }
                                     },
                                     {
                                         "tr": {
                                             "children": [
-                                                {"td": {
-                                                    "class": "code-block", "textContent": "insert"
-                                                }},
-                                                {"td": {"text": "String"}},
-                                                {"td": {"text": "Target element ID"}}
+                                                {
+                                                    "td": {
+                                                        "class": "code-block",
+                                                        "textContent": "insert"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "String"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Target element ID"
+                                                    }
+                                                }
                                             ]
                                         }
                                     },
                                     {
                                         "tr": {
                                             "children": [
-                                                {"td": {
-                                                    "class": "code-block", "textContent": "sort"
-                                                }},
-                                                {"td": {"text": "String"}},
-                                                {"td": {"text": "Column:csv-asc or Column:csv-desc"}}
+                                                {
+                                                    "td": {
+                                                        "class": "code-block",
+                                                        "textContent": "sort"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "String"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Column:csv-asc or Column:csv-desc"
+                                                    }
+                                                }
                                             ]
                                         }
                                     },
                                     {
                                         "tr": {
                                             "children": [
-                                                {"td": {
-                                                    "class": "code-block", "textContent": "page-size"
-                                                }},
-                                                {"td": {"text": "Number"}},
-                                                {"td": {"text": "Rows per page"}}
+                                                {
+                                                    "td": {
+                                                        "class": "code-block",
+                                                        "textContent": "page-size"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Number"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Rows per page"
+                                                    }
+                                                }
                                             ]
                                         }
                                     },
                                     {
                                         "tr": {
                                             "children": [
-                                                {"td": {
-                                                    "class": "code-block", "textContent": "lazy-load"
-                                                }},
-                                                {"td": {"text": "Boolean"}},
-                                                {"td": {"text": "Enable incremental loading (default: true)"}}
+                                                {
+                                                    "td": {
+                                                        "class": "code-block",
+                                                        "textContent": "lazy-load"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Boolean"
+                                                    }
+                                                },
+                                                {
+                                                    "td": {
+                                                        "text": "Enable incremental loading (default: true)"
+                                                    }
+                                                }
                                             ]
                                         }
                                     }
@@ -358,7 +472,6 @@
                     ]
                 }
             },
-
             {
                 "h3": "💡 Best Practices"
             },
@@ -369,20 +482,47 @@
                         {
                             "ul": {
                                 "children": [
-                                    {"li": {"text": "✅ Always include column headers in the first row"}},
-                                    {"li": {"text": "✅ Use consistent data types within columns"}},
-                                    {"li": {"text": "✅ Enable lazy-load for files over 100 rows"}},
-                                    {"li": {"text": "✅ Set appropriate page-size for user experience"}},
-                                    {"li": {"text": "✅ Combine with search elements for filtering"}},
-                                    {"li": {"text": "✅ Style tables with CSS for better presentation"}},
-                                    {"li": {"text": "✅ Handle missing or malformed data gracefully"}}
+                                    {
+                                        "li": {
+                                            "text": "✅ Always include column headers in the first row"
+                                        }
+                                    },
+                                    {
+                                        "li": {
+                                            "text": "✅ Use consistent data types within columns"
+                                        }
+                                    },
+                                    {
+                                        "li": {
+                                            "text": "✅ Enable lazy-load for files over 100 rows"
+                                        }
+                                    },
+                                    {
+                                        "li": {
+                                            "text": "✅ Set appropriate page-size for user experience"
+                                        }
+                                    },
+                                    {
+                                        "li": {
+                                            "text": "✅ Combine with search elements for filtering"
+                                        }
+                                    },
+                                    {
+                                        "li": {
+                                            "text": "✅ Style tables with CSS for better presentation"
+                                        }
+                                    },
+                                    {
+                                        "li": {
+                                            "text": "✅ Handle missing or malformed data gracefully"
+                                        }
+                                    }
                                 ]
                             }
                         }
                     ]
                 }
             },
-
             {
                 "h3": "📋 Complete Example"
             },
@@ -398,7 +538,8 @@
                         },
                         {
                             "div": {
-                                "class": "code-block", "textContent": "\n\n\n    User Directory\n    &lt;script src=\"/dotpipe.js\">\n    \n        table { width: 100%; border-collapse: collapse; }\n        th, td { border: 1px solid #1f4068;  padding: 2px !important; }\n        th { background: #1a1f3a; color: #4fc3f7; cursor: pointer; }\n        tr:hover { background: #1a1a2e; }\n    \n\n\n    👥 User Directory\n    \n    \n    \n    \n    \n    \n    \n    \n        🔄 Reload Data\n    \n    \n    \n        document.addEventListener('DOMContentLoaded', () => {\n            domContentLoad();\n            addPipe(document.body);\n            // Auto-load on page load\n            pipes('userDirectory');\n        });\n    \n\n"
+                                "class": "code-block",
+                                "textContent": "\n\n\n    User Directory\n    &lt;script src=\"/dotpipe.js\">\n    \n        table { width: 100%; border-collapse: collapse; }\n        th, td { border: 1px solid #1f4068;  padding: 2px !important; }\n        th { background: #1a1f3a; color: #4fc3f7; cursor: pointer; }\n        tr:hover { background: #1a1a2e; }\n    \n\n\n    👥 User Directory\n    \n    \n    \n    \n    \n    \n    \n    \n        🔄 Reload Data\n    \n    \n    \n        document.addEventListener('DOMContentLoaded', () => {\n            domContentLoad();\n            addPipe(document.body);\n            // Auto-load on page load\n            pipes('userDirectory');\n        });\n    \n\n"
                             }
                         }
                     ]

@@ -214,14 +214,14 @@
         <div class="toc">
             <h3>📚 Tutorial Sections - Click to Load</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 20px;">
-                <button data-section="overview" style="padding: 15px; font-size: 1em;">🎯 Overview</button>
-                <button data-section="inline_macros" style="padding: 15px; font-size: 1em;">⚡ Inline Macros</button>
-                <button data-section="ajax_pipes" style="padding: 15px; font-size: 1em;">🔗 AJAX & Pipes</button>
-                <button data-section="tabs_demo" style="padding: 15px; font-size: 1em;">📑 Tabs Component</button>
-                <button data-section="csv_demo" style="padding: 15px; font-size: 1em;">📊 CSV Component</button>
-                <button data-section="carousel_demo" style="padding: 15px; font-size: 1em;">🎠 Carousel</button>
-                <button data-section="modala_demo" style="padding: 15px; font-size: 1em;">🎨 Modala Templates</button>
-                <button data-section="advanced" style="padding: 15px; font-size: 1em;">🛠️ Advanced</button>
+                <button id="toc-overview" class="modala" ajax="/dotfly/demo_app/pages/tutorial/overview.json:tutorialContent" style="padding: 15px; font-size: 1em;">🎯 Overview</button>
+                <button id="toc-inline_macros" class="modala" ajax="/dotfly/demo_app/pages/tutorial/inline_macros.json:tutorialContent" style="padding: 15px; font-size: 1em;">⚡ Inline Macros</button>
+                <button id="toc-ajax_pipes" class="modala" ajax="/dotfly/demo_app/pages/tutorial/ajax_pipes.json:tutorialContent" style="padding: 15px; font-size: 1em;">🔗 AJAX & Pipes</button>
+                <button id="toc-tabs_demo" class="modala" ajax="/dotfly/demo_app/pages/tutorial/tabs_demo.json:tutorialContent" style="padding: 15px; font-size: 1em;">📑 Tabs Component</button>
+                <button id="toc-csv_demo" class="modala" ajax="/dotfly/demo_app/pages/tutorial/csv_demo.json:tutorialContent" style="padding: 15px; font-size: 1em;">📊 CSV Component</button>
+                <button id="toc-carousel_demo" class="modala" ajax="/dotfly/demo_app/pages/tutorial/carousel_demo.json:tutorialContent" style="padding: 15px; font-size: 1em;">🎠 Carousel</button>
+                <button id="toc-modala_demo" class="modala" ajax="/dotfly/demo_app/pages/tutorial/modala_demo.json:tutorialContent" style="padding: 15px; font-size: 1em;">🎨 Modala Templates</button>
+                <button id="toc-advanced" class="modala" ajax="/dotfly/demo_app/pages/tutorial/advanced.json:tutorialContent" style="padding: 15px; font-size: 1em;">🛠️ Advanced</button>
             </div>
         </div>
 
@@ -256,112 +256,20 @@
                 addPipe(document.body);
             }
             
-            // Add event listeners to navigation buttons
-            document.querySelectorAll('button[data-section]').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    loadSection(this.getAttribute('data-section'));
-                });
-            });
-            
             console.log('✅ Tutorial initialized');
-            
-            // Load overview by default
-            setTimeout(() => loadSection('overview'), 500);
+
+            // Load overview by default via the TOC ajax button
+            setTimeout(() => {
+                const btn = document.getElementById('toc-overview');
+                if (btn) {
+                    try { btn.click(); } catch (e) { console.error('auto-click failed', e); }
+                }
+            }, 500);
         }
 
-        // Load tutorial section
-        window.loadSection = function(section) {
-            const contentDiv = document.getElementById('tutorialContent');
-            contentDiv.innerHTML = '<div style="text-align: center; padding: 40px;"><div style="font-size: 2em;">⏳</div><p>Loading...</p></div>';
-            
-            const url = `/dotfly/demo_app/pages/tutorial/${section}.json`;
-            console.log('Loading section:', url);
-            
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Section loaded:', section);
-                    contentDiv.innerHTML = '';
-                    
-                    // Use modala to render the JSON
-                    if (typeof modala === 'function') {
-                        modala(data, contentDiv);
-                    } else {
-                        contentDiv.innerHTML = '<div style="color: red;">Error: modala function not found</div>';
-                    }
-                    
-                    // Re-register any new pipe elements
-                    if (typeof addPipe === 'function') {
-                        addPipe(contentDiv);
-                    }
-                    
-                    // Scroll to top
-                    contentDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                })
-                .catch(error => {
-                    console.error('Error loading section:', error);
-                    contentDiv.innerHTML = `
-                        <div style="background: #ffebee; color: #c62828; padding: 20px; border-radius: 5px;">
-                            <h3>❌ Error Loading Section</h3>
-                            <p><strong>Section:</strong> ${section}</p>
-                            <p><strong>URL:</strong> ${url}</p>
-                            <p><strong>Error:</strong> ${error.message}</p>
-                            <p style="margin-top: 15px;">Please check that the JSON file exists and is valid.</p>
-                        </div>
-                    `;
-                });
-        };
+        // Navigation is handled by dotPipe via `ajax` attributes on TOC buttons.
 
-        // Helper functions for demos
-        window.showAlert = function(message) {
-            alert(message);
-        };
-
-        window.updateOutput = function(outputId, content) {
-            const elem = document.getElementById(outputId);
-            if (elem) {
-                elem.innerHTML = content;
-            }
-        };
-
-        window.highlightElement = function(elementId) {
-            const elem = document.getElementById(elementId);
-            if (elem) {
-                elem.style.background = '#ffff00';
-                setTimeout(() => {
-                    elem.style.background = '';
-                }, 2000);
-            }
-        };
-
-        window.processData = function(data) {
-            console.log('Processing data:', data);
-            return JSON.stringify(data, null, 2);
-        };
-
-        window.clearOutput = function(outputId) {
-            const elem = document.getElementById(outputId);
-            if (elem) {
-                elem.innerHTML = '<em>Output cleared. Ready for next demo...</em>';
-            }
-        };
-
-        // Variable storage demo
-        window.demoVars = {};
-        
-        window.storeValue = function(key, value) {
-            window.demoVars[key] = value;
-            console.log(`Stored ${key} = ${value}`);
-        };
-        
-        window.retrieveValue = function(key) {
-            return window.demoVars[key] || 'undefined';
-        };
+        /* Tutorial helper functions are provided by dotpipe.js core */
     </script>
 </body>
 </html>

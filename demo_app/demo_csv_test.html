@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>dotPipe CSV Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 16px; }
+    .csv-container { margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <h1>CSV Demo</h1>
+
+  <!-- The CSV element you provided -->
+  <csv id="csvDemo0" sources="/dotfly/demo_app/data/tasks.csv" insert="csvDemo0" display="table" pagesize="20"></csv>
+
+  <!-- Load core engine -->
+  <script src="../dotpipe.js"></script>
+  <script>
+    // Wait for the engine to be available and then trigger processing
+    (function(){
+      function tryInit(){
+        if (typeof domContentLoad === 'function') {
+          // run once to process pipes and CSVs
+          domContentLoad(false);
+          console.log('domContentLoad() invoked');
+        } else {
+          setTimeout(tryInit, 100);
+        }
+      }
+      tryInit();
+    })();
+  </script>
+</body>
+</html>

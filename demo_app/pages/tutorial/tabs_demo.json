@@ -174,9 +174,14 @@
                             }
                         },
                         {
-                            "button": {
-                                "tagname": "button",
-                                "id": "addTabBtn",
+                            "pipe": {
+                                "tagname": "pipe",
+                                "id": "addTabPipe",
+                                "class": "add-tab-pipe tab-button",
+                                "role": "button",
+                                "tabindex": "0",
+                                "append": "demo1Tabs:class:has-dynamic;demo1Tabs:data-dyn:1",
+                                "onclick": "pipes(this)",
                                 "textContent": "➕ Add Dynamic Tab"
                             }
                         }
