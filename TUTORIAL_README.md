@@ -95,6 +95,41 @@ python launcher.py run demo_app
 - Three loading methods
 - **Complete examples** including this tutorial itself
 
+#### Modala Rendering Rules
+- **`children` arrays:** When a JSON object contains a `children` array, each item is rendered as nested content under the current element. Use objects for elements and primitives for text nodes. Example:
+
+```json
+{
+  "div": {
+    "class": "panel",
+    "children": [
+      { "h2": "Title" },
+      { "p": "A paragraph inside the panel." }
+    ]
+  }
+}
+```
+
+- **Key-as-tag fallback:** If an object key is a recognized HTML or dotPipe tag (for example `div`, `carousel`, `button`, `select`) and the nested object does not provide a `tagname`, the parser will use the key as the element tag. This enables the compact form:
+
+```json
+{
+  "carousel": {
+    "id": "c1",
+    "type": "img",
+    "sources": "img1.jpg;img2.jpg",
+    "boxes": "1"
+  }
+}
+```
+
+- **`tagname` fallback:** If neither a key-as-tag nor a `tagname` is present, the renderer will create a `div` element by default.
+
+- **Carousel / Card `sources`:** For carousel and card elements the raw `sources` string is preserved as an attribute on the created element so rotation helpers (e.g. `shiftFilesLeft` / `shiftFilesRight`) can read and split the value.
+
+- **Recursion & attachment:** Nested objects are rendered into their immediate parent element so `children` and nested-key forms produce proper DOM trees without leaking nodes to the global document root.
+
+
 ### 🛠️ Advanced Techniques
 - Shell variables (scoped pipelines)
 - The `|call` operator for custom functions
